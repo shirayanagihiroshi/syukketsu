@@ -1,0 +1,100 @@
+/*
+ * skt.kekka.jyugyou
+ * 欠課入力部(授業追加)モジュール
+ */
+
+ .skt-kekka-jyugyou-update,    .skt-kekka-jyugyou-cancel,
+ .skt-kekka-jyugyou-main,      .skt-kekka-jyugyou-add,
+ .skt-kekka-jyugyou-nametitle, .skt-kekka-jyugyou-nametext,
+ .skt-kekka-jyugyou-meiboType, .skt-kekka-jyugyou-gakunenlist,
+ .skt-kekka-jyugyou-clslist,   .skt-kekka-jyugyou-meiboIdlist,
+ .skt-kekka-jyugyou-tanniList, .skt-kekka-jyugyou-tanniList-title
+ {
+   position: absolute;
+ }
+
+ .skt-kekka-jyugyou-nametitle {
+   top    : 20px;
+   left   : 10px;
+ }
+
+ .skt-kekka-jyugyou-nametext {
+   top    : 45px;
+   left   : 10px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-meiboType {
+   top    : 80px;
+   left   : 10px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-gakunenlist {
+   top    : 110px;
+   left   : 10px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-clslist {
+   top    : 110px;
+   left   : 130px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-meiboIdlist {
+   top    : 110px;
+   left   : 10px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-add {
+   top    : 220px;
+   left   : 80px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-update {
+   top    : 20px;
+   left   : 500px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-jyugyou-cancel {
+   top    : 20px;
+   left   : 420px;
+   font-size: 20px;
+
+ }
+
+.skt-kekka-jyugyou-main {
+  top    : 270px;
+  left   : 10px;
+  font-size: 20px;
+  border : 1px solid black;
+  border-collapse:collapse;
+  background : #DFC0E0;
+}
+
+.skt-kekka-jyugyou-main td{
+  border : 1px solid black;
+  text-align: center;
+}
+
+.skt-kekka-jyugyou-tanniList-title {
+  top    : 150px;
+  left   : 10px;
+}
+
+.skt-kekka-jyugyou-tanniList {
+  top    : 175px;
+  left   : 10px;
+  font-size: 20px;
+}

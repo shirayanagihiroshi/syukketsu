@@ -1,0 +1,93 @@
+/*
+ * skt.calendar.css
+ * 日課設定モジュール
+ */
+
+ .skt-calendar-previousWeek, .skt-calendar-back,
+ .skt-calendar-nextWeek,     .skt-calendar-notice,
+ .skt-calendar-main,         .skt-calendar-update
+ {
+   position: absolute;
+ }
+
+.skt-calendar-previousWeek {
+  top : 10px;
+  left : 10px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-calendar-previousWeek:hover{
+  background-color: red;
+}
+
+.skt-calendar-back {
+  top : 10px;
+  left : 180px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-calendar-back:hover{
+  background-color: red;
+}
+
+.skt-calendar-nextWeek {
+  top : 10px;
+  left : 350px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-calendar-nextWeek:hover{
+  background-color: red;
+}
+
+.skt-calendar-notice {
+  top : 120px;
+  left: 10px;
+}
+
+.skt-calendar-main {
+  top    : 150px;
+  left   : 10px;
+  border-collapse:collapse;
+  background : #DFC0E0;
+}
+
+.skt-calendar-main th, .skt-calendar-main tr, .skt-calendar-main td {
+  font-size: 20px;
+  border : 1px solid black;
+}
+
+.skt-calendar-update {
+  top : 10px;
+  left : 600px;
+  width : 90px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+  cursor: pointer;
+}
+.skt-calendar-update:hover{
+  background-color: red;
+}
+
+
+.skt-calendar-edi {
+  background : #FE7575;
+}
+
+.skt-calendar-edimemo {
+  background : #FFF;
+}

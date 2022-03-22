@@ -1,0 +1,60 @@
+/*
+ * skt.menu.css
+ * メニュー部スタイル
+ */
+
+.skt-menu1, .skt-menu2, .skt-menu3, .skt-menu4, .skt-menu5, .skt-menu6,
+.skt-menu7, .skt-menu8
+ {
+   position : absolute;
+   margin   : 0;
+   padding  : 10px;
+ }
+
+.skt-menu1{
+  top    : 0;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu2{
+  top    : 50px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu3{
+  top    : 100px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu4{
+  top    : 150px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu5{
+  top    : 200px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu6{
+  top    : 250px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu7{
+  top    : 300px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu8{
+  top    : 350px;
+  height : 50px;
+  width  : 200px;
+}

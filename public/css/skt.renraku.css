@@ -1,0 +1,101 @@
+/*
+ * skt.renraku.css
+ * 出欠連絡モジュール
+ */
+
+.skt-renraku-today, .skt-renraku-gakunen-title, .skt-renraku-gakunen,
+.skt-renraku-cls-title, .skt-renraku-cls, .skt-renraku-members-title,
+.skt-renraku-members, .skt-renraku-main, .skt-renraku-insert,
+.skt-renraku-notice
+ {
+   position : absolute;
+ }
+
+.skt-renraku-gakunen-title, .skt-renraku-cls-title, .skt-renraku-members-title {
+  font-size: 20px;
+}
+
+.skt-renraku-gakunen, .skt-renraku-cls,.skt-renraku-members {
+  font-size: 25px;
+}
+
+.skt-renraku-today {
+  top  : 10px;
+  left : 10px;
+  font-size: 30px;
+}
+
+.skt-renraku-gakunen-title {
+  top  : 65px;
+  left : 10px;
+}
+
+.skt-renraku-gakunen {
+  top  : 65px;
+  left : 60px;
+}
+
+.skt-renraku-cls-title {
+  top  : 65px;
+  left : 210px;
+}
+
+.skt-renraku-cls {
+  top  : 65px;
+  left : 240px;
+}
+
+.skt-renraku-members-title {
+  top  : 65px;
+  left : 350px;
+}
+
+.skt-renraku-members {
+  top  : 65px;
+  left : 400px;
+}
+
+.skt-renraku-insert {
+  top  : 360px;
+  left : 50px;
+  /* font-size: 50px; */
+  font-size: 30px;
+  width: 130px;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+  cursor: pointer;
+}
+.skt-renraku-insert:hover{
+  background-color: red;
+}
+
+
+.skt-renraku-sk {
+  background : #FE7575;
+}
+
+.skt-renraku-re {
+  background : #FFA078;
+}
+
+.skt-renraku-edimemo {
+  background : #FFF;
+}
+
+.skt-renraku-main {
+  top : 150px;
+  left: 10px;
+  background : #DFC0E0;
+  border-collapse:collapse;
+}
+
+.skt-renraku-main tr, .skt-renraku-main td{
+  font-size: 20px;
+  border : 1px solid black;
+}
+
+.skt-renraku-notice {
+  top  : 120px;
+  left : 10px;
+  font-size : 20px;
+}

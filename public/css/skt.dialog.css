@@ -1,0 +1,112 @@
+/*
+ * skt.dialog.css
+ * ダイアログスタイル
+ */
+
+ .skt-dialog, .skt-dialog-head,
+ .skt-dialog-closer, .skt-dialog-main,
+ .skt-dialog-main-username-title, .skt-dialog-main-username-textbox,
+ .skt-dialog-main-passward-title, .skt-dialog-main-passward-textbox,
+ .skt-dialog-main-button-ok, .skt-dialog-main-button-cancel
+ {
+   position: absolute;
+ }
+
+.skt-dialog {
+  margin-top : -200px;
+  margin-left : -200px;
+  top : 50%;
+  left : 50%;
+  width : 400px;
+  height : 400px;
+  border-radius : 3px;
+  z-index : 2;
+  background : #85B0FF;
+}
+
+ .skt-dialog-head {
+   top    : 0;
+   left   : 0;
+   right  : 0;
+   height : 40px;
+ }
+
+ .skt-dialog-closer {
+   top    : 4px;
+   right  : 4px;
+   width  : 32px;
+   height : 32px;
+   text-align: center;
+   cursor: pointer;
+   border-radius: 8px;
+   background : #705AA3;
+ }
+ .skt-dialog-closer:hover{
+   background-color: #E63C41;
+ }
+
+
+ .skt-dialog-main {
+   top    : 40px;
+   left   : 0;
+   right  : 0;
+   bottom : 0;
+ }
+
+.skt-dialog-main-username-title {
+  top    : 40px;
+  left   : 20px;
+  right  : 20px;
+  font-size: 25px;
+}
+
+.skt-dialog-main-username-textbox {
+  top    : 80px;
+  left   : 20px;
+  height : 40px;
+  width: 280px;
+  font-size: 35px;
+}
+
+.skt-dialog-main-passward-title {
+  top    : 140px;
+  left   : 20px;
+  right  : 20px;
+  font-size: 25px;
+}
+
+.skt-dialog-main-passward-textbox {
+  top    : 180px;
+  left   : 20px;
+  height : 40px;
+  width: 280px;
+  font-size: 35px;
+}
+
+.skt-dialog-main-button-ok{
+  top    : 260px;
+  left   : 40px;
+  width  : 130px;
+  line-height: 40px;
+  font-size: 35px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-dialog-main-button-ok:hover{
+  background-color: red;
+}
+
+.skt-dialog-main-button-cancel{
+  top    : 260px;
+  left   : 220px;
+  width  : 130px;
+  line-height : 40px;
+  font-size: 35px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-dialog-main-button-cancel:hover{
+  background-color: red;
+}

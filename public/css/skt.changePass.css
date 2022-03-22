@@ -1,0 +1,64 @@
+/*
+ * skt.changePass.css
+ * パスワード変更スタイル
+ */
+
+.skt-changePass-oldpass,  .skt-changePass-oldpass-textbox,
+.skt-changePass-newpass1, .skt-changePass-newpass1-textbox,
+.skt-changePass-newpass2, .skt-changePass-newpass2-textbox,
+.skt-changePass-change
+ {
+   position: absolute;
+ }
+
+.skt-changePass-oldpass{
+  top: 10px;
+  left: 10px;
+  font-size: 25px;
+}
+
+.skt-changePass-oldpass-textbox {
+   top: 50px;
+   left: 10px;
+   height: 40px;
+   font-size: 25px;
+}
+
+.skt-changePass-newpass1 {
+  top: 110px;
+  left: 10px;
+  font-size: 25px;
+}
+
+.skt-changePass-newpass1-textbox{
+  top: 150px;
+  left: 10px;
+  height: 40px;
+  font-size: 25px;
+}
+
+.skt-changePass-newpass2 {
+  top: 210px;
+  left: 10px;
+  font-size: 25px;
+}
+
+.skt-changePass-newpass2-textbox {
+   top: 250px;
+   left: 10px;
+   height: 40px;
+   font-size: 25px;
+}
+
+ .skt-changePass-change{
+   top    : 320px;
+   left: 10px;
+   width: 130px;
+   font-size: 25px;
+   border-radius: 8px;
+   background-color: #E6E6FA;
+   cursor: pointer;
+ }
+.skt-changePass-change:hover{
+  background-color: red;
+}

@@ -1,0 +1,136 @@
+/*
+ * skt.kekka.css
+ * 結果入力部モジュール
+ */
+
+ .skt-kekka-previousWeek, .skt-kekka-back,
+ .skt-kekka-nextWeek,     .skt-kekka-main,
+ .skt-kekka-toJikanwari,  .skt-kekka-notice,
+ .skt-kekka-notice2,      .skt-kekka-jyugyou,
+ .skt-kekka-mode-toggle,  .skt-kekka-mode-title,
+ .skt-kekka-hanrei
+ {
+   position: absolute;
+ }
+
+.skt-kekka-previousWeek {
+  top : 10px;
+  left : 10px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-kekka-previousWeek:hover{
+  background-color: red;
+}
+
+.skt-kekka-back {
+  top : 10px;
+  left : 190px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-kekka-back:hover{
+  background-color: red;
+}
+
+.skt-kekka-nextWeek {
+  top : 10px;
+  left : 370px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-kekka-nextWeek:hover{
+  background-color: red;
+}
+
+ .skt-kekka-toJikanwari{
+ top : 100px;
+ left : 480px;
+ width : 180px;
+ height : 30px;
+ font-size: 18px;
+ cursor: pointer;
+ border-radius: 8px;
+ background-color: #E6E6FA;
+}
+.skt-kekka-toEditMode:hover{
+ background-color: red;
+}
+
+.skt-kekka-main {
+  top    : 150px;
+  left   : 10px;
+  font-size: 20px;
+  border: solid 1px;
+  border-collapse:collapse;
+
+
+  background : #DFC0E0;
+}
+
+.skt-kekka-main td{
+  border: solid 1px;
+  text-align: center;
+}
+
+.skt-kekka-notice {
+  top    : 60px;
+  left   : 10px
+}
+
+.skt-kekka-notice2 {
+  top    : 100px;
+  left   : 10px
+}
+
+.skt-kekka-jyugyou {
+  top    : 100px;
+  left   : 90px;
+  font-size: 20px;
+}
+
+.skt-kekka-edi {
+  background-color: white;
+}
+
+.skt-kekka-today {
+  background-color: orange;
+}
+
+.skt-kekka-yet {
+  background-color: #FE7575;
+}
+
+.skt-kekka-done {
+  background-color: #0099CC;
+}
+
+.skt-kekka-mode-toggle {
+  top  : 12px;
+  left : 570px;
+}
+
+.skt-kekka-mode-title {
+  top   :  2px;
+  left  : 55px;
+  width : 150px;
+}
+
+ .skt-kekka-hanrei {
+  bottom : 20px;
+  left  : 18%;
+  width : 700px;
+  position : fixed;
+}

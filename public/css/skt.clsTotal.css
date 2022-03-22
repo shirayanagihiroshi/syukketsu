@@ -1,0 +1,101 @@
+/*
+ * skt.clsTotal.css
+ * クラス単位集計スタイルル
+ */
+
+.skt-clsTotal-main, .skt-clsTotal-notice,
+.skt-clsTotal-startMonth-textbox,.skt-clsTotal-startMonth,
+.skt-clsTotal-startDay-textbox,.skt-clsTotal-startDay,
+.skt-clsTotal-endMonth-textbox,.skt-clsTotal-endMonth,
+.skt-clsTotal-endDay-textbox,.skt-clsTotal-endDay,
+.skt-clsTotal-calc
+ {
+   position: absolute;
+ }
+
+
+
+.skt-clsTotal-startMonth-textbox{
+  top:10px;
+  left: 10px;
+  width: 40px;
+  font-size: 25px;
+  text-align: center;
+}
+.skt-clsTotal-startMonth{
+   top: 15px;
+   left: 60px;
+   font-size: 25px;
+ }
+
+.skt-clsTotal-startDay-textbox{
+  top:10px;
+  left: 90px;
+  width: 40px;
+  font-size: 25px;
+  text-align: center;
+}
+.skt-clsTotal-startDay{
+  top: 15px;
+  left: 135px;
+  font-size: 25px;
+}
+
+.skt-clsTotal-endMonth-textbox{
+  top:10px;
+  left: 220px;
+  width: 40px;
+  font-size: 25px;
+  text-align: center;
+}
+.skt-clsTotal-endMonth{
+  top: 15px;
+  left: 270px;
+  font-size: 25px;
+}
+
+.skt-clsTotal-endDay-textbox{
+  top:10px;
+  left: 300px;
+  width: 40px;
+  font-size: 25px;
+  text-align: center;
+}
+.skt-clsTotal-endDay{
+  top: 15px;
+  left: 340px;
+  font-size: 25px;
+}
+
+
+.skt-clsTotal-calc {
+  top: 10px;
+  left: 450px;
+  font-size: 25px;
+  width: 130px;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+  cursor: pointer;
+}
+.skt-clsTotal-calc:hover{
+  background-color: red;
+}
+
+.skt-clsTotal-notice {
+  top : 60px;
+  left : 10px;
+  width : 200px;
+  height: 35px;
+}
+
+.skt-clsTotal-main {
+  top : 90px;
+  left: 10px;
+  background : #DFC0E0;
+  border-collapse:collapse;
+}
+
+.skt-clsTotal-main tr, .skt-clsTotal-main td{
+  font-size: 20px;
+  border : 1px solid black;
+}

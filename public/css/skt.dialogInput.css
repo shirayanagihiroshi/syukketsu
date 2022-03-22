@@ -1,0 +1,105 @@
+/*
+ * skt.dialogInput.js
+ * 文字入力可能な ダイアログ部モジュール
+ */
+
+ .skt-dialogInput,
+ .skt-dialogInput-head,           .skt-dialogInput-head-closer,
+ .skt-dialogInput-main,           .skt-dialogInput-main-detail,
+ .skt-dialogInput-main-textbox,   .skt-dialogInput-main-memo,
+ .skt-dialogInput-main-button-ok, .skt-dialogInput-main-button-cancel
+ {
+   position: absolute;
+ }
+
+.skt-dialogInput {
+  margin-top : -200px;
+  margin-left : -200px;
+  top : 50%;
+  left : 50%;
+  width : 400px;
+  height : 400px;
+  border-radius : 3px;
+  z-index : 2;
+  background : #85B0FF;
+  position:fixed;
+}
+
+ .skt-dialogInput-head {
+   top    : 0;
+   left   : 0;
+   right  : 0;
+   height : 40px;
+ }
+
+ .skt-dialogInput-head-closer {
+   top    : 4px;
+   right  : 4px;
+   width  : 32px;
+   height : 32px;
+   text-align: center;
+   cursor: pointer;
+   border-radius: 8px;
+   background : #705AA3;
+ }
+ .skt-dialog-closer:hover{
+   background-color: #E63C41;
+ }
+
+
+ .skt-dialogInput-main {
+   top    : 40px;
+   left   : 0;
+   right  : 0;
+   bottom : 0;
+ }
+
+.skt-dialogInput-main-detail {
+  top    : 0;
+  left   : 20px;
+  right  : 20px;
+  font-size: 20px;
+}
+
+.skt-dialogInput-main-memo {
+  top    : 110px;
+  left   : 20px;
+  right  : 20px;
+  font-size: 18px;
+}
+
+.skt-dialogInput-main-textbox {
+  top    : 135px;
+  left   : 20px;
+  height : 40px;
+  width: 280px;
+  font-size: 20px;
+}
+
+.skt-dialogInput-main-button-ok{
+  top    : 260px;
+  left   : 40px;
+  width  : 130px;
+  line-height: 40px;
+  font-size: 35px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-dialogInput-main-button-ok:hover{
+  background-color: red;
+}
+
+.skt-dialogInput-main-button-cancel{
+  top    : 260px;
+  left   : 220px;
+  width  : 130px;
+  line-height : 40px;
+  font-size: 35px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-dialogInput-main-button-cancel:hover{
+  background-color: red;
+}

@@ -1,0 +1,61 @@
+/*
+ * skt.schoolTotal.css
+ * 学校単位集計スタイル
+ */
+
+.skt-schoolTotal-main, .skt-schoolTotal-title,
+.skt-schoolTotal-previousDay,
+.skt-schoolTotal-today,
+.skt-schoolTotal-nextDay
+ {
+   position: absolute;
+ }
+
+.skt-schoolTotal-main{
+  top : 60px;
+  left: 10px;
+  background : #DFC0E0;
+  border-collapse:collapse;
+}
+
+.skt-schoolTotal-main tr, .skt-schoolTotal-main td{
+  font-size: 20px;
+  border : 1px solid black;
+}
+
+.skt-schoolTotal-previousDay{
+  top : 10px;
+  left : 10px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-schoolTotal-previousDay:hover{
+  background-color: red;
+}
+
+.skt-schoolTotal-today{
+  top : 10px;
+  left : 180px;
+  width : 250px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+}
+
+.skt-schoolTotal-nextDay{
+  top : 10px;
+  left : 400px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-schoolTotal-nextDay:hover{
+  background-color: red;
+}

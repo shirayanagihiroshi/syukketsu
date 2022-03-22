@@ -1,0 +1,113 @@
+/*
+ * skt.kekka.input
+ * 欠課入力部(入力画面)モジュール
+ */
+
+ .skt-kekka-input-previouskoma,   .skt-kekka-input-nextkoma,
+ .skt-kekka-input-back,           .skt-kekka-input-update,
+ .skt-kekka-input-notice,         .skt-kekka-input-main,
+ .skt-kekka-input-mode-toggle,    .skt-kekka-input-mode-title
+ {
+   position: absolute;
+ }
+
+ .skt-kekka-input-previouskoma {
+   top    : 10px;
+   left   : 10px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-input-nextkoma {
+   top    : 10px;
+   left   : 250px;
+   font-size: 20px;
+
+ }
+
+ .skt-kekka-input-update {
+   top    : 10px;
+   left   : 440px;
+   font-size: 20px;
+ }
+
+ .skt-kekka-input-back {
+   top    : 10px;
+   left   : 130px;
+   font-size: 20px;
+ }
+
+ .skt-kekka-input-notice {
+   top    : 60px;
+   left   : 10px;
+   font-size: 20px;
+ }
+
+ .skt-kekka-input-main {
+   top    : 90px;
+   left   : 10px;
+   font-size: 18px;
+   border: solid 1px;
+   border-collapse:collapse;
+
+
+   background : #DFC0E0;
+ }
+
+ .skt-kekka-input-main td{
+   border: solid 1px;
+   text-align: center;
+ }
+
+ .skt-kekka-input-edi {
+   background-color: white;
+   min-width: 80px;
+ }
+
+ .skt-kekka-input-today {
+   background-color: orange;
+ }
+
+ .skt-kekka-input-yet {
+   background-color: #FE7575;
+ }
+
+ .skt-kekka-input-done {
+   background-color: #0099CC;
+ }
+
+ .skt-kekka-input-mode-toggle {
+   top  : 12px;
+   left : 550px;
+ }
+
+ .skt-kekka-input-mode-title {
+   top   :  2px;
+   left  : 55px;
+   width : 150px;
+ }
+
+ .skt-kekka-input-memo {
+   background-color: #f5f5f5;
+   min-width  : 250px;
+ }
+
+ .skt-kekka-input-min-width {
+   min-width  : 100px;
+ }
+
+ .skt-kekka-input-memoDelete {
+   color : blue;
+   text-decoration : underline; /*下線を引く*/
+   text-decoration-color : blue;/*下線の色*/
+ }
+
+ .skt-kekka-input-limit-over80 {
+   font-weight : bold;
+   color       : red;
+ }
+
+ .skt-kekka-input-limit-over100 {
+   font-weight : bold;
+   color       : darkred;
+ }

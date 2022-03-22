@@ -1,0 +1,84 @@
+﻿[
+ {"goudouMeiboId" : 1,
+  "students":[
+     {"gakunen" : 6,"cls" : 2,"bangou" : 1,"name" : "豊根　1子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 2,"name" : "豊根　2子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 3,"name" : "豊根　3子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 4,"name" : "豊根　4子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 5,"name" : "豊根　5子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 6,"name" : "豊根　6子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 7,"name" : "豊根　7子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 8,"name" : "豊根　8子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 9,"name" : "豊根　9子"}
+    ,{"gakunen" : 6,"cls" : 2,"bangou" : 10,"name" : "豊根　10子"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 1,"name" : "設楽　1男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 2,"name" : "設楽　2男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 3,"name" : "設楽　3男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 4,"name" : "設楽　4男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 5,"name" : "設楽　5男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 6,"name" : "設楽　6男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 7,"name" : "設楽　7男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 8,"name" : "設楽　8男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 9,"name" : "設楽　9男"}
+    ,{"gakunen" : 6,"cls" : 3,"bangou" : 10,"name" : "設楽　10男"}
+  ]}
+,{"goudouMeiboId" : 2,
+  "students":[
+     {"gakunen" : 6,"cls" : 4,"bangou" : 1,"name" : "岡崎　1子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 2,"name" : "岡崎　2子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 3,"name" : "岡崎　3子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 4,"name" : "岡崎　4子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 5,"name" : "岡崎　5子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 6,"name" : "岡崎　6子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 7,"name" : "岡崎　7子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 8,"name" : "岡崎　8子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 9,"name" : "岡崎　9子"}
+    ,{"gakunen" : 6,"cls" : 4,"bangou" : 10,"name" : "岡崎　10子"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 1,"name" : "蒲郡　1男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 2,"name" : "蒲郡　2男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 3,"name" : "蒲郡　3男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 4,"name" : "蒲郡　4男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 5,"name" : "蒲郡　5男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 6,"name" : "蒲郡　6男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 7,"name" : "蒲郡　7男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 8,"name" : "蒲郡　8男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 9,"name" : "蒲郡　9男"}
+    ,{"gakunen" : 6,"cls" : 5,"bangou" : 10,"name" : "蒲郡　10男"}
+  ]}
+,{"goudouMeiboId" : 3,
+  "students":[
+     {"gakunen" : 3,"cls" : 1,"bangou" : 1,"name" : "菊川　1子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 2,"name" : "菊川　2子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 3,"name" : "菊川　3子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 4,"name" : "菊川　4子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 5,"name" : "菊川　5子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 6,"name" : "菊川　6子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 7,"name" : "菊川　7子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 8,"name" : "菊川　8子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 9,"name" : "菊川　9子"}
+    ,{"gakunen" : 3,"cls" : 1,"bangou" : 10,"name" : "菊川　10子"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 1,"name" : "森　1男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 2,"name" : "森　2男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 3,"name" : "森　3男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 4,"name" : "森　4男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 5,"name" : "森　5男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 6,"name" : "森　6男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 7,"name" : "森　7男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 8,"name" : "森　8男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 9,"name" : "森　9男"}
+    ,{"gakunen" : 3,"cls" : 2,"bangou" : 10,"name" : "森　10男"}
+  ]}
+,{"goudouMeiboId" : 4,
+  "students":[
+     {"gakunen" : 3,"cls" : 3,"bangou" : 1,"name" : "島田　1子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 2,"name" : "島田　2子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 3,"name" : "島田　3子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 4,"name" : "島田　4子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 5,"name" : "島田　5子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 6,"name" : "島田　6子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 7,"name" : "島田　7子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 8,"name" : "島田　8子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 9,"name" : "島田　9子"}
+    ,{"gakunen" : 3,"cls" : 3,"bangou" : 10,"name" : "島田　10子"}
+  ]}
+]

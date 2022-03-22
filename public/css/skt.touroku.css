@@ -1,0 +1,133 @@
+/*
+ * skt.touroku.css
+ * 出欠入力部モジュールスタイル
+ */
+
+.skt-touroku-previousDay, .skt-touroku-today, .skt-touroku-nextDay,
+.skt-touroku-notice, .skt-touroku-main, .skt-touroku-update, .skt-touroku-back,
+.skt-touroku-leak, .skt-touroku-mode-toggle
+ {
+   position: absolute;
+ }
+
+
+
+.skt-touroku-previousDay {
+  top : 10px;
+  left : 10px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}
+.skt-touroku-previousDay:hover{
+  background-color: red;
+}
+
+
+.skt-touroku-today {
+  top : 70px;
+  left : 10px;
+  font-size: 30px;
+}
+.skt-touroku-leak {
+  top : 70px;
+  left : 310px;
+  color : red;
+}
+
+.skt-touroku-back {
+  top : 10px;
+  left : 180px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-touroku-back:hover{
+  background-color: red;
+}
+
+.skt-touroku-nextDay {
+  top : 10px;
+  left : 350px;
+  width : 150px;
+  height : 40px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-touroku-nextDay:hover{
+  background-color: red;
+}
+
+.skt-touroku-notice {
+  top : 120px;
+  left: 10px;
+}
+
+.skt-touroku-main {
+  top    : 150px;
+  left   : 10px;
+  border-collapse:collapse;
+  background : #DFC0E0;
+}
+
+.skt-touroku-main th, .skt-touroku-main tr, .skt-touroku-main td {
+  font-size: 18px;
+  border : 1px solid black;
+}
+
+.skt-touroku-update {
+  top : 10px;
+  left : 580px;
+  width : 90px;
+  height : 40px;
+  font-size: 25px;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+  cursor: pointer;
+}
+.skt-touroku-update:hover{
+  background-color: red;
+}
+
+
+.skt-touroku-sk {
+  background : #FE7575;
+}
+
+.skt-touroku-re {
+  background : #FFA078;
+}
+
+.skt-touroku-edimemo {
+  background : #FFF;
+}
+
+.skt-touroku-mode-toggle {
+  top  : 12px;
+  left : 700px;
+}
+
+.skt-touroku-mode-title {
+  top   :  2px;
+  left  : 55px;
+  width : 150px;
+}
+
+.skt-touroku-memoDelete {
+   color : blue;
+   text-decoration : underline; /*下線を引く*/
+   text-decoration-color : blue;/*下線の色*/
+ }
+
+.skt-touroku-memo{
+   background-color: #f5f5f5;
+   min-width  : 250px;
+}

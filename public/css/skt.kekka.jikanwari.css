@@ -1,0 +1,69 @@
+/*
+ * skt.kekka.jikanwarijs
+ * 欠課入力部(時間割設定)モジュール
+ */
+
+ .skt-kekka-jikanwari-notice, .skt-kekka-jikanwari-jyugyou,
+ .skt-kekka-jikanwari-update, .skt-kekka-jikanwari-addJyugyou,
+ .skt-kekka-jikanwari-cancel, .skt-kekka-jikanwari-notice2,
+ .skt-kekka-jikanwari-main
+ {
+   position: absolute;
+ }
+
+.skt-kekka-jikanwari-jyugyou{
+   top:30px;
+   left:90px;
+   font-size: 20px;
+}
+
+.skt-kekka-jikanwari-addJyugyou{
+  bottom : 20px;
+  left : 37%;
+  font-size: 20px;
+  position:fixed;
+
+}
+
+.skt-kekka-jikanwari-notice {
+  top    : 70px;
+  left: 10px;
+}
+
+.skt-kekka-jikanwari-notice2 {
+  top    : 35px;
+  left: 10px;
+}
+
+.skt-kekka-jikanwari-update{
+  top: 30px;
+  left: 400px;
+  font-size: 20px;
+
+}
+
+.skt-kekka-jikanwari-cancel{
+  top:110px;
+  left:350px;
+  font-size: 20px;
+
+}
+
+.skt-kekka-jikanwari-main {
+  top    : 110px;
+  left   : 10px;
+  font-size: 20px;
+  border : 1px solid black;
+  border-collapse:collapse;
+  background : #DFC0E0;
+}
+
+.skt-kekka-jikanwari-main tr, .skt-kekka-jikanwari-main td{
+  border : 1px solid black;
+  text-align: center;
+  padding:1px 5px;
+}
+
+.skt-kekka-jikanwari-edi {
+  background-color: white;
+}
