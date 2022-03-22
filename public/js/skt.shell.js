@@ -779,8 +779,12 @@ skt.shell = (function () {
 
     // パスワード変更成功
     $.gevent.subscribe( $container, 'changePassSuccess', function (event, msg_map) {
+      stateMap.errStr = 'パスワードの変更に成功しました';
       changeAnchorPart({
-        status : 'matiuke'
+        status : 'dialog',
+        _status : {
+          dialogKind : 'invalid'
+        }
       });
     });
 
