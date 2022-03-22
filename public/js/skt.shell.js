@@ -66,7 +66,7 @@ skt.shell = (function () {
       + '<div class="skt-shell-main">'
         + '<div class="skt-shell-main-menu"></div>'
         + '<div class="skt-shell-main-content">'
-          + '<a href="https://shirayanagihiroshi.github.io/hatomochi/howToUseSkt.html">sktの使い方を見る</a>'
+          + '<a href="https://shirayanagihiroshi.github.io/syukketsu/">sktの使い方を見る</a>'
         + '</div>'
       + '</div>',
     titleStr : String()
