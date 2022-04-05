@@ -1,0 +1,264 @@
+<html>
+  <head>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.7/mermaid.min.js"></script>
+
+    <style type="text/css">
+      p {
+        width:60%;
+      }
+
+      .daiji {
+        color: red;
+        font-weight : bold;
+      }
+
+      table, td {
+        border : 1px solid black;
+        border-collapse:collapse;
+      }
+    </style>
+
+    <script>
+      let clientContents, serverContents;
+
+      window.onload = function () {
+        let toggle,
+            client, clientToggle,
+            server, serverToggle;
+
+        toggle = function () {
+          let flg = false;
+          return function () {
+            if ( flg == true ) {
+              flg = false;
+            } else {
+              flg = true;
+            }
+            return flg;
+          }
+        }
+
+        clientToggle = toggle();
+        serverToggle = toggle();
+        client = document.getElementById("client");
+        server = document.getElementById("server");
+
+        client.onclick = function () {
+          if (clientToggle()) {
+            client.innerHTML = clientContents;
+          } else {
+            client.innerHTML = "+";
+          }
+        }
+        server.onclick = function () {
+          if (serverToggle()) {
+            server.innerHTML = serverContents;
+          } else {
+            server.innerHTML = "+";
+          }
+        }
+      }
+    </script>
+
+  </head>
+  <body>
+
+    <h1>フォルダ構成</h1>
+    <ul>
+      <li>
+        <p>クライアント：publicフォルダ以下のすべて。</p>
+        <p Id="client">+</p>
+        <script>
+          clientContents = "<ul>"
+                            +"<li>"
+                              +"skt.shell.js:コントローラ。イメージは外骨格である。全体のhtmlの枠組みのみ持ち、"
+                              +"そこへ各機能モジュールを割り当てる。そして機能モジュール間の調停をする。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.acct.js:機能モジュール。アカウント部の描画処理、イベントハンドラを持つ。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.login.js:機能モジュール。ログイン画面の描画処理、イベントハンドラを持つ。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.XXX.js:画面(機能)を増やすと機能モジュールは増えてゆくはず・・・"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.model.js:モデル。データの管理はここで行う。逆に機能モジュールでは"
+                              +"機能モジュールをまたぐようなデータを保持してはいけない。モデルは表示や通信を行わない。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.data.js:サーバとの通信処理はここで行う。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.util.js:汎用ユーティリティー。ブラウザが無くても動く。"
+                            +"</li>"
+                            +"<li>"
+                              +"skt.util_b.js:汎用ユーティリティー。ブラウザがいる仮定で動く。"
+                            +"</li>"
+                          +"</ul>";
+        </script>
+      </li>
+      <li>サーバ：app.jsとlibフォルダ以下のすべて。</li>
+      <p Id="server">+</p>
+      <script>
+        serverContents = "<ul>"
+                          +"<li>"
+                            +"app.js:サーバは認証とデータの保持のみ行う。よってロジックの大部分はクライアントにあるはず。"
+                            +"主にクライアントからの要求を受け、必要なデータを返す。"
+                          +"</li>"
+                          +"<li>"
+                            +"database.js:mongoDBへのアクセスはここを介して行う。"
+                          +"</li>"
+                          +"<li>"
+                            +"crypt.js:サーバ側のユーティリティ。ハッシュ処理を行う。"
+                          +"</li>"
+                          +"<li>"
+                            +"keys.js:httpsの鍵やDBのユーザなど、環境に依存する設定項目をもつ。ここは試験用と本番用で変わるはず。"
+                            +'<span class="daiji">本番環境のデータをgithubにpushしてはいけない。</span>'
+                          +"</li>"
+                        +"</ul>";
+      </script>
+      <li>データ準備：readyData.jsとdata2DBフォルダ以下のすべて。</li>
+    </ul>
+
+    <h1>mongo DB</h1>
+    <p>
+      javascriptのオブジェクトがそのまま入る感じで楽なので、mongoDBを使っている。用語がRDBと異なるので注意。
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <td>mongoDB</td>
+          <td>RDM(Relational DataBase)</td>
+        </tr>
+      </thead>
+        <tr>
+          <td>collection</td>
+          <td>table</td>
+        </tr>
+        <tr>
+          <td>document</td>
+          <td>row (行)</td>
+        </tr>
+        <tr>
+          <td>field</td>
+          <td>column (カラム)</td>
+        </tr>
+      <tbody>
+      </tbody>
+    </table>
+
+    <h2>collectionの説明</h2>
+
+    <h1>各種処理</h1>
+    <ul>
+      <li>起動
+        <div class="mermaid">
+          sequenceDiagram
+            participant u  as ユーザ
+            participant b  as ブラウザ
+            participant sh as kadai.shell
+            participant a  as kadai.acct
+            participant m  as kadai.model
+            participant d  as kadai.data
+            participant g  as jquery.event.gevent
+            participant sv as サーバ
+            u->>b: ブラウザで該当URLにアクセス
+            b->>sv: get
+            sv->>b: public/kadai.htmlを送る
+            b->>b: css,javascript の読み込み
+            b->>m: 初期化
+            m->>d: コールバックの登録
+            d->>m: 登録
+            b->>sh: 初期化
+            sh->>g: グローバルカスタムイベントの登録
+            g->>sh: 登録
+            sh->>a: 初期化
+            a->>sh: コンテンツ(html)の設定
+            sh->>b: 画面表示
+        </div>
+      </li>
+      <li>ログインするボタン押下
+        <div class="mermaid">
+          sequenceDiagram
+            participant u  as ユーザ
+            participant sh as kadai.shell
+            participant a  as kadai.acct
+            participant m  as kadai.model
+            participant l  as kadai.login
+            participant an as jquery.uriAnchor
+            participant b  as ブラウザ
+            u->>a: ログインするボタンを押す
+            a->>m: ログイン中かどうか判定
+            m->>a: ログインしてないよ
+            a->>sh: tryLoginイベント送信
+            sh->>an: setAnchor
+            an->>b: URIアンカーを設定
+            Note right of an : これをするとブラウザの履歴に残る
+            b->>sh: onHashchangeイベント送信
+            Note right of sh : 画面遷移は基本ここから
+            sh->>l: モジュールの初期化
+        </div>
+      </li>
+      <li>ログイン処理
+        <div class="mermaid">
+          sequenceDiagram
+            participant u  as ユーザ
+            participant sh as kadai.shell
+            participant l  as kadai.login
+            participant m  as kadai.model
+            participant d  as kadai.data
+            participant an as uriAnchor
+            participant sv as サーバ
+            u->>l: ユーザID等入力後OKボタンを押す
+            l->>m: ログイン処理
+            m->>d: ログイン処理
+            Note right of d : 通信はkadai.dataに集約
+            d->>sv: ログイン処理
+            sv->>m: ログイン成功
+            m->>sh: loginSuccessイベント送信
+            sh->>m: 登録済の課題を取得
+            m->>d: 課題の取得
+            d->>sv: 課題の取得
+            sv->>m: 課題の取得完了
+            m->>sh: 課題の取得完了
+            sh->>an: setAnchorしてカレンダー表示へ
+            Note right of an : 以降略
+        </div>
+      </li>
+    </ul>
+    <h1>ポイント</h1>
+    <ul>
+      <li>
+        <p>
+          イベントは2種類ある：クライアント/サーバ間のでやり取りするためのイベントと、クライアント内のやり取りに使うイベントがある。
+          前者はkadai.data（とkadai.dataで登録したkadai.model）とサーバのみがやりとりする。後者はkadai.modelや機能モジュールと
+          kadai.shellの間でやり取りする。
+        </p>
+      </li>
+      <li>
+        <p>
+          kadai.shellの役割：機能モジュール同士で直接やりとりしてはいけない。結合度が上がってしまうから。機能モジュール同士で
+          何かやりとりする場合は、kadai.shellが調停すること。
+        </p>
+      </li>
+      <li>
+        <p>
+          クライアントの画面遷移：ユーザの操作やデータの取得などで画面遷移するわけだが、これらを契機に処理すると、
+          ブラウザの戻るボタンに対応できない。これに対応するため、画面遷移は必ずonHashchangeを契機に行うこと。
+          そうすれば、画面遷移の直接の原因を気にしなくて良くなる。
+        </p>
+      </li>
+      <li>
+        <p>
+          ユーザが登録した課題データの扱い：サーバのDBにデータが保存されるが、防犯上の理由から、ユーザ操作上で課題データを変更、削除したとしても
+          データは残すことにしてある。
+        </p>
+      </li>
+    </ul>
+
+  </body>
+</html>
