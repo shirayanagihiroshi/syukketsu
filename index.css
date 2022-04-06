@@ -48,6 +48,10 @@ ul{
   background-color: #99CCFF;
 }
 
+.red {
+  color: red;
+}
+
 td[kouho] {
   color: silver;
 }
