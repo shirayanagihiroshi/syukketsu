@@ -46,16 +46,16 @@ skt.kekkaInput = (function () {
           + '"skt-kekka-input-limit-over80"',
         limitOver100ClsName : String()
           + '"skt-kekka-input-limit-over100"',
-        zenkiPeriod : { startY : 2021, // 欠課時数の集計の期間を指定
+        zenkiPeriod : { startY : 2022, // 欠課時数の集計の期間を指定
                         startM : 4,
                         startD : 1,
-                        endY   : 2021,
+                        endY   : 2022,
                         endM   : 9,
                         endD   : 30 },
-        koukiPeriod : { startY : 2021,
+        koukiPeriod : { startY : 2022,
                         startM : 10,
                         startD : 1,
-                        endY   : 2022,
+                        endY   : 2023,
                         endM   : 3,
                         endD   : 31 },
         settable_map : { targetYear : true,
