@@ -481,7 +481,7 @@ skt.kekkaInput = (function () {
 
   createTable = function () {
     let i, str, kekkaPreviousKoma, kekkaNextKoma,
-      previousNikka, todayNikka, nextNikka,
+      previousNikka, todayNikka, nextNikka, countZenki, countKouki, countTotal,
       jyugyous = skt.model.getJyugyou(),
       jyugyou  = jyugyous.find(skt.util.jyugyouSelectf(configMap.jyugyouId)),
       kekkas   = skt.model.getKekka(),
@@ -496,7 +496,14 @@ skt.kekkaInput = (function () {
       nextKoma = getNextSameJyugyou(configMap.targetYear,
                                     configMap.targetMonth,
                                     configMap.targetDay,
-                                    configMap.koma);
+                                    configMap.koma),
+      filterState = function (state) {
+        return function (target) {
+          if ( target.state == state ) {
+            return true;
+          }
+        }
+      };
 
       if (previousKoma.jyugyouId != 0) {
         kekkaPreviousKoma = kekkas.find(skt.util.komaSelectFromDayf(previousKoma.year,
@@ -612,7 +619,13 @@ skt.kekkaInput = (function () {
     }
     str += ' ' + configMap.tbNextButton;
     str += '</td>';
-    str += '<td>前期</td><td>後期</td><td>合計</td><td>詳細</td>';
+    countZenki = stateMap.kekkasZenki.filter(filterState('done'));
+    str += '<td>前期(' + countZenki.length  + '回)</td>';
+    countKouki = stateMap.kekkaskouki.filter(filterState('done'));
+    str += '<td>後期(' + countKouki.length  + '回)</td>';
+    countTotal = countZenki.length + countKouki.length;
+    str += '<td>合計(' + countTotal + '回)</td>';
+    str += '<td>詳細</td>';
     str += '</tr>';
 
     jqueryMap.$main.append(str);
