@@ -20,20 +20,20 @@
 
  .skt-kekka-input-nextkoma {
    top    : 10px;
-   left   : 250px;
+   left   : 290px;
    font-size: 20px;
 
  }
 
  .skt-kekka-input-update {
    top    : 10px;
-   left   : 440px;
+   left   : 460px;
    font-size: 20px;
  }
 
  .skt-kekka-input-back {
    top    : 10px;
-   left   : 130px;
+   left   : 150px;
    font-size: 20px;
  }
 
@@ -78,7 +78,7 @@
 
  .skt-kekka-input-mode-toggle {
    top  : 12px;
-   left : 550px;
+   left : 570px;
  }
 
  .skt-kekka-input-mode-title {
