@@ -232,7 +232,10 @@ skt.kekka = (function () {
 
         // 授業変更モードなら、授業あり（未登録）にする。
         } else if (configMap.mode == 'edit') {
-          skt.model.updateKekka(year, month, day, koma, Number(jqueryMap.$jyugyou.val()), 'yet', []);
+          // 授業が未登録の時は除外
+          if (jyugyous.length != 0) {
+            skt.model.updateKekka(year, month, day, koma, Number(jqueryMap.$jyugyou.val()), 'yet', []);
+          }
         }
       }
     }
