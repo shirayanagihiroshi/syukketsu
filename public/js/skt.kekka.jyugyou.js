@@ -241,7 +241,19 @@ skt.kekkaJyugyou = (function () {
 
   setMeiboIdList = function () {
     let i,
-      ml = skt.model.getMeiboIdList();
+      ml = skt.model.getMeiboIdList(),
+      f  = function (a, b) {
+        if (a.goudouMeiboId < b.goudouMeiboId) {
+          return -1;
+        } else if (a.goudouMeiboId == b.goudouMeiboId) {
+          return 0;
+        } else {
+          return 1;
+        }
+      };
+
+    // 混合名簿IDの順に並べる
+    ml.sort(f);
 
     // 一旦リストを削除消して
     jqueryMap.$meiboIdlist.children().remove();
