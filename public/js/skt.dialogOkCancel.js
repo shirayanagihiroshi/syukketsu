@@ -13,17 +13,19 @@ skt.dialogOkCancel = (function () {
             + '<div class="skt-dialogOkCancel-main-title">'
             + '</div>'
             + '<button class="skt-dialogOkCancel-main-button-ok">'
-              + '<p>ok</p>'
+              + 'ok'
             + '</button>'
             + '<button class="skt-dialogOkCancel-main-button-cancel">'
-              + '<p>cancel</p>'
+              + 'cancel'
             + '</button>'
           + '</div>'
         + '<div>',
         settable_map : {showStr : true,
-                        okFunc  : true},
+                        okFunc  : true,
+                        okStr   : true},
         showStr : "",
-        okFunc  : function () {}
+        okFunc  : function () {},
+        okStr   : ""
       },
       stateMap = {
         $append_target : null
@@ -86,6 +88,10 @@ skt.dialogOkCancel = (function () {
     setJqueryMap();
 
     jqueryMap.$title.html( configMap.showStr );
+
+    if (configMap.okStr != "") {
+      jqueryMap.$buttonOK.html( configMap.okStr );
+    }
 
     jqueryMap.$buttonOK
       .click( onOK );

@@ -26,6 +26,7 @@ skt.shell = (function () {
         dialogKind : { login          : true,  // status : dialog のとき使用
                        logout         : true,  // status : dialog のとき使用
                        invalid        : true,  // status : dialog のとき使用
+                       noInvalid      : true,  // status : dialog のとき使用
                        verifySkUpdate : true,  // status : dialog のとき使用
                        verifyRkInsert : true,  // status : dialog のとき使用
                        delRenraku     : true,  // status : dialog のとき使用
@@ -166,63 +167,87 @@ skt.shell = (function () {
       } else if ( anchor_map._status.dialogKind == 'logout' ) {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : 'ログアウトしますか？',
-                                         okFunc  : skt.model.logout});
+                                         okFunc  : skt.model.logout,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if ( anchor_map._status.dialogKind == 'invalid' ) {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr,
                                          // OKでもキャンセルと同じ動きをさせる
-                                         okFunc  : skt.dialogOkCancel.onClose});
+                                         okFunc  : skt.dialogOkCancel.onClose,
+                                         okStr   : 'cancel'});
+        skt.dialogOkCancel.initModule( jqueryMap.$container );
+      } else if ( anchor_map._status.dialogKind == 'noInvalid' ) {
+        setModal(true);
+        skt.dialogOkCancel.configModule({showStr : stateMap.errStr,
+                                         // OKでもキャンセルと同じ動きをさせる
+                                         // はいはいわかりましたくらいのシーンである
+                                         // dialogKind が invalid の時の処理と
+                                         // 本質的には違わない。
+                                         // ボタンにcancelって書いてあると
+                                         // 違和感があるからOKにしとく
+                                         okFunc  : skt.dialogOkCancel.onClose,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if ( anchor_map._status.dialogKind == 'verifySkUpdate' ) {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : '出欠情報を登録して良いですか？',
-                                         okFunc  : skt.touroku.Update});
+                                         okFunc  : skt.touroku.Update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if ( anchor_map._status.dialogKind == 'verifyRkInsert' ) {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : '出欠連絡を登録して良いですか？',
-                                         okFunc  : skt.renraku.Update});
+                                         okFunc  : skt.renraku.Update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'delRenraku') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr + 'の連絡を削除して良いですか？',
-                                         okFunc  : skt.schoolTotal.deleleRenraku});
+                                         okFunc  : skt.schoolTotal.deleleRenraku,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'anotherLogin') {
         // ここではあえてsetModalしない
         skt.dialogOkCancel.configModule({showStr : '接続が切れたか、他の端末でログインしました。再度ログインしてください',
-                                         okFunc  : skt.model.logout});
+                                         okFunc  : skt.model.logout,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyChgPass') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : 'パスワードを変更してよろしいですか？',
-                                         okFunc  : skt.changePass.changeExe});
+                                         okFunc  : skt.changePass.changeExe,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyClUpdate') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr,
-                                         okFunc  : skt.calendar.Update});
+                                         okFunc  : skt.calendar.Update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyJKWUpdate') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr,
-                                         okFunc  : skt.kekkaJikanwari.update});
+                                         okFunc  : skt.kekkaJikanwari.update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyJGYUpdate') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr,
-                                         okFunc  : skt.kekkaJyugyou.update});
+                                         okFunc  : skt.kekkaJyugyou.update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyKKUpdate') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : '欠課を登録して良いですか？',
-                                         okFunc  : skt.kekkaInput.update});
+                                         okFunc  : skt.kekkaInput.update,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'verifyJGYDelete') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : 'メモを削除して良いですか？',
-                                         okFunc  : skt.kekka.onDeleteReal});
+                                         okFunc  : skt.kekka.onDeleteReal,
+                                         okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'kekkaReason') {
         setModal(true);
@@ -239,7 +264,8 @@ skt.shell = (function () {
       } else if (anchor_map._status.dialogKind == 'delStudentMemo') {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : stateMap.errStr + '　を削除しますか？',
-                                         okFunc  : deleteStudentMemo });
+                                         okFunc  : deleteStudentMemo,
+                                         okStr   : 'ok' });
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       }
 
@@ -783,7 +809,7 @@ skt.shell = (function () {
       changeAnchorPart({
         status : 'dialog',
         _status : {
-          dialogKind : 'invalid'
+          dialogKind : 'noInvalid'
         }
       });
     });
