@@ -59,7 +59,7 @@ skt.kekka = (function () {
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKekka,
-      onDelete, onDeleteReal, onPrevious, onBack, onNext, onToggle,
+      onDelete, onPrevious, onBack, onNext, onToggle,
       onJikanwari, createTable, createTableInner, viewInit,
       onTalbeClick, setJyugyou;
 
@@ -159,11 +159,12 @@ skt.kekka = (function () {
 
       // 授業変更モードなら、確認画面を出して、理由メモ削除する。
       } else if (configMap.mode == 'edit') {
-        stateMap.deleteTarget.year  = year;
-        stateMap.deleteTarget.month = month;
-        stateMap.deleteTarget.day   = day;
-        stateMap.deleteTarget.koma  = koma;
-        $.gevent.publish('verifyJGYDelete', [{}]);
+
+        // 授業が未登録の時は除外
+        if (jyugyous.length != 0) {
+          skt.model.updateKekka(year, month, day, koma, Number(jqueryMap.$jyugyou.val()), 'yet', []);
+        }
+
       }
 
     // 授業ありとしてあるとき
@@ -550,18 +551,10 @@ skt.kekka = (function () {
                           memoStr);
   }
 
-  onDeleteReal = function (memo) {
-    skt.model.deleteKekka(stateMap.deleteTarget.year,
-                          stateMap.deleteTarget.month,
-                          stateMap.deleteTarget.day,
-                          stateMap.deleteTarget.koma);
-  }
-
   return {
     configModule  : configModule,
     initModule    : initModule,
     removeKekka   : removeKekka,
-    onDelete      : onDelete,
-    onDeleteReal  : onDeleteReal
+    onDelete      : onDelete
   };
 }());

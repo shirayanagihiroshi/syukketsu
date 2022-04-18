@@ -16,7 +16,7 @@ skt.model = (function () {
       changePass, showGakunen, showCls, readyCalendar, getCalendar,
       updateCalendar, getJyugyou, getJikanwari, getJyugyouMeibo,
       readyKekka, getKekka, updateJikanwari, updateJyugyou, updateKekka,
-      deleteKekka, kindAndStudentSelectf, syukketsuInSyutteiSelectf,
+      kindAndStudentSelectf, syukketsuInSyutteiSelectf,
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
       readyMeiboIdList, getMeiboIdList,//関数
@@ -334,12 +334,6 @@ skt.model = (function () {
 
     // 欠課登録完了
     skt.data.registerReceive('updateKekkaResult', function (msg) {
-      // とりあえず、欠課をとりなおす。
-      skt.model.readyKekka('update'); // クライアントステートを設定してるけど現状使ってない
-    });
-
-    // 欠課削除完了
-    skt.data.registerReceive('deleteKekkaResult', function (msg) {
       // とりあえず、欠課をとりなおす。
       skt.model.readyKekka('update'); // クライアントステートを設定してるけど現状使ってない
     });
@@ -1233,18 +1227,6 @@ skt.model = (function () {
     skt.data.sendToServer('updateKekka',queryObj);
   }
 
-  // year, month, day, koma で指定した欠課データを削除する
-  deleteKekka = function (year, month, day, koma) {
-    let queryObj = {AKey:{userId  : accessKey.userId,
-                          token   : accessKey.token},
-                    year      : year,
-                    month     : month,
-                    day       : day,
-                    koma      : koma};
-
-    skt.data.sendToServer('deleteKekka',queryObj);
-  }
-
   updateJikanwari = function (jikanwariData) {
     let queryObj;
 
@@ -1471,7 +1453,6 @@ skt.model = (function () {
           readyKekka       : readyKekka,
           getKekka         : getKekka,
           updateKekka      : updateKekka,
-          deleteKekka      : deleteKekka,
           updateJikanwari  : updateJikanwari,
           updateJyugyou    : updateJyugyou,
           syukketsuInSyutteiSelectf : syukketsuInSyutteiSelectf,

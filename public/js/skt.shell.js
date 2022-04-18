@@ -36,7 +36,6 @@ skt.shell = (function () {
                        verifyJKWUpdate: true,  // status : dialog のとき使用
                        verifyJGYUpdate: true,  // status : dialog のとき使用
                        verifyKKUpdate : true,  // status : dialog のとき使用
-                       verifyJGYDelete: true,  // status : dialog のとき使用
                        kekkaReason    : true,  // status : dialog のとき使用
                        studentMemo    : true,  // status : dialog のとき使用
                        delStudentMemo : true}, // status : dialog のとき使用
@@ -241,12 +240,6 @@ skt.shell = (function () {
         setModal(true);
         skt.dialogOkCancel.configModule({showStr : '欠課を登録して良いですか？',
                                          okFunc  : skt.kekkaInput.update,
-                                         okStr   : 'ok'});
-        skt.dialogOkCancel.initModule( jqueryMap.$container );
-      } else if (anchor_map._status.dialogKind == 'verifyJGYDelete') {
-        setModal(true);
-        skt.dialogOkCancel.configModule({showStr : 'メモを削除して良いですか？',
-                                         okFunc  : skt.kekka.onDeleteReal,
                                          okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
       } else if (anchor_map._status.dialogKind == 'kekkaReason') {
@@ -937,17 +930,6 @@ skt.shell = (function () {
           koma  : stateMap.koma,
           jyugyouId : stateMap.jyugyouId,
           mode  : stateMap.mode
-        }
-      });
-    });
-
-    // 授業削除確認(なし->完全削除)
-    $.gevent.subscribe( $container, 'verifyJGYDelete', function (event, msg_map) {
-      stateMap.errStr = msg_map.errStr;
-      changeAnchorPart({
-        status : 'dialog',
-        _status : {
-          dialogKind  : 'verifyJGYDelete'
         }
       });
     });

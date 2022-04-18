@@ -376,26 +376,6 @@ io.on("connection", function (socket) {
     });
   });
 
-  socket.on('deleteKekka', function (msg) {
-    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
-      // ログイン中のユーザにのみ回答
-      if (result.length != 0 && msg.AKey.token == result[0].token ) {
-        db.deleteManyDocuments('kekka',
-                               {userId : msg.AKey.userId,
-                                year   : msg.year,
-                                month  : msg.month,
-                                day    : msg.day,
-                                koma   : msg.koma},
-                               function (res) {
-
-          io.to(socket.id).emit('deleteKekkaResult', res); // 送信者のみに送信
-        });
-      } else {
-        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
-      }
-    });
-  });
-
   socket.on('updateStudentMemo', function (msg) {
     db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
       // ログイン中のユーザにのみ回答
