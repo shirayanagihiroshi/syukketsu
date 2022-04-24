@@ -25,7 +25,7 @@ skt.kyuugaku = (function () {
           + '<select class="skt-kyuugaku-members">'
           + '</select>'
           + '<table class="skt-kyuugaku-main"></table>'
-          + '<input class="skt-kyuugaku-insert" type="button" value="登録">'
+          + '<input class="skt-kyuugaku-update" type="button" value="登録">'
           + '<div class="skt-kyuugaku-notice">※生徒を選択してから事由、期間を入力してください。</div>'
           + '<div class="skt-kyuugaku-jiyuuT">事由：</div>'
           + '<input type="text" class="skt-kyuugaku-jiyuu">'
@@ -56,69 +56,79 @@ skt.kyuugaku = (function () {
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeRenraku,
-      setDropDownList, verify, onUpdate;
+      setDropDownList, verify, redraw, onUpdate;
 
   //---DOMメソッド---
   setJqueryMap = function () {
     var $container = stateMap.$container;
     jqueryMap = {
       $container    : $container,
-      $title        : $container.find( '.skt-kyuugaku-title' ),
-      $gakunenlistT : $container.find( '.skt-kyuugaku-gakunen-title' ),
-      $gakunenlist  : $container.find( '.skt-kyuugaku-gakunen' ),
-      $clslistT     : $container.find( '.skt-kyuugaku-cls-title' ),
-      $clslist      : $container.find( '.skt-kyuugaku-cls' ),
-      $memberlistT  : $container.find( '.skt-kyuugaku-members-title' ),
-      $memberlist   : $container.find( '.skt-kyuugaku-members' ),
-      $main         : $container.find( '.skt-kyuugaku-main' ),
-      $notice       : $container.find( '.skt-kyuugaku-notice' ),
-      $insert       : $container.find( '.skt-kyuugaku-insert' )
+      $title        : $container.find( '.skt-kyuugaku-title'            ),
+      $gakunenlistT : $container.find( '.skt-kyuugaku-gakunen-title'    ),
+      $gakunenlist  : $container.find( '.skt-kyuugaku-gakunen'          ),
+      $clslistT     : $container.find( '.skt-kyuugaku-cls-title'        ),
+      $clslist      : $container.find( '.skt-kyuugaku-cls'              ),
+      $memberlistT  : $container.find( '.skt-kyuugaku-members-title'    ),
+      $memberlist   : $container.find( '.skt-kyuugaku-members'          ),
+      $main         : $container.find( '.skt-kyuugaku-main'             ),
+      $notice       : $container.find( '.skt-kyuugaku-notice'           ),
+      $update       : $container.find( '.skt-kyuugaku-update'           ),
+      $jiyuu        : $container.find( '.skt-kyuugaku-jiyuu'            ),
+      $sYear        : $container.find( '.skt-kyuugaku-term-start-year'  ),
+      $sMonth       : $container.find( '.skt-kyuugaku-term-start-month' ),
+      $sDay         : $container.find( '.skt-kyuugaku-term-start-day'   ),
+      $eYear        : $container.find( '.skt-kyuugaku-term-end-year'    ),
+      $eMonth       : $container.find( '.skt-kyuugaku-term-end-month'   ),
+      $eDay         : $container.find( '.skt-kyuugaku-term-end-day'     )
     };
   }
 
   //---イベントハンドラ---
   verify = function () {
-    // 入力値を全て取得
-    let retObj, allData = $('.skt-renraku-main').find('tr'),
-        updataArr = [];
+    let jiyuu = jqueryMap.$jiyuu.val(),
+      sYear   = jqueryMap.$sYear.val(),
+      sMonth  = jqueryMap.$sMonth.val(),
+      sDay    = jqueryMap.$sDay.val(),
+      eYear   = jqueryMap.$eYear.val(),
+      eMonth  = jqueryMap.$eMonth.val(),
+      eDay    = jqueryMap.$eDay.val();
 
-    // 0行目がヘッダ
-    // 1行目が内容
-    retObj = skt.model.skTable2obj(allData[1]);
+    if (jiyuu  == "" || 
+        sYear  == "" || isNaN(sYear)  || 
+        sMonth == "" || isNaN(sMonth) || 
+        sDay   == "" || isNaN(sDay)   || 
+        eYear  == "" || isNaN(eYear)  || 
+        eMonth == "" || isNaN(eMonth) || 
+        eDay   == "" || isNaN(eDay) ) {
 
-    // 入力が正常なら登録処理へ
-    if ( retObj.result == 1 ) {
-      stateMap.target = retObj.updateObj;
-      $.gevent.publish('verifyInsertRenraku', [{}]);
+      $.gevent.publish('invalidInput', [{errStr:'入力が不正です'}]);
 
-    // チェックに異常があれば
-    // エラーダイアログを出す。
-    } else if ( retObj.result == 0 ) {
-      $.gevent.publish('invalidInput', [{errStr:'チェックがありません'}]);
-    } else if ( retObj.result == 2 ) {
-      $.gevent.publish('invalidInput', [{errStr:retObj.errStr}]);
+    // 入力が正常っぽければ登録処理へ
+    } else {
+      $.gevent.publish('verifyKGUpdate', [{}]);
     }
   }
 
   onUpdate = function () {
-    let today = new Date();
-
-    // syukketsu collection と renraku collection はデータの持ち方が違う
-    // ただ、内容に直接アクセスしすぎ。もうちょいモデルで面倒をみるべき
-    stateMap.target.gakunen = Number( jqueryMap.$gakunenlist.val() );
-    stateMap.target.cls     = Number( jqueryMap.$clslist.val() );
-    stateMap.target.year    = today.getFullYear();
-    stateMap.target.month   = today.getMonth() + 1; // 月だけ0始まり
-    stateMap.target.day     = today.getDate();
-    stateMap.target.name    = stateMap.targetName;
+    let obj = {gakunen  : Number( jqueryMap.$gakunenlist.val() ),
+               cls      : Number( jqueryMap.$clslist.val()     ),
+               bangou   : Number( jqueryMap.$memberlist.val()  ),
+               jiyuu    : jqueryMap.$jiyuu.val(),
+               sYear    : Number( jqueryMap.$sYear.val()       ),
+               sMonth   : Number( jqueryMap.$sMonth.val()      ),
+               sDay     : Number( jqueryMap.$sDay.val()        ),
+               eYear    : Number( jqueryMap.$eYear.val()       ),
+               eMonth   : Number( jqueryMap.$eMonth.val()      ),
+               eDay     : Number( jqueryMap.$eDay.val()        )}
 
     // 登録処理
-    skt.model.insertRenraku( stateMap.target );
+    skt.model.updateKyuugaku( obj );
   }
 
 
   //---ユーティリティメソッド---
 
+  // skt.renraku.js と同じ処理
   // 学園、組を指定して、組、生徒のドロップダウンリストを更新する。
   // ダサいが最初だけ、initflgを立てる。
   setDropDownList = function ( gakunen, cls , initflg = false) {
@@ -226,7 +236,7 @@ skt.kyuugaku = (function () {
 //    createTable(stateMap.targetSyussekibangou, stateMap.targetName);
 //    setDayButtons();
 
-    jqueryMap.$insert
+    jqueryMap.$update
       .click( verify );
 
     return true;
@@ -245,7 +255,7 @@ skt.kyuugaku = (function () {
         jqueryMap.$memberlist.remove();
         jqueryMap.$main.remove();
         jqueryMap.$notice.remove();
-        jqueryMap.$insert.remove();
+        jqueryMap.$update.remove();
       }
     }
     return true;
@@ -255,6 +265,7 @@ skt.kyuugaku = (function () {
     configModule  : configModule,
     initModule    : initModule,
     removeRenraku : removeRenraku,
+    redraw        : redraw,
     Update        : onUpdate
   };
 }());

@@ -19,7 +19,7 @@ skt.model = (function () {
       kindAndStudentSelectf, syukketsuInSyutteiSelectf,
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
-      readyMeiboIdList, getMeiboIdList, getKyuugaku,//関数
+      readyMeiboIdList, getMeiboIdList, updateKyuugaku, getKyuugaku,//関数
       accessKey, userKind, name, targetClass, allClass,
       syukketsu, renraku, receiveAnotherLoginFlg,
       calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList,
@@ -368,6 +368,14 @@ skt.model = (function () {
       meiboIdList = msg.res;
       $.gevent.publish('getMeiboIdListResult', [{}]);
     });
+
+    // 休学データ登録完了
+    skt.data.registerReceive('updateSyukketsuResult', function (msg) {
+      // あまり良くないがモデルがもつデータを直接更新しているので
+      // そのまま再描画する。
+      skt.kyuugaku.redraw();
+    });
+
 
   };//initModule end
 
@@ -1416,6 +1424,41 @@ skt.model = (function () {
     return meiboIdList;
   }
 
+  updateKyuugaku = function ( kyuugakuData ) {
+    let queryObj = {AKey   : {userId : accessKey.userId, token : accessKey.token},
+                    kyuugakuData : kyuugakuData};
+    let p = kyuugaku.find(skt.util.studentSelectf(kyuugakuData.gakunen,
+                                                  kyuugakuData.cls,
+                                                  kyuugakuData.bangou));
+
+    // 登録したあと、サーバから取得しなおしたほうが良いが
+    // 全校生徒の名簿と一緒に取ってしまっている都合上
+    // 取り直すのがめんどいから
+    // 直接モデルが持つデータを更新する。
+    if ( p == null) {
+      kyuugaku.push({gakunen  : kyuugakuData.gakunen,
+                     cls      : kyuugakuData.cls,
+                     bangou   : kyuugakuData.bangou,
+                     jiyuu    : kyuugakuData.jiyuu,
+                     sYear    : kyuugakuData.sYear,
+                     sMonth   : kyuugakuData.sMonth,
+                     sDay     : kyuugakuData.sDay,
+                     eYear    : kyuugakuData.eYear,
+                     eMonth   : kyuugakuData.eMonth,
+                     eDay     : kyuugakuData.eDay});
+    } else {
+      p.jiyuu  = kyuugakuData.jiyuu;
+      p.sYear  = kyuugakuData.sYear;
+      p.sMonth = kyuugakuData.sMonth;
+      p.sDay   = kyuugakuData.sDay;
+      p.eYear  = kyuugakuData.eYear;
+      p.eMonth = kyuugakuData.eMonth;
+      p.eDay   = kyuugakuData.eDay;
+    }
+
+    skt.data.sendToServer('updateKyuugaku',queryObj);
+  }
+
   getKyuugaku = function () {
     return kyuugaku;
   }
@@ -1470,6 +1513,7 @@ skt.model = (function () {
           memoDeleted      : memoDeleted,
           readyMeiboIdList : readyMeiboIdList,
           getMeiboIdList   : getMeiboIdList,
+          updateKyuugaku   : updateKyuugaku,
           getKyuugaku      : getKyuugaku
         };
 }());

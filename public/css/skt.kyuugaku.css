@@ -5,7 +5,7 @@
 
 .skt-kyuugaku-title, .skt-kyuugaku-gakunen-title, .skt-kyuugaku-gakunen,
 .skt-kyuugaku-cls-title, .skt-kyuugaku-cls, .skt-kyuugaku-members-title,
-.skt-kyuugaku-members, .skt-kyuugaku-main, .skt-kyuugaku-insert,
+.skt-kyuugaku-members, .skt-kyuugaku-main, .skt-kyuugaku-update,
 .skt-kyuugaku-notice,
 .skt-kyuugaku-jiyuuT,
 .skt-kyuugaku-jiyuu,
@@ -164,7 +164,7 @@
   left : 10px;
 }
 
-.skt-kyuugaku-insert {
+.skt-kyuugaku-update {
   top  : 165px;
   left : 470px;
   /* font-size: 50px; */
@@ -174,7 +174,7 @@
   background-color: #E6E6FA;
   cursor: pointer;
 }
-.skt-kyuugaku-insert:hover{
+.skt-kyuugaku-update:hover{
   background-color: red;
 }
 

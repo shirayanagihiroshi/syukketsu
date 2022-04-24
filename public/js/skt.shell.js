@@ -39,7 +39,8 @@ skt.shell = (function () {
                        verifyKKUpdate : true,  // status : dialog のとき使用
                        kekkaReason    : true,  // status : dialog のとき使用
                        studentMemo    : true,  // status : dialog のとき使用
-                       delStudentMemo : true}, // status : dialog のとき使用
+                       delStudentMemo : true,  // status : dialog のとき使用
+                       verifyKGUpdate : true}, // status : dialog のとき使用
         year  : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         month : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         day   : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
@@ -262,8 +263,13 @@ skt.shell = (function () {
                                          okFunc  : deleteStudentMemo,
                                          okStr   : 'ok' });
         skt.dialogOkCancel.initModule( jqueryMap.$container );
+      } else if (anchor_map._status.dialogKind == 'verifyKGUpdate') {
+        setModal(true);
+        skt.dialogOkCancel.configModule({showStr : '休学の情報を登録して良いですか？',
+                                         okFunc  : skt.kyuugaku.Update,
+                                         okStr   : 'ok'});
+        skt.dialogOkCancel.initModule( jqueryMap.$container );
       }
-
 
 
     // 待ち受け画面の場合
@@ -1018,6 +1024,16 @@ skt.shell = (function () {
     $.gevent.subscribe( $container, 'getMeiboIdListResult', function (event, msg_map) {
       changeAnchorPart({
         status : 'setJyugyou'
+      });
+    });
+
+    // 休学情報登録確認
+    $.gevent.subscribe( $container, 'verifyKGUpdate', function (event, msg_map) {
+      changeAnchorPart({
+        status : 'dialog',
+        _status : {
+          dialogKind  : 'verifyKGUpdate'
+        }
       });
     });
 

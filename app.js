@@ -456,6 +456,33 @@ io.on("connection", function (socket) {
     });
   });
 
+  socket.on('updateKyuugaku', function (msg) {
+    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
+      // ログイン中のユーザにのみ回答
+      if (result.length != 0 && msg.AKey.token == result[0].token ) {
+        db.updateDocument('kyuugaku',
+                          {gakunen : msg.kyuugakuData.gakunen,
+                           cls     : msg.kyuugakuData.cls,
+                           bangou  : msg.kyuugakuData.bangou},
+                          {$set : {gakunen  : msg.kyuugakuData.gakunen,
+                                   cls      : msg.kyuugakuData.cls,
+                                   bangou   : msg.kyuugakuData.bangou,
+                                   jiyuu    : msg.kyuugakuData.jiyuu,
+                                   sYear    : msg.kyuugakuData.sYear,
+                                   sMonth   : msg.kyuugakuData.sMonth,
+                                   sDay     : msg.kyuugakuData.sDay,
+                                   eYear    : msg.kyuugakuData.eYear,
+                                   eMonth   : msg.kyuugakuData.eMonth,
+                                   eDay     : msg.kyuugakuData.eDay}}, function (res) {
+
+          io.to(socket.id).emit('updateKyuugakuResult', res); // 送信者のみに送信
+        });
+      } else {
+        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
+      }
+    });
+  });
+
 
   // 切断
   socket.on("disconnect", () => {
