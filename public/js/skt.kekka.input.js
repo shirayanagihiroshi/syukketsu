@@ -706,8 +706,8 @@ skt.kekkaInput = (function () {
                                 personGakunen,
                                 personCls,
                                 jyugyou.students[idx].bangou);
+        str += '</td>';
       }
-      str += '</td>';
     }
 
     // 次のコマ

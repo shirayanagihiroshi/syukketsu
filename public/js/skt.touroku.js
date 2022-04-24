@@ -218,16 +218,27 @@ skt.touroku = (function () {
     // DBの持つ理由の種別との対応を一致させるためヘッダはモデルに持たせた。
     // テーブルとの変換もモデルでやる。
     for (i =0; i < num; i++) {
-
+      let inKyuugaku = skt.util.inKyuugaku(stateMap.tc.gakunen,
+                                           stateMap.tc.cls,
+                                           stateMap.tc.students[i].bangou,
+                                           configMap.targetYear,
+                                           configMap.targetMonth,
+                                           configMap.targetDay,
+                                           skt.model.getKyuugaku());
       if (configMap.mode == 'normal') {
         let members = [];
         if (skOneDaySk != null) {
           members = skOneDaySk.member;
         }
         //出席番号は1からだから補正する
-        tablePart = skt.model.readySkTable(members, (i + 1), configMap.tbSyukketsu,
-                                                             configMap.tbReason,
-                                                             configMap.tbMemo);
+        // また、休学中の生徒は入力させない
+        if (inKyuugaku != "") {
+          tablePart = skt.model.readySkTable(members, (i + 1), '<td>', '<td>', '<td>');
+        } else {
+          tablePart = skt.model.readySkTable(members, (i + 1), configMap.tbSyukketsu,
+                                                               configMap.tbReason,
+                                                               configMap.tbMemo);
+        }
       }
 
       str = '<tr>';
@@ -238,14 +249,19 @@ skt.touroku = (function () {
         str += tablePart;
         str += '<td>' + skt.model.rnObj2Htm((i + 1), skOneDayRn, configMap.tbTorikomi) + '</td>';
       } else if (configMap.mode == 'studentmemo') {
-        str += configMap.tbMemoClsName;
-        str += printStudentMemo(configMap.targetYear,
-                                configMap.targetMonth,
-                                configMap.targetDay,
-                                stateMap.tc.gakunen,
-                                stateMap.tc.cls,
-                                stateMap.tc.students[i].bangou);
-        str += '</td>';
+        // 休学中の生徒は事由を表示
+        if (inKyuugaku != "") {
+          str += '<td>' + inKyuugaku + '</td>';
+        } else {
+          str += configMap.tbMemoClsName;
+          str += printStudentMemo(configMap.targetYear,
+                                  configMap.targetMonth,
+                                  configMap.targetDay,
+                                  stateMap.tc.gakunen,
+                                  stateMap.tc.cls,
+                                  stateMap.tc.students[i].bangou);
+          str += '</td>';
+        }
       }
       str += '</tr>';
       jqueryMap.$main.append(str);
