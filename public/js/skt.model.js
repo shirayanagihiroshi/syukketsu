@@ -19,10 +19,11 @@ skt.model = (function () {
       kindAndStudentSelectf, syukketsuInSyutteiSelectf,
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
-      readyMeiboIdList, getMeiboIdList,//関数
+      readyMeiboIdList, getMeiboIdList, getKyuugaku,//関数
       accessKey, userKind, name, targetClass, allClass,
       syukketsu, renraku, receiveAnotherLoginFlg,
-      calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList;//モジュールスコープ変数
+      calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList,
+      kyuugaku;//モジュールスコープ変数
 
   // この配列はreason1、reason2・・・と順番にならべなきゃだめ。
   const skReasons = ['reason1', 'reason2', 'reason3', 'reason4' , 'reason5'     , 'reason6'         , 'reason7', 'reason8'],
@@ -46,6 +47,7 @@ skt.model = (function () {
     kekka       = [];
     studentMemo = [];
     meiboIdList = [];
+    kyuugaku    = [];
   }
 
   initModule = function () {
@@ -82,7 +84,8 @@ skt.model = (function () {
 
     // カレンダー取得完了
     skt.data.registerReceive('readyCalendarResult', function (msg) {
-      calendar = msg.res;
+      calendar = msg.calendar;
+      kyuugaku = msg.kyuugaku;
 
       // ログイン時にみんな行うカレンダー取得
       if (msg.clientState == 'init') {
@@ -1413,6 +1416,9 @@ skt.model = (function () {
     return meiboIdList;
   }
 
+  getKyuugaku = function () {
+    return kyuugaku;
+  }
 
   return { initModule      : initModule,
           login            : login,
@@ -1463,6 +1469,7 @@ skt.model = (function () {
           isMyMemo         : isMyMemo,
           memoDeleted      : memoDeleted,
           readyMeiboIdList : readyMeiboIdList,
-          getMeiboIdList   : getMeiboIdList
+          getMeiboIdList   : getMeiboIdList,
+          getKyuugaku      : getKyuugaku
         };
 }());

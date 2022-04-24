@@ -101,8 +101,22 @@ io.on("connection", function (socket) {
 
   socket.on('readyCalendar', function (msg) {
     console.log("readyCalendar");
-
-    commonDBFind(msg, 'calendar', 'readyCalendarResult');
+    // ユーザ全員が必要とする情報だから、皆最初に取ってる。
+    // 元はカレンダーのみ取得する処理だったが、何度もやりとりを往復すると
+    // 遅くなりそうなのを気にして休学データを追加する際に、ここにぶっ込んだ。
+    // 分かりにくい気がするので設計としてはどうかと思う。
+    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
+      if (result.length != 0 && msg.AKey.token == result[0].token ) {
+        db.findManyDocuments('calendar', {}, {projection:{_id:0}}, function (resu) {
+          db.findManyDocuments('kyuugaku', {}, {projection:{_id:0}}, function (res) {
+            let obj = {calendar:resu, kyuugaku:res, clientState:msg.clientState};
+            io.to(socket.id).emit('readyCalendarResult', obj); // 送信者のみに送信
+          });
+        });
+      } else {
+        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
+      }
+    });
   });
 
   socket.on('getKekka', function (msg) {
