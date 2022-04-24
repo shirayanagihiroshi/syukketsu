@@ -370,10 +370,11 @@ skt.model = (function () {
     });
 
     // 休学データ登録完了
-    skt.data.registerReceive('updateSyukketsuResult', function (msg) {
+    skt.data.registerReceive('updateKyuugakuResult', function (msg) {
       // あまり良くないがモデルがもつデータを直接更新しているので
       // そのまま再描画する。
       skt.kyuugaku.redraw();
+      $.gevent.publish('cancelDialog', [{}]);
     });
 
 

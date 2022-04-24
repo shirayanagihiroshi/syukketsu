@@ -249,17 +249,11 @@ skt.kyuugaku = (function () {
     jqueryMap.$gakunenlist.change( function () {
       setDropDownList( Number( jqueryMap.$gakunenlist.val() ),
                        Number( jqueryMap.$clslist.val() ) );
-      // 一旦テーブルも削除して作り直し
-      jqueryMap.$main.children().remove();
-//      createTable(stateMap.targetSyussekibangou, stateMap.targetName);
     });
 
     jqueryMap.$clslist.change(function () {
       setDropDownList( Number( jqueryMap.$gakunenlist.val() ),
                        Number( jqueryMap.$clslist.val() ) );
-      // 一旦テーブルも削除して作り直し
-      jqueryMap.$main.children().remove();
-//      createTable(stateMap.targetSyussekibangou, stateMap.targetName);
     });
 
     jqueryMap.$memberlist.change( function () {
@@ -278,13 +272,7 @@ skt.kyuugaku = (function () {
       p = ml.students.find( f( Number( jqueryMap.$memberlist.val() ) ) );
       stateMap.targetSyussekibangou = p.bangou;
       stateMap.targetName           = p.name;
-
-      jqueryMap.$main.children().remove();
-//      createTable(stateMap.targetSyussekibangou, stateMap.targetName);
     });
-
-//    createTable(stateMap.targetSyussekibangou, stateMap.targetName);
-//    setDayButtons();
 
     jqueryMap.$update
       .click( verify );
@@ -316,6 +304,10 @@ skt.kyuugaku = (function () {
       }
     }
     return true;
+  }
+
+  redraw = function () {
+    showRegisteredList();
   }
 
   return {
