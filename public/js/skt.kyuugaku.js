@@ -26,7 +26,24 @@ skt.kyuugaku = (function () {
           + '</select>'
           + '<table class="skt-kyuugaku-main"></table>'
           + '<input class="skt-kyuugaku-insert" type="button" value="登録">'
-          + '<div class="skt-kyuugaku-notice">※生徒を選択してから、内容をチェックしてください。</dev>',
+          + '<div class="skt-kyuugaku-notice">※生徒を選択してから事由、期間を入力してください。</div>'
+          + '<div class="skt-kyuugaku-jiyuuT">事由：</div>'
+          + '<input type="text" class="skt-kyuugaku-jiyuu">'
+          + '<div class="skt-kyuugaku-term-start-yearT">年</div>'
+          + '<input type="text" class="skt-kyuugaku-term-start-year">'
+          + '<div class="skt-kyuugaku-term-start-monthT">月</div>'
+          + '<input type="text" class="skt-kyuugaku-term-start-month">'
+          + '<div class="skt-kyuugaku-term-start-dayT">日</div>'
+          + '<input type="text" class="skt-kyuugaku-term-start-day">'
+          + '<div class="skt-kyuugaku-term-kara">から</div>'
+          + '<div class="skt-kyuugaku-term-end-yearT">年</div>'
+          + '<input type="text" class="skt-kyuugaku-term-end-year">'
+          + '<div class="skt-kyuugaku-term-end-monthT">月</div>'
+          + '<input type="text" class="skt-kyuugaku-term-end-month">'
+          + '<div class="skt-kyuugaku-term-end-dayT">日</div>'
+          + '<input type="text" class="skt-kyuugaku-term-end-day">'
+          + '<hr class="skt-kyuugaku-separation">'
+          + '<div class="skt-kyuugaku-register"></div>',
         settable_map : {},
         allMeibo : {}
       },

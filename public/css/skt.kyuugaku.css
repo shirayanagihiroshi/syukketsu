@@ -6,7 +6,24 @@
 .skt-kyuugaku-title, .skt-kyuugaku-gakunen-title, .skt-kyuugaku-gakunen,
 .skt-kyuugaku-cls-title, .skt-kyuugaku-cls, .skt-kyuugaku-members-title,
 .skt-kyuugaku-members, .skt-kyuugaku-main, .skt-kyuugaku-insert,
-.skt-kyuugaku-notice
+.skt-kyuugaku-notice,
+.skt-kyuugaku-jiyuuT,
+.skt-kyuugaku-jiyuu,
+.skt-kyuugaku-term-start-yearT,
+.skt-kyuugaku-term-start-year,
+.skt-kyuugaku-term-start-monthT,
+.skt-kyuugaku-term-start-month,
+.skt-kyuugaku-term-start-dayT,
+.skt-kyuugaku-term-start-day,
+.skt-kyuugaku-term-kara,
+.skt-kyuugaku-term-end-yearT,
+.skt-kyuugaku-term-end-year,
+.skt-kyuugaku-term-end-monthT,
+.skt-kyuugaku-term-end-month,
+.skt-kyuugaku-term-end-dayT,
+.skt-kyuugaku-term-end-day,
+.skt-kyuugaku-separation,
+.skt-kyuugaku-register
  {
    position : absolute;
  }
@@ -55,9 +72,101 @@
   left : 400px;
 }
 
+.skt-kyuugaku-jiyuuT {
+  top  : 160px;
+  left : 10px;
+}
+
+.skt-kyuugaku-jiyuu {
+  top  : 160px;
+  left : 60px;
+}
+
+.skt-kyuugaku-term-start-yearT {
+  top  : 190px;
+  left : 70px;
+}
+
+.skt-kyuugaku-term-start-year {
+  top  : 190px;
+  left : 10px;
+  width : 50px;
+}
+
+.skt-kyuugaku-term-start-monthT {
+  top  : 190px;
+  left : 120px;
+}
+
+.skt-kyuugaku-term-start-month {
+  top  : 190px;
+  left : 90px;
+  width : 25px;
+}
+
+.skt-kyuugaku-term-start-dayT {
+  top  : 190px;
+  left : 170px;
+}
+
+.skt-kyuugaku-term-start-day {
+  top  : 190px;
+  left : 140px;
+  width : 25px;
+}
+
+.skt-kyuugaku-term-kara {
+  top  : 190px;
+  left : 200px;
+}
+
+.skt-kyuugaku-term-end-yearT {
+  top  : 190px;
+  left : 320px;
+}
+
+.skt-kyuugaku-term-end-year {
+  top  : 190px;
+  left : 260px;
+  width : 50px;
+}
+
+.skt-kyuugaku-term-end-monthT {
+  top  : 190px;
+  left : 370px;
+}
+
+.skt-kyuugaku-term-end-month {
+  top  : 190px;
+  left : 340px;
+  width : 25px;
+}
+
+.skt-kyuugaku-term-end-dayT {
+  top  : 190px;
+  left : 420px;
+}
+
+.skt-kyuugaku-term-end-day {
+  top  : 190px;
+  left : 390px;
+  width : 25px;
+}
+
+
+.skt-kyuugaku-separation {
+  top  : 240px;
+  width : 100%;
+}
+
+.skt-kyuugaku-register {
+  top  : 260px;
+  left : 10px;
+}
+
 .skt-kyuugaku-insert {
-  top  : 360px;
-  left : 50px;
+  top  : 165px;
+  left : 470px;
   /* font-size: 50px; */
   font-size: 30px;
   width: 130px;
@@ -68,8 +177,6 @@
 .skt-kyuugaku-insert:hover{
   background-color: red;
 }
-
-
 
 .skt-kyuugaku-notice {
   top  : 120px;
