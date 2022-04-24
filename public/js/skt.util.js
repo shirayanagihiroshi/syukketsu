@@ -20,7 +20,7 @@ skt.util = (function () {
       daySelectf, komaSelectf, komaSelectFromDayf, jyugyouSelectf,
       studentSelectf, sortCalendarf, sortKekkaf,
       kekkaStudentSelectf, clsSelectf, dayAndStudentSelectf,
-      nengappiAndJyugyouIdSelect, getStyleSheetValue;
+      nengappiAndJyugyouIdSelect, getStyleSheetValue, inKyuugaku;
 
   // パブリックコンストラクタ/makeError/
   makeError = function ( name_text, msg_text, data ) {
@@ -361,6 +361,35 @@ skt.util = (function () {
     return retValue;
   }
 
+  // 休学中なら事由を返し、そうでなければ "" を返す
+  inKyuugaku = function (gakunen, cls, bangou, y, m, d, kyuugakuData) {
+    // このdaycheckはmodelの他の関数の中にもある。あとで何とかすること。
+    let daycheck = function (y, m, d, sy, sm, sd, ey, em, ed) {
+        let targetDate = new Date(y, m - 1, d),
+          targett   = targetDate.getTime(),
+          startDate = new Date(sy, sm - 1, sd),
+          endDate   = new Date(ey, em - 1, ed);
+
+        if (startDate.getTime() <= targett && targett <= endDate.getTime()) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+
+    if (kyuugakuData != null && kyuugakuData.length != 0) {
+      let p = kyuugakuData.find(studentSelectf(gakunen, cls, bangou));
+
+      if (p != null) {
+        if (daycheck(y, m, d, p.sYear, p.sMonth, p.sDay, p.eYear, p.eMonth, p.eDay)) {
+          return p.jiyuu;
+        }
+      }
+    }
+
+    return "";
+  }
+
   return {
     makeError    : makeError,
     setConfigMap : setConfigMap,
@@ -381,6 +410,7 @@ skt.util = (function () {
     dayAndStudentSelectf   : dayAndStudentSelectf,
     sortKekkaf             : sortKekkaf,
     nengappiAndJyugyouIdSelect : nengappiAndJyugyouIdSelect,
-    getStyleSheetValue     : getStyleSheetValue
+    getStyleSheetValue     : getStyleSheetValue,
+    inKyuugaku             : inKyuugaku
   };
 }());

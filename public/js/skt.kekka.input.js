@@ -640,6 +640,7 @@ skt.kekkaInput = (function () {
 
   createTableInner = function (idx, jyugyou, kekkaPreviousKoma, kekka, kekkaNextKoma) {
     let str, personGakunen, personCls, zenkiKekkaCount, koukikekkaCount, temp,
+      inKyuugaku,
       f = skt.util.kekkaStudentSelectf,
       printKekka = function (targetKoma, gakunen, cls, bangou) {
         if ( (targetKoma != null) && (targetKoma.state == 'done')) {
@@ -678,17 +679,34 @@ skt.kekkaInput = (function () {
     str += '</td>';
 
     // 編集対象のコマ
-    str += '<td class=' + configMap.tbEditClsName + '>';
+    inKyuugaku = skt.util.inKyuugaku(personGakunen,
+                                     personCls,
+                                     jyugyou.students[idx].bangou,
+                                     configMap.targetYear,
+                                     configMap.targetMonth,
+                                     configMap.targetDay,
+                                     skt.model.getKyuugaku());
+    // 休学中なら入力させない
+    if (inKyuugaku != "") {
+      str += '<td>';
+    } else {
+      str += '<td class=' + configMap.tbEditClsName + '>';
+    }
     str += printKekka(kekka, personGakunen, personCls, jyugyou.students[idx].bangou);
     str += '</td>';
     if (configMap.mode == 'normal') {
-      str += '<td class=' + configMap.tbMemoClsName + '>';
-      str += printStudentMemo(configMap.targetYear,
-                              configMap.targetMonth,
-                              configMap.targetDay,
-                              personGakunen,
-                              personCls,
-                              jyugyou.students[idx].bangou);
+      // 休学中なら事由を表示
+      if (inKyuugaku != "") {
+        str += '<td>' + inKyuugaku + '</td>';
+      } else {
+        str += '<td class=' + configMap.tbMemoClsName + '>';
+        str += printStudentMemo(configMap.targetYear,
+                                configMap.targetMonth,
+                                configMap.targetDay,
+                                personGakunen,
+                                personCls,
+                                jyugyou.students[idx].bangou);
+      }
       str += '</td>';
     }
 
