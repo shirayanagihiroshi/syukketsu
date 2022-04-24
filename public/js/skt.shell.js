@@ -573,6 +573,7 @@ skt.shell = (function () {
       skt.kekkaJyugyou.removeKekkaJyugyou();
       skt.kekkaInput.removeKekkaInput();
       skt.calendar.removeCalendar();
+      skt.kyuugaku.removeKyuugaku();
 
     changeAnchorPart({
       status : 'matiuke'

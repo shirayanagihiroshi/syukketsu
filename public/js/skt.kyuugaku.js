@@ -24,7 +24,6 @@ skt.kyuugaku = (function () {
           + '<div class="skt-kyuugaku-members-title">氏名</div>'
           + '<select class="skt-kyuugaku-members">'
           + '</select>'
-          + '<table class="skt-kyuugaku-main"></table>'
           + '<input class="skt-kyuugaku-update" type="button" value="登録">'
           + '<div class="skt-kyuugaku-notice">※生徒を選択してから事由、期間を入力してください。</div>'
           + '<div class="skt-kyuugaku-jiyuuT">事由：</div>'
@@ -55,8 +54,9 @@ skt.kyuugaku = (function () {
         target                 : {}  // チェック済の登録対象
       },
       jqueryMap = {},
-      setJqueryMap, configModule, initModule, removeRenraku,
-      setDropDownList, verify, redraw, onUpdate;
+      setJqueryMap, configModule, initModule, removeKyuugaku,
+      setDropDownList, verify, redraw, onUpdate, showRegisteredList,
+      showRegisteredInner;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -70,7 +70,6 @@ skt.kyuugaku = (function () {
       $clslist      : $container.find( '.skt-kyuugaku-cls'              ),
       $memberlistT  : $container.find( '.skt-kyuugaku-members-title'    ),
       $memberlist   : $container.find( '.skt-kyuugaku-members'          ),
-      $main         : $container.find( '.skt-kyuugaku-main'             ),
       $notice       : $container.find( '.skt-kyuugaku-notice'           ),
       $update       : $container.find( '.skt-kyuugaku-update'           ),
       $jiyuu        : $container.find( '.skt-kyuugaku-jiyuu'            ),
@@ -79,7 +78,8 @@ skt.kyuugaku = (function () {
       $sDay         : $container.find( '.skt-kyuugaku-term-start-day'   ),
       $eYear        : $container.find( '.skt-kyuugaku-term-end-year'    ),
       $eMonth       : $container.find( '.skt-kyuugaku-term-end-month'   ),
-      $eDay         : $container.find( '.skt-kyuugaku-term-end-day'     )
+      $eDay         : $container.find( '.skt-kyuugaku-term-end-day'     ),
+      $regList      : $container.find( '.skt-kyuugaku-register'         )
     };
   }
 
@@ -93,12 +93,12 @@ skt.kyuugaku = (function () {
       eMonth  = jqueryMap.$eMonth.val(),
       eDay    = jqueryMap.$eDay.val();
 
-    if (jiyuu  == "" || 
-        sYear  == "" || isNaN(sYear)  || 
-        sMonth == "" || isNaN(sMonth) || 
-        sDay   == "" || isNaN(sDay)   || 
-        eYear  == "" || isNaN(eYear)  || 
-        eMonth == "" || isNaN(eMonth) || 
+    if (jiyuu  == "" ||
+        sYear  == "" || isNaN(sYear)  ||
+        sMonth == "" || isNaN(sMonth) ||
+        sDay   == "" || isNaN(sDay)   ||
+        eYear  == "" || isNaN(eYear)  ||
+        eMonth == "" || isNaN(eMonth) ||
         eDay   == "" || isNaN(eDay) ) {
 
       $.gevent.publish('invalidInput', [{errStr:'入力が不正です'}]);
@@ -172,6 +172,54 @@ skt.kyuugaku = (function () {
     stateMap.targetName           = ml.students[0].name;
   }
 
+  showRegisteredList = function () {
+    const msg = '登録済の休学データは以下';
+    let i, str,
+      kyuugakuData = skt.model.getKyuugaku();
+
+    str = msg;
+    str += '<ul>'
+
+    for (i = 0; i < kyuugakuData.length; i++) {
+      str += '<li>'
+      str += showRegisteredInner(kyuugakuData[i]);
+      str += '</li>'
+    }
+    str += '</ul>'
+
+    jqueryMap.$regList.html(str);
+  }
+
+  showRegisteredInner = function (person) {
+    let ml, p, str = "",
+      f = function (b) {
+        return function (target) {
+          if ( target.bangou == b ) {
+            return true;
+          }
+        }
+      };
+
+    ml = skt.model.getMemberList(configMap.allMeibo, person.gakunen, person.cls);
+    p = ml.students.find( f( person.bangou) );
+
+    str += skt.model.showGakunen(person.gakunen);
+    str += skt.model.showCls(person.gakunen, person.cls);
+    str += String(person.bangou) + '番';
+    str += ' '
+    str += p.name;
+    str += ' '
+    str += person.jiyuu;
+    str += ' '
+    str += String(person.sYear) + '年' + String(person.sMonth) + '月' + String(person.sDay) + '日';
+    str += ' '
+    str += 'から'
+    str += ' '
+    str += String(person.eYear) + '年' + String(person.eMonth) + '月' + String(person.eDay) + '日';
+
+    return str;
+  }
+
   //---パブリックメソッド---
   configModule = function ( input_map ) {
     skt.util.setConfigMap({
@@ -195,6 +243,8 @@ skt.kyuugaku = (function () {
 
     // とりあえず高校1年1組を表示
     setDropDownList(4, 1, true);
+
+    showRegisteredList();
 
     jqueryMap.$gakunenlist.change( function () {
       setDropDownList( Number( jqueryMap.$gakunenlist.val() ),
@@ -242,7 +292,7 @@ skt.kyuugaku = (function () {
     return true;
   }
 
-  removeRenraku = function ( ) {
+  removeKyuugaku = function ( ) {
     //初期化と状態の解除
     if ( jqueryMap != null ) {
       if ( jqueryMap.$container ) {
@@ -253,9 +303,16 @@ skt.kyuugaku = (function () {
         jqueryMap.$clslist.remove();
         jqueryMap.$memberlistT.remove();
         jqueryMap.$memberlist.remove();
-        jqueryMap.$main.remove();
         jqueryMap.$notice.remove();
         jqueryMap.$update.remove();
+        jqueryMap.$jiyuu.remove();
+        jqueryMap.$sYear.remove();
+        jqueryMap.$sMonth.remove();
+        jqueryMap.$sDay.remove();
+        jqueryMap.$eYear.remove();
+        jqueryMap.$eMonth.remove();
+        jqueryMap.$eDay.remove();
+        jqueryMap.$regList.remove();
       }
     }
     return true;
@@ -264,7 +321,7 @@ skt.kyuugaku = (function () {
   return {
     configModule  : configModule,
     initModule    : initModule,
-    removeRenraku : removeRenraku,
+    removeKyuugaku : removeKyuugaku,
     redraw        : redraw,
     Update        : onUpdate
   };
