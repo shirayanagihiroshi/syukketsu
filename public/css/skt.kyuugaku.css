@@ -1,0 +1,78 @@
+/*
+ * skt.kyuugaku.css
+ * 休学設定モジュール
+ */
+
+.skt-kyuugaku-title, .skt-kyuugaku-gakunen-title, .skt-kyuugaku-gakunen,
+.skt-kyuugaku-cls-title, .skt-kyuugaku-cls, .skt-kyuugaku-members-title,
+.skt-kyuugaku-members, .skt-kyuugaku-main, .skt-kyuugaku-insert,
+.skt-kyuugaku-notice
+ {
+   position : absolute;
+ }
+
+.skt-kyuugaku-gakunen-title, .skt-kyuugaku-cls-title, .skt-kyuugaku-members-title {
+  font-size: 20px;
+}
+
+.skt-kyuugaku-gakunen, .skt-kyuugaku-cls,.skt-kyuugaku-members {
+  font-size: 25px;
+}
+
+.skt-kyuugaku-title {
+  top  : 10px;
+  left : 10px;
+  font-size: 30px;
+}
+
+.skt-kyuugaku-gakunen-title {
+  top  : 65px;
+  left : 10px;
+}
+
+.skt-kyuugaku-gakunen {
+  top  : 65px;
+  left : 60px;
+}
+
+.skt-kyuugaku-cls-title {
+  top  : 65px;
+  left : 210px;
+}
+
+.skt-kyuugaku-cls {
+  top  : 65px;
+  left : 240px;
+}
+
+.skt-kyuugaku-members-title {
+  top  : 65px;
+  left : 350px;
+}
+
+.skt-kyuugaku-members {
+  top  : 65px;
+  left : 400px;
+}
+
+.skt-kyuugaku-insert {
+  top  : 360px;
+  left : 50px;
+  /* font-size: 50px; */
+  font-size: 30px;
+  width: 130px;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+  cursor: pointer;
+}
+.skt-kyuugaku-insert:hover{
+  background-color: red;
+}
+
+
+
+.skt-kyuugaku-notice {
+  top  : 120px;
+  left : 10px;
+  font-size : 20px;
+}

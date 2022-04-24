@@ -21,6 +21,7 @@ skt.shell = (function () {
                 setJikanwari    : true, //従属変数なし
                 setJyugyou      : true, //従属変数なし
                 kekkaInput      : true,
+                kyuugaku        : true  //従属変数なし
               },
       _status : {
         dialogKind : { login          : true,  // status : dialog のとき使用
@@ -155,6 +156,7 @@ skt.shell = (function () {
       skt.kekkaJikanwari.removeKekkaJikanwari();
       skt.kekkaJyugyou.removeKekkaJyugyou();
       skt.kekkaInput.removeKekkaInput();
+      skt.calendar.removeCalendar();
     };
 
     // ダイアログの場合
@@ -389,6 +391,13 @@ skt.shell = (function () {
 
       skt.kekkaInput.configModule(obj);
       skt.kekkaInput.initModule( jqueryMap.$content );
+
+    // 休学の設定画面の場合
+    } else if ( anchor_map.status == 'kyuugaku' ) {
+      setModal(false);
+      clearMainContent();
+      skt.kyuugaku.configModule({});
+      skt.kyuugaku.initModule( jqueryMap.$content );
     }
   }
 
@@ -557,6 +566,7 @@ skt.shell = (function () {
       skt.kekkaJikanwari.removeKekkaJikanwari();
       skt.kekkaJyugyou.removeKekkaJyugyou();
       skt.kekkaInput.removeKekkaInput();
+      skt.calendar.removeCalendar();
 
     changeAnchorPart({
       status : 'matiuke'
@@ -588,6 +598,10 @@ skt.shell = (function () {
       } else if ( msg_map.clientState == 'proxy' ) {
         changeAnchorPart({
           status : 'proxy'
+        });
+      } else if ( msg_map.clientState == 'kyuugaku' ) {
+        changeAnchorPart({
+          status : 'kyuugaku'
         });
       }
     });

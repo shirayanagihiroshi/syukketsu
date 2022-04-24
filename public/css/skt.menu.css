@@ -4,7 +4,7 @@
  */
 
 .skt-menu1, .skt-menu2, .skt-menu3, .skt-menu4, .skt-menu5, .skt-menu6,
-.skt-menu7, .skt-menu8
+.skt-menu7, .skt-menu8, .skt-menu9
  {
    position : absolute;
    margin   : 0;
@@ -55,6 +55,12 @@
 
 .skt-menu8{
   top    : 350px;
+  height : 50px;
+  width  : 200px;
+}
+
+.skt-menu9{
+  top    : 400px;
   height : 50px;
   width  : 200px;
 }

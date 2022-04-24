@@ -18,7 +18,8 @@ skt.menu = (function () {
           + '<div class="skt-menu6">出欠確認(担任)</div>',
         main_html4 : String()
           + '<div class="skt-menu7">代理で出欠(教務)</div>'
-          + '<div class="skt-menu8">日課の入力(教務)</div>',
+          + '<div class="skt-menu8">日課の入力(教務)</div>'
+          + '<div class="skt-menu9">休学の入力(教務)</div>',
         settable_map : {userKind : true},
         userKind : 8  // 8  事務 (8から始まってることに特に意味はない)
                       // 9  非常勤教諭
@@ -31,7 +32,7 @@ skt.menu = (function () {
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeMenu, onClickMenu1,
       onClickMenu2, onClickMenu3, onClickMenu4, onClickMenu5, onClickMenu6,
-      onClickMenu7, onClickMenu8,
+      onClickMenu7, onClickMenu8, onClickMenu9, 
       setColor;
 
   //---DOMメソッド---
@@ -53,6 +54,7 @@ skt.menu = (function () {
     if ( configMap.userKind == 11 ) {
       jqueryMap.$menu7 = $container.find( '.skt-menu7' );
       jqueryMap.$menu8 = $container.find( '.skt-menu8' );
+      jqueryMap.$menu9 = $container.find( '.skt-menu9' );
     }
   }
 
@@ -121,6 +123,14 @@ skt.menu = (function () {
     $.gevent.publish('inputNikka', [{}]);
     return false;
   }
+  // 休学の入力(教務)
+  onClickMenu9 = function () {
+    //console.log('onClickMenu9');
+    setColor(9);
+    skt.shell.resetDate(); //日付がずれたままだど使いにくいので、メニューを押したら今日に戻す
+    skt.model.readyAllClass('kyuugaku');
+    return false;
+  }
 
   //---ユーティリティメソッド---
   setColor = function (menuNum) {
@@ -136,6 +146,7 @@ skt.menu = (function () {
     if (configMap.userKind == 11) {
       menus.push(jqueryMap.$menu7);
       menus.push(jqueryMap.$menu8);
+      menus.push(jqueryMap.$menu9);
     }
 
     for (i = 0; i < menus.length; i++) {
@@ -200,6 +211,9 @@ skt.menu = (function () {
 
       jqueryMap.$menu8
         .click( onClickMenu8 );
+
+      jqueryMap.$menu9
+        .click( onClickMenu9 );
     }
 
     return true;
@@ -226,6 +240,9 @@ skt.menu = (function () {
         }
         if ( jqueryMap.$menu8 ) {
           jqueryMap.$menu8.remove();
+        }
+        if ( jqueryMap.$menu9 ) {
+          jqueryMap.$menu9.remove();
         }
       }
     }

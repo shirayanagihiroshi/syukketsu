@@ -326,6 +326,7 @@ skt.kekkaJikanwari = (function () {
       if ( jqueryMap.$container ) {
         jqueryMap.$headline.remove();
         jqueryMap.$notice.remove();
+        jqueryMap.$notice2.remove();
         jqueryMap.$jyugyou.remove();
         jqueryMap.$update.remove();
         jqueryMap.$addJyugyou.remove();
