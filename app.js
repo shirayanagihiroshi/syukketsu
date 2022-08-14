@@ -88,19 +88,19 @@ io.on("connection", function (socket) {
   });
 
   socket.on('getClassMeibo', function (msg) {
-    console.log("getClassMeibo");
+//    console.log("getClassMeibo");
 
     commonDBFind(msg, 'class', 'getClassMeiboResult');
   });
 
   socket.on('getAllMeibo', function (msg) {
-    console.log("getAllMeibo");
+//    console.log("getAllMeibo");
 
     commonDBFind(msg, 'class', 'getAllMeiboResult');
   });
 
   socket.on('readyCalendar', function (msg) {
-    console.log("readyCalendar");
+//    console.log("readyCalendar");
     // ユーザ全員が必要とする情報だから、皆最初に取ってる。
     // 元はカレンダーのみ取得する処理だったが、何度もやりとりを往復すると
     // 遅くなりそうなのを気にして休学データを追加する際に、ここにぶっ込んだ。
@@ -120,25 +120,25 @@ io.on("connection", function (socket) {
   });
 
   socket.on('getKekka', function (msg) {
-    console.log("getKekka");
+//    console.log("getKekka");
 
     commonDBFind(msg, 'kekka', 'getKekkaResult');
   });
 
   socket.on('getGoudouMeibo', function (msg) {
-    console.log("getGoudouMeibo");
+//    console.log("getGoudouMeibo");
 
     commonDBFind(msg, 'goudouMeibo', 'getGoudouMeiboResult');
   });
 
   socket.on('getStudentMemo', function (msg) {
-    console.log("getStudentMemo");
+//    console.log("getStudentMemo");
 
     commonDBFind(msg, 'studentMemo', 'getStudentMemoResult');
   });
 
   socket.on('getSyukketsu', function (msg) {
-    console.log("getSyukketsu");
+//    console.log("getSyukketsu");
     // アクセスキーの確認のために'user'にアクセスしている
     db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
       // ログイン中のユーザにのみ回答
@@ -441,7 +441,7 @@ io.on("connection", function (socket) {
   });
 
   socket.on('getMeiboIdList', function (msg) {
-    console.log("getMeiboIdList");
+//    console.log("getMeiboIdList");
     // アクセスキーの確認のために'user'にアクセスしている
     db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
       // ログイン中のユーザにのみ回答
@@ -483,6 +483,28 @@ io.on("connection", function (socket) {
     });
   });
 
+  // 既存のgetKekkaは（フロント側が）色々込み入ってしまってるので別にする
+  socket.on('getKekkaOnePerson', function (msg) {
+//    console.log("getKekkaOnePerson");
+    // アクセスキーの確認のために'user'にアクセスしている
+    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
+      // ログイン中のユーザにのみ回答
+      if (result.length != 0 && msg.AKey.token == result[0].token ) {
+        db.findManyDocuments('kekka', msg.SKey, {projection:{_id:0}}, function (res) {
+          let obj = {res:res, clientState:msg.clientState};
+          io.to(socket.id).emit('getKekkaOnePersonResult', obj); // 送信者のみに送信
+        });
+      } else {
+        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
+      }
+    });
+  });
+
+  socket.on('getUserInfo', function (msg) {
+    console.log("getUserInfo");
+
+    commonDBFind(msg, 'user', 'getUserInfoResult');
+  });
 
   // 切断
   socket.on("disconnect", () => {

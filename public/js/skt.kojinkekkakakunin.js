@@ -32,11 +32,15 @@ skt.kojinkekkakakunin = (function () {
       stateMap = {
         $container             : null,
         dropDownListPosCls     : 1,  // リストを操作し登録対象の生徒を選ぶ時に使う
-        target                 : {}  // 確認の対象
+        target                 : {}, // 確認の対象
+        onePersonKekka         : [], // 確認の対象の欠課データ
+        userInfo               : {}, // 氏名、授業名などが入ってる
+        sk                     : {}  // 出欠（欠課のうち何回が出席停止か調べる）
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKojinkekkakakunin,
-      setDropDownList, createTable, onShow;
+      setDropDownList, createTable, onShow, holdOnePersonKekka, holdUserInfo,
+      holdSyukketsu;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -77,7 +81,17 @@ skt.kojinkekkakakunin = (function () {
     stateMap.target.name    =  p.name;
 
     // 表示
-    jqueryMap.$notice.html(stateMap.target.name + 'の欠課は');
+    jqueryMap.$notice.html(stateMap.target.name + 'の欠課を表示します');
+    /*
+    skt.model.readyKekkaOnePerson('KekkaOnePerson',
+                                  stateMap.target.gakunen,
+                                  stateMap.target.cls,
+                                  stateMap.target.bangou);
+                                  */
+//    skt.model.readyUserInfo('KekkaOnePerson', 'hnittai016');
+    skt.model.readySyukketsuGakunenCls('kojinkekka',
+                                       stateMap.target.gakunen,
+                                       stateMap.target.cls);
     createTable(stateMap.target.gakunen, stateMap.target.cls, stateMap.target.bangou);
   }
 
@@ -185,6 +199,21 @@ skt.kojinkekkakakunin = (function () {
     return true;
   }
 
+  holdOnePersonKekka = function (msg) {
+    stateMap.onePersonKekka = msg.res;
+    console.log(stateMap.onePersonKekka);
+  }
+
+  holdUserInfo = function (msg) {
+    stateMap.userInfo = msg.res;
+    console.log(stateMap.userInfo);
+  }
+
+  holdSyukketsu = function (msg) {
+    stateMap.sk = skt.model.getSyukketsu();
+    console.log(stateMap.sk);
+  }
+
   removeKojinkekkakakunin = function ( ) {
     //初期化と状態の解除
     if ( jqueryMap != null ) {
@@ -205,6 +234,9 @@ skt.kojinkekkakakunin = (function () {
   return {
     configModule  : configModule,
     initModule    : initModule,
+    holdOnePersonKekka      : holdOnePersonKekka,
+    holdUserInfo            : holdUserInfo,
+    holdSyukketsu           : holdSyukketsu,
     removeKojinkekkakakunin : removeKojinkekkakakunin
   };
 }());

@@ -695,6 +695,10 @@ skt.shell = (function () {
       // 欠課入力における欠課の詳細(出停中の欠課のカウント)
       } else if ( msg_map.clientState == 'kekka' ) {
         skt.kekkaInput.readyDetailCompletion();
+
+      // 個人欠課確認
+      } else if ( msg_map.clientState == 'kojinkekka' ) {
+        skt.kojinkekkakakunin.holdSyukketsu();
       }
     });
 
@@ -1048,6 +1052,24 @@ skt.shell = (function () {
           dialogKind  : 'verifyKGUpdate'
         }
       });
+    });
+
+    // 指定１人の欠課データ取得完了
+    $.gevent.subscribe( $container, 'getKekkaOnePersonResult', function (event, msg_map) {
+      // 他のところとちょっと違う流れ。
+      // 他のところはmodelが一時的に情報を保持して
+      // それを機能モジュールがgetするケースが多いが
+      // そういうのが不要なんじゃないかと思い始めた。
+      skt.kojinkekkakakunin.holdOnePersonKekka(msg_map);
+    });
+
+    // ユーザ（教員）データ取得完了
+    $.gevent.subscribe( $container, 'getUserInfoResult', function (event, msg_map) {
+      // 他のところとちょっと違う流れ。
+      // 他のところはmodelが一時的に情報を保持して
+      // それを機能モジュールがgetするケースが多いが
+      // そういうのが不要なんじゃないかと思い始めた。
+      skt.kojinkekkakakunin.holdUserInfo(msg_map);
     });
 
     skt.acct.configModule({showStr : 'ログインする'});

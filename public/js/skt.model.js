@@ -19,7 +19,8 @@ skt.model = (function () {
       kindAndStudentSelectf, syukketsuInSyutteiSelectf,
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
-      readyMeiboIdList, getMeiboIdList, updateKyuugaku, getKyuugaku,//関数
+      readyMeiboIdList, getMeiboIdList, updateKyuugaku, getKyuugaku,
+      readyKekkaOnePerson, readyUserInfo, //関数
       accessKey, userKind, name, targetClass, allClass,
       syukketsu, renraku, receiveAnotherLoginFlg,
       calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList,
@@ -375,6 +376,16 @@ skt.model = (function () {
       // そのまま再描画する。
       skt.kyuugaku.redraw();
       $.gevent.publish('cancelDialog', [{}]);
+    });
+
+    // 指定の一人の欠課データ取得完了
+    skt.data.registerReceive('getKekkaOnePersonResult', function (msg) {
+      $.gevent.publish('getKekkaOnePersonResult', [msg]);
+    });
+
+    // ユーザ一人のデータ取得完了
+    skt.data.registerReceive('getUserInfoResult', function (msg) {
+      $.gevent.publish('getUserInfoResult', [msg]);
     });
 
 
@@ -1464,6 +1475,30 @@ skt.model = (function () {
     return kyuugaku;
   }
 
+  readyKekkaOnePerson = function (clientState, gakunen, cls, bangou) {
+    let queryObj;
+
+    queryObj = {AKey:{userId  : accessKey.userId,
+                      token   : accessKey.token},
+                SKey:{contents:{$elemMatch:{gakunen : gakunen,
+                                            cls     : cls,
+                                            bangou  : bangou}}},
+                clientState:clientState};
+
+    skt.data.sendToServer('getKekkaOnePerson',queryObj);
+  }
+
+  readyUserInfo = function (clientState, userId) {
+    let queryObj;
+
+    queryObj = {AKey : {userId : accessKey.userId,
+                        token  : accessKey.token},
+                SKey : {userId : userId},
+                clientState : clientState};
+
+    skt.data.sendToServer('getUserInfo',queryObj);
+  }
+
   return { initModule      : initModule,
           login            : login,
           logout           : logout,
@@ -1515,6 +1550,8 @@ skt.model = (function () {
           readyMeiboIdList : readyMeiboIdList,
           getMeiboIdList   : getMeiboIdList,
           updateKyuugaku   : updateKyuugaku,
-          getKyuugaku      : getKyuugaku
+          getKyuugaku      : getKyuugaku,
+          readyKekkaOnePerson : readyKekkaOnePerson,
+          readyUserInfo    : readyUserInfo
         };
 }());
