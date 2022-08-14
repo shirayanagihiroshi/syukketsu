@@ -21,7 +21,8 @@ skt.shell = (function () {
                 setJikanwari    : true, //従属変数なし
                 setJyugyou      : true, //従属変数なし
                 kekkaInput      : true,
-                kyuugaku        : true  //従属変数なし
+                kyuugaku        : true, //従属変数なし
+                kojinkekkakakunin : true //従属変数なし
               },
       _status : {
         dialogKind : { login          : true,  // status : dialog のとき使用
@@ -404,6 +405,12 @@ skt.shell = (function () {
       clearMainContent();
       skt.kyuugaku.configModule({});
       skt.kyuugaku.initModule( jqueryMap.$content );
+    // 個人の欠課確認画面
+    } else if (  anchor_map.status == 'kojinkekkakakunin' ) {
+      setModal(false);
+      clearMainContent();
+      skt.kojinkekkakakunin.configModule({});
+      skt.kojinkekkakakunin.initModule( jqueryMap.$content );
     }
   }
 
@@ -591,6 +598,10 @@ skt.shell = (function () {
       if ( msg_map.clientState == 'jimu' ) {
         changeAnchorPart({
            status : 'jimurenraku'
+        });
+      } else if ( msg_map.clientState == 'kojinkekka' ) {
+        changeAnchorPart({
+           status : 'kojinkekkakakunin'
         });
       } else if ( msg_map.clientState == 'schoolTotal' ) {
         let today = new Date();

@@ -12,14 +12,15 @@ skt.menu = (function () {
           + '<div class="skt-menu2">出欠連絡(事務)</div>'
           + '<div class="skt-menu3">出欠確認(全体)</div>',
         main_html2 : String()
-          + '<div class="skt-menu4">欠課入力</div>',
+          + '<div class="skt-menu4">欠課入力</div>'
+          + '<div class="skt-menu5">個人の欠課確認</div>',
         main_html3 : String()
-          + '<div class="skt-menu5">出欠入力(担任)</div>'
-          + '<div class="skt-menu6">出欠確認(担任)</div>',
+          + '<div class="skt-menu6">出欠入力(担任)</div>'
+          + '<div class="skt-menu7">出欠確認(担任)</div>',
         main_html4 : String()
-          + '<div class="skt-menu7">代理で出欠(教務)</div>'
-          + '<div class="skt-menu8">日課の入力(教務)</div>'
-          + '<div class="skt-menu9">休学の入力(教務)</div>',
+          + '<div class="skt-menu8">代理で出欠(教務)</div>'
+          + '<div class="skt-menu9">日課の入力(教務)</div>'
+          + '<div class="skt-menu10">休学の入力(教務)</div>',
         settable_map : {userKind : true},
         userKind : 8  // 8  事務 (8から始まってることに特に意味はない)
                       // 9  非常勤教諭
@@ -32,7 +33,7 @@ skt.menu = (function () {
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeMenu, onClickMenu1,
       onClickMenu2, onClickMenu3, onClickMenu4, onClickMenu5, onClickMenu6,
-      onClickMenu7, onClickMenu8, onClickMenu9, 
+      onClickMenu7, onClickMenu8, onClickMenu9, onClickMenu10,
       setColor;
 
   //---DOMメソッド---
@@ -46,15 +47,16 @@ skt.menu = (function () {
     };
     if ( configMap.userKind == 9 || configMap.userKind == 10 || configMap.userKind == 11  ) {
       jqueryMap.$menu4 = $container.find( '.skt-menu4' );
+      jqueryMap.$menu5 = $container.find( '.skt-menu5' );
     }
     if ( configMap.userKind == 10 || configMap.userKind == 11 ) {
-      jqueryMap.$menu5 = $container.find( '.skt-menu5' );
       jqueryMap.$menu6 = $container.find( '.skt-menu6' );
+      jqueryMap.$menu7 = $container.find( '.skt-menu7' );
     }
     if ( configMap.userKind == 11 ) {
-      jqueryMap.$menu7 = $container.find( '.skt-menu7' );
       jqueryMap.$menu8 = $container.find( '.skt-menu8' );
       jqueryMap.$menu9 = $container.find( '.skt-menu9' );
+      jqueryMap.$menu10 = $container.find( '.skt-menu10' );
     }
   }
 
@@ -92,41 +94,48 @@ skt.menu = (function () {
     skt.model.readyKekka('init');
     return false;
   }
-  // 出欠入力(担任)
+  // 個人欠課確認
   onClickMenu5 = function () {
-    //console.log('onClickMenu5');
     setColor(5);
+    // 全体の名簿は通常変わらないから、モデルは取得済なら問い合わせをせず完了する
+    skt.model.readyAllClass('kojinkekka');
+    return false;
+  }
+  // 出欠入力(担任)
+  onClickMenu6 = function () {
+    //console.log('onClickMenu6');
+    setColor(6);
     skt.shell.resetDate(); //日付がずれたままだど使いにくいので、メニューを押したら今日に戻す
     skt.model.setTargetClass('input');
     return false;
   }
   // 出欠確認(担任)
-  onClickMenu6 = function () {
-    //console.log('onClickMenu6');
-    setColor(6);
+  onClickMenu7 = function () {
+    //console.log('onClickMenu7');
+    setColor(7);
     skt.model.setTargetClass('count');
     return false;
   }
 
   // 代理で出欠(教務)
-  onClickMenu7 = function () {
-    //console.log('onClickMenu7');
-    setColor();
+  onClickMenu8 = function () {
+    //console.log('onClickMenu8');
+    setColor(8);
     skt.model.readyAllClass('proxy');
     return false;
   }
   // 日課の入力(教務)
-  onClickMenu8 = function () {
-    //console.log('onClickMenu8');
-    setColor(8);
+  onClickMenu9 = function () {
+    //console.log('onClickMenu9');
+    setColor(9);
     skt.shell.resetDate(); //日付がずれたままだど使いにくいので、メニューを押したら今日に戻す
     $.gevent.publish('inputNikka', [{}]);
     return false;
   }
   // 休学の入力(教務)
-  onClickMenu9 = function () {
-    //console.log('onClickMenu9');
-    setColor(9);
+  onClickMenu10 = function () {
+    //console.log('onClickMenu10');
+    setColor(10);
     skt.shell.resetDate(); //日付がずれたままだど使いにくいので、メニューを押したら今日に戻す
     skt.model.readyAllClass('kyuugaku');
     return false;
@@ -138,15 +147,16 @@ skt.menu = (function () {
 
     if (configMap.userKind == 9 || configMap.userKind == 10 || configMap.userKind == 11) {
       menus.push(jqueryMap.$menu4);
+      menus.push(jqueryMap.$menu5);
     }
     if (configMap.userKind == 10 || configMap.userKind == 11) {
-      menus.push(jqueryMap.$menu5);
       menus.push(jqueryMap.$menu6);
+      menus.push(jqueryMap.$menu7);
     }
     if (configMap.userKind == 11) {
-      menus.push(jqueryMap.$menu7);
       menus.push(jqueryMap.$menu8);
       menus.push(jqueryMap.$menu9);
+      menus.push(jqueryMap.$menu10);
     }
 
     for (i = 0; i < menus.length; i++) {
@@ -195,25 +205,27 @@ skt.menu = (function () {
     if ( configMap.userKind == 9 || configMap.userKind == 10 || configMap.userKind == 11) {
       jqueryMap.$menu4
         .click( onClickMenu4 );
+      jqueryMap.$menu5
+        .click( onClickMenu5 );
     }
 
     if ( configMap.userKind == 10 || configMap.userKind == 11) {
-      jqueryMap.$menu5
-        .click( onClickMenu5 );
-
       jqueryMap.$menu6
         .click( onClickMenu6 );
+
+      jqueryMap.$menu7
+        .click( onClickMenu7 );
     }
 
     if ( configMap.userKind == 11) {
-      jqueryMap.$menu7
-        .click( onClickMenu7 );
-
       jqueryMap.$menu8
         .click( onClickMenu8 );
 
       jqueryMap.$menu9
         .click( onClickMenu9 );
+
+      jqueryMap.$menu10
+        .click( onClickMenu10 );
     }
 
     return true;
@@ -243,6 +255,9 @@ skt.menu = (function () {
         }
         if ( jqueryMap.$menu9 ) {
           jqueryMap.$menu9.remove();
+        }
+        if ( jqueryMap.$menu10 ) {
+          jqueryMap.$menu10.remove();
         }
       }
     }
