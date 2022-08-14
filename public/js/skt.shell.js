@@ -159,6 +159,7 @@ skt.shell = (function () {
       skt.kekkaJyugyou.removeKekkaJyugyou();
       skt.kekkaInput.removeKekkaInput();
       skt.calendar.removeCalendar();
+      skt.kojinkekkakakunin.removeKojinkekkakakunin();
     };
 
     // ダイアログの場合

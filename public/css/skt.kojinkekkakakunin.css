@@ -6,7 +6,8 @@
 .skt-kojinkekkakakunin-gakunen-title, .skt-kojinkekkakakunin-gakunen,
 .skt-kojinkekkakakunin-cls-title,     .skt-kojinkekkakakunin-cls,
 .skt-kojinkekkakakunin-members-title, .skt-kojinkekkakakunin-members,
-.skt-kojinkekkakakunin-show,          .skt-kojinkekkakakunin-main
+.skt-kojinkekkakakunin-show,          .skt-kojinkekkakakunin-main,
+.skt-kojinkekkakakunin-notice
  {
    position : absolute;
  }
@@ -62,8 +63,13 @@
   background-color: red;
 }
 
+.skt-kojinkekkakakunin-notice {
+  top : 120px;
+  left: 10px;
+}
+
 .skt-kojinkekkakakunin-main {
-  top : 200px;
+  top : 150px;
   left: 10px;
   background : #DFC0E0;
   border-collapse:collapse;
