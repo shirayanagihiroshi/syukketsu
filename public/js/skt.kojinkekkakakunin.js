@@ -81,7 +81,7 @@ skt.kojinkekkakakunin = (function () {
     stateMap.target.name    =  p.name;
 
     // ちょっとした表示
-    jqueryMap.$notice.html(stateMap.target.name + 'の欠課を表示します');
+    jqueryMap.$notice.html(stateMap.target.name + 'の欠課を表示します。(参考：欠課時数が単位数×35の1/4以下の者には、単位を認定する。by教務内規)');
 
     // まず該当の生徒の欠課を取得 (次はholdOnePersonKekka)
     skt.model.readyKekkaOnePerson('KekkaOnePerson',
