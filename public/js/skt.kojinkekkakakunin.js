@@ -39,8 +39,8 @@ skt.kojinkekkakakunin = (function () {
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKojinkekkakakunin,
-      setDropDownList, createTable, userIdFilterf, getShimei, getJyugoumei, onShow,
-      holdOnePersonKekka, holdUserInfo, holdSyukketsu;
+      setDropDownList, createTable, userIdFilterf, getShimei, getJyugoumei,
+      getDetail, onShow, holdOnePersonKekka, holdUserInfo, holdSyukketsu;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -136,7 +136,7 @@ skt.kojinkekkakakunin = (function () {
 
   // 欠課の表示
   createTable = function () {
-    let str, i, jyugyou, kekkasPerJyugyou,
+    let str, i, jyugyou, kekkasPerJyugyou, detail, 
       hyoujizumiJyugyouList = [],
       f = function (userId, jyugyouId) {
         return function (target) {
@@ -153,17 +153,11 @@ skt.kojinkekkakakunin = (function () {
         }
       };
 
-//    stateMap.onePersonKekka
-//    stateMap.sk
-
-
-
-//    { "day" : 8, "koma" : 4, "month" : 4, "userId" : "hnittai044", "year" : 2022, "contents" : [ ], "jyugyouId" : "2", "memo" : "削除済", "state" : "none" }
-
-    console.log(stateMap.onePersonKekka);
+    // 欠課は日付順にしておく
+    stateMap.onePersonKekka.sort(skt.util.sortKekkaf);
 
     jqueryMap.$main.html("");
-    str =  '<tr><td>教員名</td><td>授業名</td><td>欠課時数</td></tr>';
+    str =  '<tr><td>教員名</td><td>授業名</td><td>欠課時数</td><td>うち出停中の欠課</td><td>欠課詳細</td></tr>';
     jqueryMap.$main.append(str);
 
     for (i = 0; i < stateMap.onePersonKekka.length; i++) {
@@ -174,20 +168,30 @@ skt.kojinkekkakakunin = (function () {
                                                                          stateMap.onePersonKekka[i].jyugyouId));
 
         str =  '<tr>';
-        str +=   '<td>'
+        str +=   '<td>';
         str +=     getShimei(stateMap.userInfo, stateMap.onePersonKekka[i].userId);
-        str +=   '</td>'
-        str +=   '<td>'
+        str +=   '</td>';
+        str +=   '<td>';
         str +=     getJyugoumei(stateMap.userInfo,
                                 stateMap.onePersonKekka[i].userId,
                                 stateMap.onePersonKekka[i].jyugyouId);
-        str +=   '</td>'
-        str +=   '<td>'
+        str +=   '</td>';
+        str +=   '<td>';
         str +=     String(kekkasPerJyugyou.length);
-        str +=   '</td>'
+        str +=   '</td>';
+
+        detail = getDetail(kekkasPerJyugyou);
+
+        str +=   '<td>';
+        str +=     String(detail.inSyutteiCount);
+        str +=   '</td>';
+        str +=   '<td>';
+        str +=     detail.detailStr;
+        str +=   '</td>';
+
         jqueryMap.$main.append(str);
 
-        // これは表示済にする。
+        // この授業の分は表示済にする。
         hyoujizumiJyugyouList.push({userId    : stateMap.onePersonKekka[i].userId,
                                     jyugyouId : stateMap.onePersonKekka[i].jyugyouId});
       } else {
@@ -240,6 +244,34 @@ skt.kojinkekkakakunin = (function () {
     }
 
     return( 'jyugyouId:' + String(jyugyouId) );
+  }
+
+  // skt.kekka.input.js のshowDetail()に類似のコードがある。
+  getDetail = function (kekkasPerJyugyou) {
+    let i, tempIdx,
+      inSyutteiCount = 0, // 欠課のうち、出席停止だった回数
+      detailStr = "",
+      f = skt.model.syukketsuInSyutteiSelectf;
+
+      for (i = 0; i < kekkasPerJyugyou.length; i++) {
+        tempIdx = stateMap.sk.findIndex(f(kekkasPerJyugyou[i].year,
+                                        kekkasPerJyugyou[i].month,
+                                        kekkasPerJyugyou[i].day,
+                                        stateMap.target.gakunen,
+                                        stateMap.target.cls,
+                                        stateMap.target.bangou));
+        if ( tempIdx != -1 ) {
+          inSyutteiCount++;
+        }
+        detailStr += String(kekkasPerJyugyou[i].month) + '/' + String(kekkasPerJyugyou[i].day) + ',';
+      }
+
+    if ( detailStr != "" ) {
+      detailStr= detailStr.slice(0, -1); //最後の ',' は邪魔なので削除
+    }
+
+    return { inSyutteiCount : inSyutteiCount,
+             detailStr      : detailStr      };
   }
 
   //---パブリックメソッド---
