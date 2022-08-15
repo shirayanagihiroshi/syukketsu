@@ -484,13 +484,14 @@ io.on("connection", function (socket) {
   });
 
   // 既存のgetKekkaは（フロント側が）色々込み入ってしまってるので別にする
+  // ついでに結果の項目を絞る
   socket.on('getKekkaOnePerson', function (msg) {
 //    console.log("getKekkaOnePerson");
     // アクセスキーの確認のために'user'にアクセスしている
     db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
       // ログイン中のユーザにのみ回答
       if (result.length != 0 && msg.AKey.token == result[0].token ) {
-        db.findManyDocuments('kekka', msg.SKey, {projection:{_id:0}}, function (res) {
+        db.findManyDocuments('kekka', msg.SKey, {projection:{_id:0, koma:0, contents:0, memo:0}}, function (res) {
           let obj = {res:res, clientState:msg.clientState};
           io.to(socket.id).emit('getKekkaOnePersonResult', obj); // 送信者のみに送信
         });
@@ -500,10 +501,20 @@ io.on("connection", function (socket) {
     });
   });
 
-  socket.on('getUserInfo', function (msg) {
-    console.log("getUserInfo");
-
-    commonDBFind(msg, 'user', 'getUserInfoResult');
+    // 出力を絞るのでcommonDBFindとは別に
+    socket.on('getUserInfo', function (msg) {
+    // アクセスキーの確認のために'user'にアクセスしている
+    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
+      // ログイン中のユーザにのみ回答
+      if (result.length != 0 && msg.AKey.token == result[0].token ) {
+        db.findManyDocuments('user', msg.SKey, {projection:{_id:0, userKind:0, token:0, passWord:0, jikanwari:0}}, function (res) {
+          let obj = {res:res, clientState:msg.clientState};
+          io.to(socket.id).emit('getUserInfoResult', obj); // 送信者のみに送信
+        });
+      } else {
+        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
+      }
+    });
   });
 
   // 切断

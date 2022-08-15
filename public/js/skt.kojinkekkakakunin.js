@@ -25,7 +25,7 @@ skt.kojinkekkakakunin = (function () {
           + '</select>'
           + '<input class="skt-kojinkekkakakunin-show" type="button" value="表示">'
           + '<div class="skt-kojinkekkakakunin-notice"></div>'
-          + '<table class="skt-kojinkekkakakunin-main"></table>',
+          + '<table border=1 class="skt-kojinkekkakakunin-main"></table>',
         settable_map : {},
         allMeibo : {}
       },
@@ -34,13 +34,13 @@ skt.kojinkekkakakunin = (function () {
         dropDownListPosCls     : 1,  // リストを操作し登録対象の生徒を選ぶ時に使う
         target                 : {}, // 確認の対象
         onePersonKekka         : [], // 確認の対象の欠課データ
-        userInfo               : {}, // 氏名、授業名などが入ってる
-        sk                     : {}  // 出欠（欠課のうち何回が出席停止か調べる）
+        userInfo               : {}, // 教員の氏名、授業名などが入ってる
+        sk                     : {}  // 出欠（欠課のうち何回が出席停止か調べる用）
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKojinkekkakakunin,
-      setDropDownList, createTable, onShow, holdOnePersonKekka, holdUserInfo,
-      holdSyukketsu;
+      setDropDownList, createTable, userIdFilterf, getShimei, getJyugoumei, onShow,
+      holdOnePersonKekka, holdUserInfo, holdSyukketsu;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -80,19 +80,14 @@ skt.kojinkekkakakunin = (function () {
     p = ml.students.find( f( stateMap.target.bangou ) );
     stateMap.target.name    =  p.name;
 
-    // 表示
+    // ちょっとした表示
     jqueryMap.$notice.html(stateMap.target.name + 'の欠課を表示します');
-    /*
+
+    // まず該当の生徒の欠課を取得 (次はholdOnePersonKekka)
     skt.model.readyKekkaOnePerson('KekkaOnePerson',
                                   stateMap.target.gakunen,
                                   stateMap.target.cls,
                                   stateMap.target.bangou);
-                                  */
-//    skt.model.readyUserInfo('KekkaOnePerson', 'hnittai016');
-    skt.model.readySyukketsuGakunenCls('kojinkekka',
-                                       stateMap.target.gakunen,
-                                       stateMap.target.cls);
-    createTable(stateMap.target.gakunen, stateMap.target.cls, stateMap.target.bangou);
   }
 
 
@@ -139,25 +134,113 @@ skt.kojinkekkakakunin = (function () {
     jqueryMap.$memberlist.val(1);
   }
 
-  createTable = function (gakunen, cls, bangou) {
-    let str;
+  // 欠課の表示
+  createTable = function () {
+    let str, i, jyugyou, kekkasPerJyugyou,
+      hyoujizumiJyugyouList = [],
+      f = function (userId, jyugyouId) {
+        return function (target) {
+          if ( (target.userId == userId) && (target.jyugyouId == jyugyouId) ) {
+            return true;
+          }
+        }
+      },
+      jyugyouSelectf = function (userId, jyugyouId) {
+        return function (target) {
+          if ( (target.userId == userId) && (target.jyugyouId == jyugyouId) && (target.state == "done")) {
+            return true;
+          }
+        }
+      };
 
-    str = '<tr>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '</tr>';
+//    stateMap.onePersonKekka
+//    stateMap.sk
+
+
+
+//    { "day" : 8, "koma" : 4, "month" : 4, "userId" : "hnittai044", "year" : 2022, "contents" : [ ], "jyugyouId" : "2", "memo" : "削除済", "state" : "none" }
+
+    console.log(stateMap.onePersonKekka);
+
+    jqueryMap.$main.html("");
+    str =  '<tr><td>教員名</td><td>授業名</td><td>欠課時数</td></tr>';
     jqueryMap.$main.append(str);
 
-    str = '<tr>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '<td>' + 'hoge' + '</td>';
-    str += '</tr>';
-    jqueryMap.$main.append(str);
+    for (i = 0; i < stateMap.onePersonKekka.length; i++) {
+      jyugyou = hyoujizumiJyugyouList.find(f(stateMap.onePersonKekka[i].userId, stateMap.onePersonKekka[i].jyugyouId));
+      if (jyugyou == null) {
+        //表示処理
+        kekkasPerJyugyou = stateMap.onePersonKekka.filter(jyugyouSelectf(stateMap.onePersonKekka[i].userId,
+                                                                         stateMap.onePersonKekka[i].jyugyouId));
+
+        str =  '<tr>';
+        str +=   '<td>'
+        str +=     getShimei(stateMap.userInfo, stateMap.onePersonKekka[i].userId);
+        str +=   '</td>'
+        str +=   '<td>'
+        str +=     getJyugoumei(stateMap.userInfo,
+                                stateMap.onePersonKekka[i].userId,
+                                stateMap.onePersonKekka[i].jyugyouId);
+        str +=   '</td>'
+        str +=   '<td>'
+        str +=     String(kekkasPerJyugyou.length);
+        str +=   '</td>'
+        jqueryMap.$main.append(str);
+
+        // これは表示済にする。
+        hyoujizumiJyugyouList.push({userId    : stateMap.onePersonKekka[i].userId,
+                                    jyugyouId : stateMap.onePersonKekka[i].jyugyouId});
+      } else {
+        // 表示済なので何もしない
+      }
+    }
 
   }
 
+  userIdFilterf = function (userId) {
+    return function (target) {
+      if ( (target.userId == userId) ) {
+        return true;
+      }
+    }
+  };
+
+  getShimei = function (usersInfo, userId) {
+    let p = usersInfo.filter(userIdFilterf(userId));
+
+    if (p != null) {
+      // IDで検索しているから、ヒットするのは1件のみのはず
+      return(p[0].name);
+    } else {
+      return('userId:' + String(userId));
+    }
+  }
+
+  getJyugoumei = function (usersInfo, userId, jyugyouId) {
+    let jyugyou,
+      p = usersInfo.filter(userIdFilterf(userId)),
+      f = function (target) {
+        return function (target) {
+          if ( (target.jyugyouId == jyugyouId) ) {
+            return true;
+          }
+        }
+      };
+
+    if ( (p != null) && (Object.keys(p[0]).indexOf('jyugyou') != -1) ) {
+      // IDで検索しているから、ヒットするのは1件のみのはず
+      jyugyou = p[0].jyugyou.filter(f(jyugyouId));
+      if ( jyugyou != null) {
+        if (Object.keys(jyugyou[0]).indexOf('tanni') != -1) {
+          return(jyugyou[0].name + '(' + String(jyugyou[0].tanni) + '単位)');
+        } else {
+          return(jyugyou[0].name);
+        }
+      }
+    }
+
+    return( 'jyugyouId:' + String(jyugyouId) );
+  }
 
   //---パブリックメソッド---
   configModule = function ( input_map ) {
@@ -201,17 +284,24 @@ skt.kojinkekkakakunin = (function () {
 
   holdOnePersonKekka = function (msg) {
     stateMap.onePersonKekka = msg.res;
-    console.log(stateMap.onePersonKekka);
-  }
 
-  holdUserInfo = function (msg) {
-    stateMap.userInfo = msg.res;
-    console.log(stateMap.userInfo);
+    // 次にこの生徒のクラスの出欠情報を取得 (次は holdSyukketsu)
+    skt.model.readySyukketsuGakunenCls('kojinkekka',
+                                       stateMap.target.gakunen,
+                                       stateMap.target.cls);
   }
 
   holdSyukketsu = function (msg) {
     stateMap.sk = skt.model.getSyukketsu();
-    console.log(stateMap.sk);
+
+    // 次に多分ユーザー情報を取得 (次は holdUserInfo)
+    skt.model.readyUserInfo('KekkaOnePerson');
+  }
+
+  holdUserInfo = function (msg) {
+    stateMap.userInfo = msg.res;
+
+    createTable();
   }
 
   removeKojinkekkakakunin = function ( ) {
@@ -225,6 +315,7 @@ skt.kojinkekkakakunin = (function () {
         jqueryMap.$memberlistT.remove();
         jqueryMap.$memberlist.remove();
         jqueryMap.$show.remove();
+        jqueryMap.$notice.remove();
         jqueryMap.$main.remove();
       }
     }

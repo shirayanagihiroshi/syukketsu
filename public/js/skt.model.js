@@ -1488,12 +1488,12 @@ skt.model = (function () {
     skt.data.sendToServer('getKekkaOnePerson',queryObj);
   }
 
-  readyUserInfo = function (clientState, userId) {
+  readyUserInfo = function (clientState) {
     let queryObj;
 
     queryObj = {AKey : {userId : accessKey.userId,
                         token  : accessKey.token},
-                SKey : {userId : userId},
+                SKey : {},
                 clientState : clientState};
 
     skt.data.sendToServer('getUserInfo',queryObj);
