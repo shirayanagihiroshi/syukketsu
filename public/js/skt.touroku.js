@@ -12,6 +12,7 @@ skt.touroku = (function () {
           + '<div class="skt-touroku-today">today</div>'
           + '<button class="skt-touroku-back">今日へ戻る</button>'
           + '<button class="skt-touroku-nextDay">nextDay</button>'
+          + '<button class="skt-touroku-calendar">暦</button>'
           + '<div class="skt-touroku-notice"></div>'
           + '<table class="skt-touroku-main"></table>'
           + '<button class="skt-touroku-update">登録</button>'
@@ -64,7 +65,7 @@ skt.touroku = (function () {
       setJqueryMap, configModule, initModule, removeTouroku,
       verify, onUpdate, onPrevious, onBack, onNext, createTable,
       setDayButtons, setNotice, setLeak, redrawTable, onToggle,
-      printStudentMemo;
+      printStudentMemo, onCalendar;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -75,6 +76,7 @@ skt.touroku = (function () {
       $today       : $container.find( '.skt-touroku-today' ),
       $back        : $container.find( '.skt-touroku-back' ),
       $nextDay     : $container.find( '.skt-touroku-nextDay' ),
+      $calendar    : $container.find( '.skt-touroku-calendar' ),
       $notice      : $container.find( '.skt-touroku-notice' ),
       $main        : $container.find( '.skt-touroku-main' ),
       $update      : $container.find( '.skt-touroku-update' ),
@@ -155,6 +157,10 @@ skt.touroku = (function () {
                                         stateMap.cl);
     d.mode = configMap.mode;
     $.gevent.publish('inputSkDayChange', [d]);
+  }
+
+  onCalendar = function () {
+    $.gevent.publish('calendarPick', []);
   }
 
   onToggle = function () {
@@ -584,6 +590,8 @@ skt.touroku = (function () {
       .click( onBack );
     jqueryMap.$nextDay
       .click( onNext );
+    jqueryMap.$calendar
+      .click( onCalendar );
     jqueryMap.$update
       .click( verify );
 
@@ -598,6 +606,7 @@ skt.touroku = (function () {
         jqueryMap.$today.remove();
         jqueryMap.$back.remove();
         jqueryMap.$nextDay.remove();
+        jqueryMap.$calendar.remove();
         jqueryMap.$notice.remove();
         jqueryMap.$main.remove();
         jqueryMap.$update.remove();

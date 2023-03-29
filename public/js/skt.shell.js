@@ -41,7 +41,8 @@ skt.shell = (function () {
                        kekkaReason    : true,  // status : dialog のとき使用
                        studentMemo    : true,  // status : dialog のとき使用
                        delStudentMemo : true,  // status : dialog のとき使用
-                       verifyKGUpdate : true}, // status : dialog のとき使用
+                       verifyKGUpdate : true,  // status : dialog のとき使用
+                       calendarPick   : true}, // status : dialog のとき使用
         year  : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         month : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         day   : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
@@ -148,6 +149,7 @@ skt.shell = (function () {
       skt.dialog.removeDialog();
       skt.dialogOkCancel.removeDialog();
       skt.dialogInput.removeDialog();
+      skt.dialogCalendarPick.removeDialog();
       skt.touroku.removeTouroku();
       skt.renraku.removeRenraku();
       skt.clsTotal.removeClsTotal();
@@ -271,6 +273,12 @@ skt.shell = (function () {
                                          okFunc  : skt.kyuugaku.Update,
                                          okStr   : 'ok'});
         skt.dialogOkCancel.initModule( jqueryMap.$container );
+      } else if (anchor_map._status.dialogKind == 'calendarPick') {
+        setModal(true); 
+        skt.dialogCalendarPick.configModule({targetYear  : stateMap.skYear,
+                                             targetMonth : stateMap.skMonth,
+                                             targetDay   : stateMap.skDay});
+        skt.dialogCalendarPick.initModule( jqueryMap.$container );
       }
 
 
@@ -280,6 +288,7 @@ skt.shell = (function () {
       skt.dialog.removeDialog();
       skt.dialogOkCancel.removeDialog();
       skt.dialogInput.removeDialog();
+      skt.dialogCalendarPick.removeDialog();
 
     // 出欠入力(担任)画面の場合
     } else if ( anchor_map.status == 'inputSyukketsu' ) {
@@ -1070,6 +1079,16 @@ skt.shell = (function () {
       // それを機能モジュールがgetするケースが多いが
       // そういうのが不要なんじゃないかと思い始めた。
       skt.kojinkekkakakunin.holdUserInfo(msg_map);
+    });
+
+    // カレンダーから日付選択ダイアログ表示
+    $.gevent.subscribe( $container, 'calendarPick', function (event, msg_map) {
+      changeAnchorPart({
+        status : 'dialog',
+        _status : {
+          dialogKind : 'calendarPick'
+        }
+      });
     });
 
     skt.acct.configModule({showStr : 'ログインする'});

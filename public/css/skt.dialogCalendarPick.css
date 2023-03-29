@@ -1,0 +1,97 @@
+/*
+ * skt.dialogCalendarPick.css
+ * カレンダーから日付選択モジュール
+ */
+
+ .skt-dialogCalendarPick,        .skt-dialogCalendarPick-title,
+ .skt-dialogCalendarPick-closer, .skt-dialogCalendarPick-previousMonth,
+ .skt-dialogCalendarPick-now,    .skt-dialogCalendarPick-nextMonth,
+ .skt-dialogCalendarPick-main
+ {
+   position: absolute;
+ }
+
+.skt-dialogCalendarPick {
+  margin-top : -200px;
+  margin-left : -200px;
+  top : 50%;
+  left : 50%;
+  width : 320px;
+  height : 410px;
+  border-radius : 3px;
+  z-index : 2;
+  background : #85B0FF;
+  position:fixed;
+}
+
+.skt-dialogCalendarPick-title {
+  top    : 4px;
+  left   : 4px;
+  font-size : 16px;
+}
+
+.skt-dialogCalendarPick-closer {
+  top    : 4px;
+  right  : 4px;
+  width  : 32px;
+  height : 32px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  background : #705AA3;
+}
+
+.skt-dialogCalendarPick-previousMonth {
+  top    : 40px;
+  left   : 10px;
+  width  : 80px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #E6E6FA;
+}}
+.skt-dialogCalendarPick-previousMonth:hover{
+  background-color: red;
+}
+
+.skt-dialogCalendarPick-now {
+  top : 40px;
+  left : 100px;
+  font-size: 20px;
+}
+
+.skt-dialogCalendarPick-nextMonth {
+  top : 40px;
+  left : 230px;
+  width : 80px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #E6E6FA;
+}
+.skt-dialogCalendarPick-nextMonth:hover{
+  background-color: red;
+}
+
+.skt-dialogCalendarPick-main {
+  top    : 80px;
+  left   : 30px;
+  border-collapse:collapse;
+}
+
+.skt-dialogCalendarPick-main th, .skt-dialogCalendarPick-main tr, .skt-dialogCalendarPick-main td {
+  font-size: 28px;
+  border : 1px solid black;
+}
+
+.skt-dialogCalendarPick-today {
+  background-color: orange;
+}
+
+.skt-dialogCalendarPick-table-title {
+  background-color: #DFC0E0;
+}
+
+.skt-dialogCalendarPick-table-body {
+  background-color: white;
+}
