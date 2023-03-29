@@ -65,7 +65,7 @@ skt.touroku = (function () {
       setJqueryMap, configModule, initModule, removeTouroku,
       verify, onUpdate, onPrevious, onBack, onNext, createTable,
       setDayButtons, setNotice, setLeak, redrawTable, onToggle,
-      printStudentMemo, onCalendar;
+      printStudentMemo, onCalendar, getMode;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -627,11 +627,16 @@ skt.touroku = (function () {
     }
   }
 
+  getMode = function () {
+    return configMap.mode;
+  }
+
   return {
     configModule  : configModule,
     initModule    : initModule,
     removeTouroku : removeTouroku,
     Update        : onUpdate,
-    redrawTable   : redrawTable
+    redrawTable   : redrawTable,
+    getMode       : getMode
   };
 }());

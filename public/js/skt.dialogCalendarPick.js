@@ -86,21 +86,18 @@ skt.dialogCalendarPick = (function () {
     return false;
   }
 
-  onSelect = function () {
+  onSelect = function (day) {
+    let obj = { year  : stateMap.year,
+                month : stateMap.month,
+                day   : day,
+                mode  : skt.touroku.getMode()};
+
+    $.gevent.publish('inputSkDayChange', [obj]);
   }
 
   //---ユーティリティメソッド---
   createTable = function () {
-
-    console.log("configMap.targetYear");
-    console.log(configMap.targetYear);
-    console.log("configMap.targetMonth");
-    console.log(configMap.targetMonth);
-    console.log("configMap.targetDay");
-    console.log(configMap.targetDay);
-
     jqueryMap.$main.html(makeCalendar(stateMap.year, stateMap.month));
-
   }
 
   setNow = function () {
@@ -182,14 +179,25 @@ skt.dialogCalendarPick = (function () {
     setNow();
     createTable();
 
+    // 重複して登録すると、何度もイベントが発行される。それを避けるため、一旦削除
+    $(document).off('click');
+
+    // カレンダーのセルをクリックしたら
+    $(document).on('click', '.' + configMap.tbBodyClsName, function (event) {
+      let dayStr = this.innerText;
+
+      // 日があるセルなら
+      if (dayStr != '' && !isNaN(dayStr)) {
+        onSelect(Number(dayStr));
+      }
+    });
+
     jqueryMap.$previousMonth
       .click( onPrevious );
     jqueryMap.$nextMonth
       .click( onNext );
     jqueryMap.$closer
       .click( onClose );
-    jqueryMap.$main
-      .click( onSelect );
 
     return true;
   }
