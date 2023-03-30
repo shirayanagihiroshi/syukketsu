@@ -125,10 +125,15 @@ skt.clsTotal = (function () {
     },
     header = String()
       + '<tr>'
-      + '<td>番号</td>'
-      + '<td>氏名</td>'
-      + '<td>回数まとめ</td>'
-      + '<td>日毎の詳細</td>'
+      + '<td class="skt-talbe-header">番号</td>'
+      + '<td class="skt-talbe-header">氏名</td>'
+      + '<td class="skt-talbe-header">出停</td>'
+      + '<td class="skt-talbe-header">病欠</td>'
+      + '<td class="skt-talbe-header">事故欠</td>'
+      + '<td class="skt-talbe-header">遅刻</td>'
+      + '<td class="skt-talbe-header">早退</td>'
+      + '<td class="skt-talbe-header">公欠</td>'
+      + '<td class="skt-talbe-header">日毎の詳細</td>'
       + '</tr>';
 
     jqueryMap.$main.append(header);
@@ -147,14 +152,29 @@ skt.clsTotal = (function () {
                                                                    configMap.endMonth,
                                                                    configMap.endDay);
         str += '<td>'
-        str += total.count;
+        if (total.syuttei   != null) { str += total.syuttei; }
+        str += '</td>';
+        str += '<td>'
+        if (total.byouketsu != null) { str += total.byouketsu; }
+        str += '</td>';
+        str += '<td>'
+        if (total.jikoketsu != null) { str += total.jikoketsu; }
+        str += '</td>';
+        str += '<td>'
+        if (total.tikoku    != null) { str += total.tikoku; }
+        str += '</td>';
+        str += '<td>'
+        if (total.soutai    != null) { str += total.soutai; }
+        str += '</td>';
+        str += '<td>'
+        if (total.kouketsu  != null) { str += total.kouketsu; }
         str += '</td>';
         str += '<td>';
         str += total.detail;
         str += '</td>';
 
       } else {
-        str += '<td></td><td></td>';
+        str += '<td></td><td></td><td></td><td></td><td></td><td></td><td></td>';
       }
       str += '</tr>';
       jqueryMap.$main.append(str);
@@ -167,6 +187,7 @@ skt.clsTotal = (function () {
 
     str = skt.model.showGakunen(stateMap.tc.gakunen);
     str += skt.model.showCls(stateMap.tc.gakunen, stateMap.tc.cls);
+    str += ' 回数まとめ'
 
     jqueryMap.$notice.html(str)
   }

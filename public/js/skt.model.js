@@ -27,8 +27,8 @@ skt.model = (function () {
       kyuugaku;//モジュールスコープ変数
 
   // この配列はreason1、reason2・・・と順番にならべなきゃだめ。
-  const skReasons = ['reason1', 'reason2', 'reason3', 'reason4' , 'reason5'     , 'reason6'         , 'reason7', 'reason8'],
-      skReasonStr = ['頭痛'   , '腹痛'   , '通院'   , '体調不良', 'ワクチン接種', '指定感染症の疑い', 'その他' , '受験'];
+  const skReasons = ['reason1', 'reason2', 'reason3', 'reason4' , 'reason5', 'reason6', 'reason7', 'reason8', 'reason9'],
+      skReasonStr = ['頭痛'   , '腹痛'   , '通院'   , '体調不良', '感染'   , '感染疑' , '受験'   , '不注意' , 'その他'];
 
   initLocal = function () {
     accessKey   = {};
@@ -550,18 +550,20 @@ skt.model = (function () {
             + '<tr>'
             + '<td class="skt-talbe-header">番号</td>'
             + '<td class="skt-talbe-header">氏名</td>'
-            + '<td class="skt-talbe-header">欠席</td>'
+            + '<td class="skt-talbe-header">出停</td>'
+            + '<td class="skt-talbe-header">病欠</td>'
+            + '<td class="skt-talbe-header">事故欠</td>'
             + '<td class="skt-talbe-header">遅刻</td>'
             + '<td class="skt-talbe-header">早退</td>'
-            + '<td class="skt-talbe-header">出停</td>'
             + '<td class="skt-talbe-header">公欠</td>'
             + '<td class="skt-talbe-header">頭痛</td>'
             + '<td class="skt-talbe-header">腹痛</td>'
             + '<td class="skt-talbe-header">通院</td>'
             + '<td class="skt-talbe-header">体調不良</td>'
-            + '<td class="skt-talbe-header">ワクチン</td>'
-            + '<td class="skt-talbe-header">指定感染症疑</td>'
+            + '<td class="skt-talbe-header">感染</td>'
+            + '<td class="skt-talbe-header">感染疑</td>'
             + '<td class="skt-talbe-header">受験</td>'
+            + '<td class="skt-talbe-header">不注意</td>'
             + '<td class="skt-talbe-header">その他</td>'
             + '<td class="skt-talbe-header">他理由</td>';
     if (jimurenrakuFlg) {
@@ -623,12 +625,13 @@ skt.model = (function () {
 
   // 出欠入力の一行あたりのhtmlを返す。
   skObj2Table = function (kind, reason, memo, clsSyukketsu, clsReason, clsMemo) {
-    // 出欠情報 欠席のみ 1
-    //         遅刻のみ 2
-    //         早退のみ 4
-    //         出停のみ 8
-    //         公欠飲み 16
-    //         遅刻と早退 6
+    // 出欠情報 出停のみ   1
+    //          病欠のみ   2
+    //          事故欠のみ 4
+    //          遅刻のみ   8
+    //          早退のみ   16
+    //          公欠のみ   32
+    //          遅刻と早退 24
     // 理由は単純に表の並び順に通番
     return String()
            + clsSyukketsu + (((kind & 1) == 1) ? '1' : "") + '</td>'
@@ -636,18 +639,16 @@ skt.model = (function () {
            + clsSyukketsu + (((kind & 4) == 4) ? '1' : "") + '</td>'
            + clsSyukketsu + (((kind & 8) == 8) ? '1' : "") + '</td>'
            + clsSyukketsu + (((kind & 16) == 16) ? '1' : "") + '</td>'
+           + clsSyukketsu + (((kind & 32) == 32) ? '1' : "") + '</td>'
            + clsReason    + ((reason == 1) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 2) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 3) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 4) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 5) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 6) ? '1' : "")     + '</td>'
-           // 後から「受験(reason:8)」を追加したから順番がすれてる。
-           // 後方互換性を無視するなら順に降ってもよいが
-           // それは年度変わり目じゃないとできない。
-           // (このシステムは年度をまたいで動かせる設計じゃない)
-           + clsReason    + ((reason == 8) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 7) ? '1' : "")     + '</td>'
+           + clsReason    + ((reason == 8) ? '1' : "")     + '</td>'
+           + clsReason    + ((reason == 9) ? '1' : "")     + '</td>'
            + clsMemo      + memo                           + '</td>';
   }
   // readySkTable と対になる。
@@ -686,57 +687,63 @@ skt.model = (function () {
     if (celldata.children[6].textContent == '1') {
       kind += 16;
     }
+    if (celldata.children[7].textContent == '1') {
+      kind += 32;
+    }
     // 入力値がおかしい
-    if (!(kind == 0 || kind == 1 || kind == 2 || kind == 4 || kind == 6 || kind == 8 || kind == 16)) {
+    if (!(kind == 0 || kind == 1 || kind == 2 || kind == 4 || kind == 8 || kind == 16 || kind == 32 || kind == 24)) {
       retObj.result = 2;
-      retObj.errStr = 'チェック内容が不正です。出席番号:' + String(updateObj.bangou);
+      retObj.errStr = '遅刻早退以外は、種別を1つだけチェックしてください。出席番号:' + String(updateObj.bangou);
       return retObj;
     } else {
       updateObj.kind = Number(kind);
     }
-    if (celldata.children[7].textContent == '1') { // 頭痛
+    if (celldata.children[8].textContent == '1') { // 頭痛
       reason = 1;
       reasonCount++;
     }
-    if (celldata.children[8].textContent == '1') { // 腹痛
+    if (celldata.children[9].textContent == '1') { // 腹痛
       reason = 2;
       reasonCount++;
     }
-    if (celldata.children[9].textContent == '1') { // 通院
+    if (celldata.children[10].textContent == '1') { // 通院
       reason = 3;
       reasonCount++;
     }
-    if (celldata.children[10].textContent == '1') { // 体調不良
+    if (celldata.children[11].textContent == '1') { // 体調不良
       reason = 4;
       reasonCount++;
     }
-    if (celldata.children[11].textContent == '1') { // ワクチン接種
+    if (celldata.children[12].textContent == '1') { // 感染
       reason = 5;
       reasonCount++;
     }
-    if (celldata.children[12].textContent == '1') { // 指定感染症の疑い
+    if (celldata.children[13].textContent == '1') { // 感染疑
       reason = 6;
-      reasonCount++;
-    }
-    if (celldata.children[13].textContent == '1') { // 受験
-    // 順番がずれてるのは意図的。skObj2Tableでのコメント参照
-      reason = 8;
       reasonCount++;
     }
     if (celldata.children[14].textContent == '1') { // 受験
       reason = 7;
       reasonCount++;
     }
+    if (celldata.children[15].textContent == '1') { // 不注意
+      reason = 8;
+      reasonCount++;
+    }
+    if (celldata.children[16].textContent == '1') { // その他
+      reason = 9;
+      reasonCount++;
+    }
     // 入力値がおかしい
     if ( 2 <= reasonCount ) {
       retObj.result = 2;
-      retObj.errStr = 'チェック内容が不正です。出席番号:' + String(updateObj.bangou);
+      retObj.errStr = '理由は1つだけチェックしてください。出席番号:' + String(updateObj.bangou);
       return retObj;
     } else if ( reasonCount == 1 )  {
       updateObj.reason = Number(reason);
     }
-    if (celldata.children[15].textContent != "") {
-      memo = celldata.children[15].textContent;
+    if (celldata.children[17].textContent != "") {
+      memo = celldata.children[17].textContent;
       updateObj.memo = memo;
     }
 
@@ -744,9 +751,12 @@ skt.model = (function () {
     // メモは出欠情報があるときだけ許可
     if ( ( kind != 0 && reason == 0 ) || ( kind == 0 && reason != 0 ) ||
          ( kind == 0 && reason == 0 && memo != "" ) ) {
-      retObj.result = 2;
-      retObj.errStr = 'チェック内容が不正です。出席番号:' + String(updateObj.bangou);
-      return retObj;
+      // 公欠は理由を求めなくてよい
+      if (!(kind == 32 && reason == 0)) {
+        retObj.result = 2;
+        retObj.errStr = '種別と理由はいずれもチェックしてください。出席番号:' + String(updateObj.bangou);
+        return retObj;
+      }
     }
 
     // 何かしらの入力があれば
@@ -788,24 +798,28 @@ skt.model = (function () {
       if ( p != null) {
         //retStr += p.name;
         if ((p.kind & 1) == 1) {
-          retStr += '欠席';
-        }
-        if ((p.kind & 2) == 2) {
-          retStr += '遅刻';
-        }
-        if ((p.kind & 4) == 4) {
-          retStr += '早退';
-        }
-        if ((p.kind & 8) == 8) {
           retStr += '出停';
         }
+        if ((p.kind & 2) == 2) {
+          retStr += '病欠';
+        }
+        if ((p.kind & 4) == 4) {
+          retStr += '事故欠';
+        }
+        if ((p.kind & 8) == 8) {
+          retStr += '遅刻';
+        }
         if ((p.kind & 16) == 16) {
+          retStr += '早退';
+        }
+        if ((p.kind & 32) == 32) {
           retStr += '公欠';
         }
 
-        retStr += ':';
-
-        retStr += skReasonStr[p.reason-1];
+        if (!((p.kind & 32) == 32)) { //公欠は理由を問わない
+          retStr += ':';
+          retStr += skReasonStr[p.reason-1];
+        }
 
         if ( p.memo != null ) {
           if ( p.memo != "" ) {
@@ -822,8 +836,7 @@ skt.model = (function () {
   // もし欠席してなければ、””を返す。
   // syukketsuList は syukketsu collection を学年、クラスで検索したもの
   skCountPerPerson = function (bangou, syukketsuList, startYear, startMonth, startDay, endYear, endMonth, endDay) {
-    let totalPerKind,
-        retStr = "",
+    let totalPerKind, syutteiStr, byouketsuStr, jikoketsuStr, tikokuStr, soutaiStr, kouketsuStr,
         retDetail = "",
         selectBangou = function ( bangou ) {
           return function ( target ) {
@@ -874,7 +887,8 @@ skt.model = (function () {
         cKind2 = {},
         cKind3 = {},
         cKind4 = {},
-        cKind5 = {};
+        cKind5 = {},
+        cKind6 = 0; // 公欠は理由を求めないので特別扱い
 
     if ( syukketsuList != null && syukketsuList.length != 0 ) {
 
@@ -883,6 +897,7 @@ skt.model = (function () {
       resetCounter(cKind3);
       resetCounter(cKind4);
       resetCounter(cKind5);
+      cKind6 = 0; // 公欠は理由を求めないので特別扱い
 
       // 日毎の繰り返し
       syukketsuList.forEach( function ( target ) {
@@ -908,6 +923,9 @@ skt.model = (function () {
               if ( (p.kind & 16) == 16 ) {
                 countUp( cKind5, p.reason );
               }
+              if ( (p.kind & 32) == 32 ) {
+                cKind6++;// 公欠は理由を求めないので特別扱い
+              }
 
               // 集計ついでに詳細も追記してゆく
               retDetail += String(target.month) + '/'+ String(target.day) + rnObj2Htm(bangou, [p], "") + ' ';
@@ -918,28 +936,36 @@ skt.model = (function () {
       // 数え終えたので、それを表示
       totalPerKind = countTotalPerKind(cKind1);
       if ( totalPerKind != 0 ) {
-        retStr = '欠席' + String(totalPerKind) + '(' + showReason(cKind1) + '),' ;
+        syutteiStr   = String(totalPerKind) + '(' + showReason(cKind1) + ')' ;
       }
       totalPerKind = countTotalPerKind(cKind2);
       if ( totalPerKind != 0 ) {
-        retStr += '遅刻' + String(totalPerKind) + '(' + showReason(cKind2) + '),';
+        byouketsuStr = String(totalPerKind) + '(' + showReason(cKind2) + ')';
       }
       totalPerKind = countTotalPerKind(cKind3);
       if ( totalPerKind != 0 ) {
-        retStr += '早退' + String(totalPerKind) + '(' + showReason(cKind3) + '),';
+        jikoketsuStr = String(totalPerKind) + '(' + showReason(cKind3) + ')';
       }
       totalPerKind = countTotalPerKind(cKind4);
       if ( totalPerKind != 0 ) {
-        retStr += '出停' + String(totalPerKind) + '(' + showReason(cKind4) + '),';
+        tikokuStr    = String(totalPerKind) + '(' + showReason(cKind4) + ')';
       }
       totalPerKind = countTotalPerKind(cKind5);
       if ( totalPerKind != 0 ) {
-        retStr += '公欠' + String(totalPerKind) + '(' + showReason(cKind5) + '),';
+        soutaiStr    = String(totalPerKind) + '(' + showReason(cKind5) + ')';
       }
-      if (retStr != "") { retStr= retStr.slice(0, -1); }//最後の ',' は邪魔なので削除
+      if ( cKind6 != 0 ) {
+        kouketsuStr  = String(cKind6);
+      }
     }
 
-    return {count:retStr, detail:retDetail};
+    return { syuttei   : syutteiStr,
+             byouketsu : byouketsuStr,
+             jikoketsu : jikoketsuStr,
+             tikoku    : tikokuStr,
+             soutai    : soutaiStr,
+             kouketsu  : kouketsuStr,
+             detail    : retDetail };
   }
 
   readyTodayAll = function (clientState, y, m, d) {
@@ -972,6 +998,7 @@ skt.model = (function () {
         ckind3 = 0, mkind3 = "",
         ckind4 = 0, mkind4 = "",
         ckind5 = 0, mkind5 = "",
+        ckind6 = 0, mkind6 = "",
         num = syukketsuList.length,
         showReason = function (reason) {
           return skReasonStr[reason-1];
@@ -1001,7 +1028,7 @@ skt.model = (function () {
             if (type == true) {
               mkind1 += String(syukketsuList[i].bangou) + ',';
             } else {
-              str += makeJimurenrakuStr(' 欠席', syukketsuList[i]);
+              str += makeJimurenrakuStr(' 出停', syukketsuList[i]);
             }
           }
           if ( (syukketsuList[i].kind & 2) == 2 ) {
@@ -1009,7 +1036,7 @@ skt.model = (function () {
             if (type == true) {
               mkind2 += String(syukketsuList[i].bangou) + ',';
             } else {
-              str += makeJimurenrakuStr(' 遅刻', syukketsuList[i]);
+              str += makeJimurenrakuStr(' 病欠', syukketsuList[i]);
             }
           }
           if ( (syukketsuList[i].kind & 4) == 4 ) {
@@ -1017,7 +1044,7 @@ skt.model = (function () {
             if (type == true) {
               mkind3 += String(syukketsuList[i].bangou) + ',';
             } else {
-              str += makeJimurenrakuStr(' 早退', syukketsuList[i]);
+              str += makeJimurenrakuStr(' 事故欠', syukketsuList[i]);
             }
           }
           if ( (syukketsuList[i].kind & 8) == 8 ) {
@@ -1025,13 +1052,21 @@ skt.model = (function () {
             if (type == true) {
               mkind4 += String(syukketsuList[i].bangou) + ',';
             } else {
-              str += makeJimurenrakuStr(' 出停', syukketsuList[i]);
+              str += makeJimurenrakuStr(' 遅刻', syukketsuList[i]);
             }
           }
           if ( (syukketsuList[i].kind & 16) == 16 ) {
             ckind5++;
             if (type == true) {
               mkind5 += String(syukketsuList[i].bangou) + ',';
+            } else {
+              str += makeJimurenrakuStr(' 早退', syukketsuList[i]);
+            }
+          }
+          if ( (syukketsuList[i].kind & 32) == 32 ) {
+            ckind6++;
+            if (type == true) {
+              mkind6 += String(syukketsuList[i].bangou) + ',';
             } else {
               str += makeJimurenrakuStr(' 公欠', syukketsuList[i]);
             }
@@ -1046,23 +1081,27 @@ skt.model = (function () {
         if (mkind3 != "") { mkind3 = mkind3.slice(0, -1); }
         if (mkind4 != "") { mkind4 = mkind4.slice(0, -1); }
         if (mkind5 != "") { mkind5 = mkind5.slice(0, -1); }
+        if (mkind6 != "") { mkind6 = mkind6.slice(0, -1); }
         // 数え終えたら出力
         if (ckind1 != 0) {
-          str = '欠席:' + String(ckind1) +'名(' + mkind1 + '),';
+          str = '出停:' + String(ckind1) +'名(' + mkind1 + '),';
         }
         if (ckind2 != 0) {
-          str += '遅刻:' + String(ckind2) +'名(' + mkind2 + '),';
+          str += '病欠:' + String(ckind2) +'名(' + mkind2 + '),';
         }
         if (ckind3 != 0) {
-          str += '早退:' + String(ckind3) +'名(' + mkind3 + '),';
+          str += '事故欠:' + String(ckind3) +'名(' + mkind3 + '),';
         }
         if (ckind4 != 0) {
-          str += '出停:' + String(ckind4) +'名(' + mkind4 + '),';
+          str += '遅刻:' + String(ckind4) +'名(' + mkind4 + '),';
         }
         if (ckind5 != 0) {
-          str += '公欠:' + String(ckind5) +'名(' + mkind5 + '),';
+          str += '早退:' + String(ckind5) +'名(' + mkind5 + '),';
         }
-        if (ckind1 == 0 && ckind2 == 0 && ckind3 == 0 && ckind4 == 0 && ckind5 == 0) {
+        if (ckind6 != 0) {
+          str += '公欠:' + String(ckind6) +'名(' + mkind6 + '),';
+        }
+        if (ckind1 == 0 && ckind2 == 0 && ckind3 == 0 && ckind4 == 0 && ckind5 == 0 && ckind6 == 0) {
           str = '皆出席';
         } else {
           str = str.slice(0, -1); //最後の ',' は邪魔なので削除
