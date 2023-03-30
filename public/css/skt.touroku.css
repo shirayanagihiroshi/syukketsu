@@ -92,6 +92,10 @@
   background : #DFC0E0;
 }
 
+.skt-touroku-main2 {
+  background : #E5D5E5;
+}
+
 .skt-touroku-main th, .skt-touroku-main tr, .skt-touroku-main td {
   font-size: 18px;
   border : 1px solid black;
@@ -116,8 +120,24 @@
   background : #FE7575;
 }
 
+.skt-touroku-sk2 {
+  background : #FAA0A0;
+}
+
+.skt-touroku-kk {
+  background : #B0C4DE;
+}
+
+.skt-touroku-kk2 {
+  background : #C0D8F0;
+}
+
 .skt-touroku-re {
   background : #FFA078;
+}
+
+.skt-touroku-re2 {
+  background : #FFC090;
 }
 
 .skt-touroku-edimemo {

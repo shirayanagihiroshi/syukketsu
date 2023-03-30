@@ -23,14 +23,26 @@ skt.touroku = (function () {
             + '<div class="skt-toggle-circle"></div>'
             + '<div class="skt-touroku-mode-title"></div>'
           + '</label>',
+        tbMain2 : String()
+          + '<td class="skt-touroku-main2">',
         tbSyukketsu : String()
           + '<td class="skt-touroku-edi skt-touroku-sk">',
+        tbSyukketsu2 : String()
+          + '<td class="skt-touroku-edi skt-touroku-sk2">',
+        tbKouketsu : String()
+          + '<td class="skt-touroku-edi skt-touroku-kk">',
+        tbKouketsu2 : String()
+          + '<td class="skt-touroku-edi skt-touroku-kk2">',
         tbReason    : String()
           + '<td class="skt-touroku-edi skt-touroku-re">',
+        tbReason2    : String()
+          + '<td class="skt-touroku-edi skt-touroku-re2">',
         tbMemo      : String()
           + '<td class="skt-touroku-edimemo">',
         tbToInputMemoClsName : String()
           + '<td class="skt-touroku-memoInput">',
+        tbToInputMemoClsName2 : String()
+          + '<td class="skt-touroku-memoInput skt-touroku-main2">',
         tbToDelMemoClsName : String()
           + '<li class="skt-touroku-memoDelete">',
         tbMemoClsName : String()
@@ -241,15 +253,35 @@ skt.touroku = (function () {
         if (inKyuugaku != "") {
           tablePart = skt.model.readySkTable(members, (i + 1), '<td>', '<td>', '<td>');
         } else {
-          tablePart = skt.model.readySkTable(members, (i + 1), configMap.tbSyukketsu,
-                                                               configMap.tbReason,
-                                                               configMap.tbMemo);
+          if (i % 2 == 0) { //しましま模様にして見やすいように。挙動は変わらない。
+            tablePart = skt.model.readySkTable(members, (i + 1), configMap.tbSyukketsu,
+                                                                 configMap.tbKouketsu,
+                                                                 configMap.tbReason,
+                                                                 configMap.tbMemo);
+          } else {
+            tablePart = skt.model.readySkTable(members, (i + 1), configMap.tbSyukketsu2,
+                                                                 configMap.tbKouketsu2,
+                                                                 configMap.tbReason2,
+                                                                 configMap.tbMemo);
+          }
         }
       }
 
       str = '<tr>';
-      str += '<td>' + stateMap.tc.students[i].bangou + '</td>';
-      str += configMap.tbToInputMemoClsName + stateMap.tc.students[i].name + '</td>';
+
+      if (i % 2 == 0) { //しましま模様にして見やすいように。挙動は変わらない。
+        str += '<td>';
+      } else {
+        str += configMap.tbMain2;
+      }
+      str += stateMap.tc.students[i].bangou + '</td>';
+
+      if (i % 2 == 0) {
+        str += configMap.tbToInputMemoClsName;
+      } else {
+        str += configMap.tbToInputMemoClsName2;
+      }
+      str += stateMap.tc.students[i].name + '</td>';
 
       if (configMap.mode == 'normal') {
         str += tablePart;
@@ -510,6 +542,7 @@ skt.touroku = (function () {
           newTd += skt.model.skObj2Table(p.kind, p.reason,
                                          (p.memo != null) ? p.memo : "",
                                          configMap.tbSyukketsu,
+                                         configMap.tbKouketsu,
                                          configMap.tbReason,
                                          configMap.tbMemo);
           newTd += '<td>' + rnTd + '</td>';

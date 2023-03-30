@@ -576,7 +576,7 @@ skt.model = (function () {
   // 出欠入力テーブルについて
   // 出欠入力の一行あたりのhtml（氏名の次から）を返す。
   // ここが変わるとときは、多分getSkTableHeaderも連動して変わる
-  readySkTable = function (skMenbers, syussekibangou, clsSyukketsu, clsReason, clsMemo) {
+  readySkTable = function (skMenbers, syussekibangou, clsSyukketsu, clsKouketsu, clsReason, clsMemo) {
     let personData,
         kind = 0,
         reason = 0,
@@ -620,11 +620,11 @@ skt.model = (function () {
           }
         }
 
-    return skObj2Table( kind, reason, memo, clsSyukketsu, clsReason, clsMemo );
+    return skObj2Table( kind, reason, memo, clsSyukketsu, clsKouketsu, clsReason, clsMemo );
   }
 
   // 出欠入力の一行あたりのhtmlを返す。
-  skObj2Table = function (kind, reason, memo, clsSyukketsu, clsReason, clsMemo) {
+  skObj2Table = function (kind, reason, memo, clsSyukketsu, clsKouketsu, clsReason, clsMemo) {
     // 出欠情報 出停のみ   1
     //          病欠のみ   2
     //          事故欠のみ 4
@@ -639,7 +639,7 @@ skt.model = (function () {
            + clsSyukketsu + (((kind & 4) == 4) ? '1' : "") + '</td>'
            + clsSyukketsu + (((kind & 8) == 8) ? '1' : "") + '</td>'
            + clsSyukketsu + (((kind & 16) == 16) ? '1' : "") + '</td>'
-           + clsSyukketsu + (((kind & 32) == 32) ? '1' : "") + '</td>'
+           + clsKouketsu + (((kind & 32) == 32) ? '1' : "") + '</td>'
            + clsReason    + ((reason == 1) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 2) ? '1' : "")     + '</td>'
            + clsReason    + ((reason == 3) ? '1' : "")     + '</td>'
