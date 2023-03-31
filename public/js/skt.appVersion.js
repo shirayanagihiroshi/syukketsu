@@ -7,7 +7,7 @@ skt.appVersion = (function () {
   'use strict';
 
   var initModule, show, zenkiP, koukiP,
-      ver = '1.7';
+      ver = '1.8';
 
   initModule      = function () {};
 
