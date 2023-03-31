@@ -14,6 +14,8 @@ skt.schoolTotal = (function () {
           + '<div class="skt-schoolTotal-title"></div>'
           + '<table class="skt-schoolTotal-main"></table>',
         del_button : 'skt-schoolTotal-del',
+        tbMain2 : String()
+          + '<td class="skt-schoolTotal-main2">',
         settable_map : {year  : true,
                         month : true,
                         day   : true},
@@ -90,6 +92,13 @@ skt.schoolTotal = (function () {
         }
       };
     },
+    shimashimaTab = function (i, tabA, tabB) {
+      if (i % 2 == 0) {
+        return tabA;
+      } else {
+        return tabB
+      }
+    },
     header = String()
       + '<tr>'
       + '<td>学年</td>'
@@ -105,14 +114,14 @@ skt.schoolTotal = (function () {
     for (i = 0;i < num; i++) {
 
       str = '<tr>';
-      str += '<td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2 );
       str += skt.model.showGakunen(configMap.allMeibo[i].gakunen);
       str += '</td>';
-      str += '<td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2 );
       str += skt.model.showCls(configMap.allMeibo[i].gakunen,
                                configMap.allMeibo[i].cls);
       str += '</td>';
-      str += '<td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2 );
 
       if (stateMap.sk != null) {
         let oneCls = stateMap.sk.find(selectf(configMap.allMeibo[i].gakunen,
@@ -125,7 +134,7 @@ skt.schoolTotal = (function () {
 
       }
       str += '</td>';
-      str += '<td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2 );
 
       if (stateMap.rn != null) {
         let oneCls = stateMap.rn.filter(selectf(configMap.allMeibo[i].gakunen,

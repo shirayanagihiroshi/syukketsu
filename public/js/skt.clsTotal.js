@@ -19,6 +19,8 @@ skt.clsTotal = (function () {
           + '<input class="skt-clsTotal-calc" type="button" value="再計算">'
           + '<div class="skt-clsTotal-notice"></div>'
           + '<table class="skt-clsTotal-main"></table>',
+        tbMain2 : String()
+          + '<td class="skt-clsTotal-main2">',
         settable_map : { startYear  : true,
                          startMonth : true,
                          startDay   : true,
@@ -123,6 +125,13 @@ skt.clsTotal = (function () {
         }
       };
     },
+    shimashimaTab = function (i, tabA, tabB) {
+      if (i % 2 == 0) {
+        return tabA;
+      } else {
+        return tabB
+      }
+    },
     header = String()
       + '<tr>'
       + '<td class="skt-talbe-header">番号</td>'
@@ -141,8 +150,10 @@ skt.clsTotal = (function () {
     for (i = 0;i < num; i++) {
       let meibo = stateMap.tc.students.find(f(i+1));
       str = '<tr>';
-      str += '<td>' + String((i+1)) + '</td>';
-      str += '<td>' + meibo.name + '</td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2);
+      str += String((i+1)) + '</td>';
+      str += shimashimaTab(i, '<td>', configMap.tbMain2);
+      str += meibo.name + '</td>';
 
       if ( stateMap.sk != null ) {
         let total = skt.model.skCountPerPerson((i+1), stateMap.sk, configMap.startYear,
@@ -151,25 +162,25 @@ skt.clsTotal = (function () {
                                                                    configMap.endYear,
                                                                    configMap.endMonth,
                                                                    configMap.endDay);
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.syuttei   != null) { str += total.syuttei; }
         str += '</td>';
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.byouketsu != null) { str += total.byouketsu; }
         str += '</td>';
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.jikoketsu != null) { str += total.jikoketsu; }
         str += '</td>';
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.tikoku    != null) { str += total.tikoku; }
         str += '</td>';
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.soutai    != null) { str += total.soutai; }
         str += '</td>';
-        str += '<td>'
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         if (total.kouketsu  != null) { str += total.kouketsu; }
         str += '</td>';
-        str += '<td>';
+        str += shimashimaTab(i, '<td>', configMap.tbMain2);
         str += total.detail;
         str += '</td>';
 

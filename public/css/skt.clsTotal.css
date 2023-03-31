@@ -95,6 +95,10 @@
   border-collapse:collapse;
 }
 
+.skt-clsTotal-main2 {
+  background : #E5D5E5;
+}
+
 .skt-clsTotal-main tr, .skt-clsTotal-main td{
   font-size: 20px;
   border : 1px solid black;
