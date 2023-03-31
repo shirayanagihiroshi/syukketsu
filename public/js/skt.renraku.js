@@ -151,6 +151,7 @@ skt.renraku = (function () {
   createTable = function (bangou, name) {
     let str, tablePart,
     clsSyukketsu = '<td class="skt-renraku-edi skt-renraku-sk">',
+    clsKouketsu  = '<td class="skt-renraku-edi skt-renraku-kk">',
     clsReason    = '<td class="skt-renraku-edi skt-renraku-re">',
     clsMemo      = '<td class="skt-renraku-edimemo">';
 
@@ -158,7 +159,7 @@ skt.renraku = (function () {
 
     // DBの持つ理由の種別との対応を一致させるためヘッダはモデルに持たせた。
     // テーブルとの変換もモデルでやる。
-    tablePart = skt.model.readySkTable([], 1, clsSyukketsu, clsReason, clsMemo);
+    tablePart = skt.model.readySkTable([], 1, clsSyukketsu, clsKouketsu, clsReason, clsMemo);
 
     str = '<tr>';
     str += '<td>' + String(bangou) + '</td>';
