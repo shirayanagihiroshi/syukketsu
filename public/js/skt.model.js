@@ -1068,7 +1068,9 @@ skt.model = (function () {
             if (type == true) {
               mkind6 += String(syukketsuList[i].bangou) + ',';
             } else {
-              str += makeJimurenrakuStr(' 公欠', syukketsuList[i]);
+              // 公欠は理由を求めない
+              str += '公欠(' + String(syukketsuList[i].bangou) + '番 ' + syukketsuList[i].name
+                       + showMemo(syukketsuList[i].memo) + addbutton(syukketsuList[i]) + ')';
             }
           }
         }
