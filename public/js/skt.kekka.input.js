@@ -46,18 +46,6 @@ skt.kekkaInput = (function () {
           + '"skt-kekka-input-limit-over80"',
         limitOver100ClsName : String()
           + '"skt-kekka-input-limit-over100"',
-        zenkiPeriod : { startY : 2022, // 欠課時数の集計の期間を指定
-                        startM : 4,
-                        startD : 1,
-                        endY   : 2022,
-                        endM   : 9,
-                        endD   : 30 },
-        koukiPeriod : { startY : 2022,
-                        startM : 10,
-                        startD : 1,
-                        endY   : 2023,
-                        endM   : 3,
-                        endD   : 31 },
         settable_map : { targetYear : true,
                          targetMonth : true,
                          targetDay   : true,
@@ -762,24 +750,26 @@ skt.kekkaInput = (function () {
 
   readyKekkaCount = function () {
     let kek = skt.model.getKekka(),
-      f = skt.util.nengappiAndJyugyouIdSelect;
+      f = skt.util.nengappiAndJyugyouIdSelect,
+      zenkiP = skt.appVersion.getZenkiPeriod(),
+      kenkiP = skt.appVersion.getKoukiPeriod();
 
     // 欠課データのうち該当区間にあって、該当の授業IDのものをもっておいて
     // 欠課時数を数えるのに使う。
-    stateMap.kekkasZenki = kek.filter(f(configMap.zenkiPeriod.startY,
-                                        configMap.zenkiPeriod.startM,
-                                        configMap.zenkiPeriod.startD,
-                                        configMap.zenkiPeriod.endY,
-                                        configMap.zenkiPeriod.endM,
-                                        configMap.zenkiPeriod.endD,
+    stateMap.kekkasZenki = kek.filter(f(zenkiP.startY,
+                                        zenkiP.startM,
+                                        zenkiP.startD,
+                                        zenkiP.endY,
+                                        zenkiP.endM,
+                                        zenkiP.endD,
                                         configMap.jyugyouId));
 
-    stateMap.kekkaskouki = kek.filter(f(configMap.koukiPeriod.startY,
-                                        configMap.koukiPeriod.startM,
-                                        configMap.koukiPeriod.startD,
-                                        configMap.koukiPeriod.endY,
-                                        configMap.koukiPeriod.endM,
-                                        configMap.koukiPeriod.endD,
+    stateMap.kekkaskouki = kek.filter(f(kenkiP.startY,
+                                        kenkiP.startM,
+                                        kenkiP.startD,
+                                        kenkiP.endY,
+                                        kenkiP.endM,
+                                        kenkiP.endD,
                                         configMap.jyugyouId));
   }
 
