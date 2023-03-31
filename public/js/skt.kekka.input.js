@@ -27,7 +27,7 @@ skt.kekkaInput = (function () {
         tbDetailButton : String()
             + '<button class="skt-kekka-input-detail">表示</button>',
         tbEditClsName : String()
-          + '"skt-kekka-input-edi"',  // ダブルコーテーションがついてるのはわざと
+          + 'skt-kekka-input-edi',
         tbYetClsName : String()
           + 'skt-kekka-input-yet',
         tbDoneClsName : String()
@@ -35,17 +35,27 @@ skt.kekkaInput = (function () {
         tbTodayClsName : String()
           + 'skt-kekka-input-today',
         tbToInputMemoClsName : String()
-          + '"skt-kekka-input-memoInput"',
+          + 'skt-kekka-input-memoInput',
         tbToDelMemolClsName : String()
           + '"skt-kekka-input-memoDelete"',
         tbMemoClsName : String()
-          + '"skt-kekka-input-memo"',
+          + 'skt-kekka-input-memo',
         tbMinWidthClsName : String()
           + 'skt-kekka-input-min-width',
         limitOver80ClsName : String()
           + '"skt-kekka-input-limit-over80"',
         limitOver100ClsName : String()
           + '"skt-kekka-input-limit-over100"',
+        tbMain2 : String()
+          + 'skt-kekka-input-main2',
+        tbEdiColorA : String()
+          + 'skt-kekka-input-edi-colorA',
+        tbEdiColorB : String()
+          + 'skt-kekka-input-edi-colorB',
+        tbInputMemoColorA : String()
+          + 'skt-kekka-input-memo-colorA',
+        tbInputMemoColorB : String()
+          + 'skt-kekka-input-memo-colorB',
         settable_map : { targetYear : true,
                          targetMonth : true,
                          targetDay   : true,
@@ -639,6 +649,13 @@ skt.kekkaInput = (function () {
           }
         }
         return "";
+      },
+      shimashimaTab = function (i, tabA, tabB) {
+        if (i % 2 == 0) {
+          return tabA;
+        } else {
+          return tabB
+        }
       };
 
     // クラス単位授業
@@ -652,17 +669,18 @@ skt.kekkaInput = (function () {
     }
 
     str = '<tr>';
-    str += '<td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
     str += String(personCls);
     str += '</td>';
-    str += '<td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
     str += String(jyugyou.students[idx].bangou);
     str += '</td>';
-    str += '<td class=' + configMap.tbToInputMemoClsName + '>';
+    str += shimashimaTab(idx, '<td class="' + configMap.tbToInputMemoClsName + '">',
+             '<td class="' + configMap.tbToInputMemoClsName + ' '+ configMap.tbMain2 + '">');
     str += String(jyugyou.students[idx].name);
     str += '</td>';
     // 前のコマ
-    str += '<td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
     str += printKekka(kekkaPreviousKoma, personGakunen, personCls, jyugyou.students[idx].bangou);
     str += '</td>';
 
@@ -676,18 +694,23 @@ skt.kekkaInput = (function () {
                                      skt.model.getKyuugaku());
     // 休学中なら入力させない
     if (inKyuugaku != "") {
-      str += '<td>';
+      str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
     } else {
-      str += '<td class=' + configMap.tbEditClsName + '>';
+      str += shimashimaTab(idx,
+               '<td class="' + configMap.tbEditClsName + ' ' + configMap.tbEdiColorA +'">',
+               '<td class="' + configMap.tbEditClsName + ' ' + configMap.tbEdiColorB +'">');
     }
     str += printKekka(kekka, personGakunen, personCls, jyugyou.students[idx].bangou);
     str += '</td>';
     if (configMap.mode == 'normal') {
       // 休学中なら事由を表示
       if (inKyuugaku != "") {
-        str += '<td>' + inKyuugaku + '</td>';
+        str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
+        str += inKyuugaku + '</td>';
       } else {
-        str += '<td class=' + configMap.tbMemoClsName + '>';
+        str += shimashimaTab(idx,
+                 '<td class="' + configMap.tbMemoClsName + ' ' + configMap.tbInputMemoColorA +'">',
+                 '<td class="' + configMap.tbMemoClsName + ' ' + configMap.tbInputMemoColorB +'">');
         str += printStudentMemo(configMap.targetYear,
                                 configMap.targetMonth,
                                 configMap.targetDay,
@@ -699,7 +722,7 @@ skt.kekkaInput = (function () {
     }
 
     // 次のコマ
-    str += '<td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
     str += printKekka(kekkaNextKoma, personGakunen, personCls, jyugyou.students[idx].bangou);
     str += '</td>';
 
@@ -709,17 +732,21 @@ skt.kekkaInput = (function () {
                                          jyugyou.students[idx].bangou,
                                          configMap.jyugyouId));
     zenkiKekkaCount = temp.length;
-    str += '<td>' + String(zenkiKekkaCount) + '</td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
+    str += String(zenkiKekkaCount) + '</td>';
     // 後期欠課時数
     temp = stateMap.kekkaskouki.filter(f(personGakunen,
                                          personCls,
                                          jyugyou.students[idx].bangou,
                                          configMap.jyugyouId));
     koukikekkaCount = temp.length;
-    str += '<td>' + String(koukikekkaCount) + '</td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
+    str += String(koukikekkaCount) + '</td>';
     // 欠課時数合計
-    str += '<td>' + showCount(zenkiKekkaCount + koukikekkaCount) + '</td>';
-    str += '<td>' + configMap.tbDetailButton +'</td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
+    str += showCount(zenkiKekkaCount + koukikekkaCount) + '</td>';
+    str += shimashimaTab(idx, '<td>', '<td class="' + configMap.tbMain2 + '">');
+    str += configMap.tbDetailButton +'</td>';
     str += '</tr>';
     return str;
   }
