@@ -16,19 +16,19 @@ skt.appVersion = (function () {
   };
 
   zenkiP = function () {
-    return { startY : 2022, // 欠課時数の集計の期間を指定
+    return { startY : 2023, // 欠課時数の集計の期間を指定
              startM : 4,
              startD : 1,
-             endY   : 2022,
+             endY   : 2023,
              endM   : 9,
              endD   : 30 }
   }
 
   koukiP = function () {
-    return { startY : 2022,
+    return { startY : 2023,
              startM : 10,
              startD : 1,
-             endY   : 2023,
+             endY   : 2024,
              endM   : 3,
              endD   : 31 }
   }
