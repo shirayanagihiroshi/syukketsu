@@ -70,7 +70,15 @@ skt.shell = (function () {
       + '<div class="skt-shell-main">'
         + '<div class="skt-shell-main-menu"></div>'
         + '<div class="skt-shell-main-content">'
+          + '<h1>version1.8(R5年度4月版)での主な変更点</h1>'
+          + '<ul>'
+          +   '<li>出欠入力(担任)画面の種別や理由の整理（順番が変わっているので注意）</li>'
+          +   '<li>出欠入力(担任)画面でカレンダーから入力日を選べるように</li>'
+          +   '<li>出欠確認(担任)画面で回数のまとめは出停/病欠・・・ごとに表示</li>'
+          + '</ul>'
+          + '<p>'
           + '<a href="https://shirayanagihiroshi.github.io/syukketsu/">sktの使い方を見る</a>'
+          + '</p>'
         + '</div>'
       + '</div>',
     titleStr : String()
