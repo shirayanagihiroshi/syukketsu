@@ -1330,7 +1330,7 @@ skt.model = (function () {
       if ( (target.year == year) && (target.month == month) && (target.day == day) &&
            (target.gakunen == gakunen) && (target.cls == cls) &&
            (target.member.length != 0) ) {
-        let idx = target.member.findIndex(kindAndStudentSelectf(8, bangou)); // 8は出停
+        let idx = target.member.findIndex(kindAndStudentSelectf(1, bangou)); // 1は出停
         if (idx != -1) {
           return true;
         }
