@@ -672,12 +672,12 @@ skt.shell = (function () {
         changeAnchorPart({
           status : 'clsTotal',
           _status : {
-            sYear  : y, // とりあえず開始は年度の初めにしとく。
+            sYear  : 2022,
             sMonth : 4,
             sDay   : 1,
-            eYear  : today.getFullYear(),
-            eMonth : today.getMonth() + 1, //月だけ0始まり
-            eDay   : today.getDate()
+            eYear  : 2023,
+            eMonth : 3,
+            eDay   : 31
           }
         });
 
