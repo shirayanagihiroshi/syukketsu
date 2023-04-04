@@ -69,7 +69,7 @@ readyData = function () {
   // 処理したくないところはtrueをfalseにして飛ばす
   switch (stage) {
     case 1:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('user', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
