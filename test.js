@@ -13,7 +13,7 @@ console.log('start');
 
 async function main() {
   // Use connect method to connect to the server
-  await client.connect();
+//  await client.connect(); //この行があっても動くし、無くても動く
   console.log('Connected successfully to server');
   const db = client.db(dbName);
   const collection = db.collection('syukketsu');
