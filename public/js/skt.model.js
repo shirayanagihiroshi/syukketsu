@@ -20,7 +20,7 @@ skt.model = (function () {
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
       readyMeiboIdList, getMeiboIdList, updateKyuugaku, getKyuugaku,
-      readyKekkaOnePerson, readyUserInfo, //関数
+      readyKekkaOnePerson, readyUserInfo, skTableCound, //関数
       accessKey, userKind, name, targetClass, allClass,
       syukketsu, renraku, receiveAnotherLoginFlg,
       calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList,
@@ -28,7 +28,7 @@ skt.model = (function () {
 
   // この配列はreason1、reason2・・・と順番にならべなきゃだめ。
   const skReasons = ['reason1', 'reason2', 'reason3', 'reason4' , 'reason5', 'reason6', 'reason7', 'reason8', 'reason9'],
-      skReasonStr = ['頭痛'   , '腹痛'   , '通院'   , '体調不良', '感染'   , '感染疑' , '受験'   , '不注意' , 'その他'];
+      skReasonStr = ['頭痛'   , '腹痛'   , '通院'   , '体調不良', '発熱'   , '感染'   , '受験'   , '不注意' , 'その他'];
 
   initLocal = function () {
     accessKey   = {};
@@ -550,21 +550,21 @@ skt.model = (function () {
             + '<tr>'
             + '<td class="skt-talbe-header">番号</td>'
             + '<td class="skt-talbe-header">氏名</td>'
-            + '<td class="skt-talbe-header">出停</td>'
-            + '<td class="skt-talbe-header">病欠</td>'
-            + '<td class="skt-talbe-header">事故欠</td>'
-            + '<td class="skt-talbe-header">遅刻</td>'
-            + '<td class="skt-talbe-header">早退</td>'
-            + '<td class="skt-talbe-header">公欠</td>'
-            + '<td class="skt-talbe-header">頭痛</td>'
-            + '<td class="skt-talbe-header">腹痛</td>'
-            + '<td class="skt-talbe-header">通院</td>'
-            + '<td class="skt-talbe-header">体調不良</td>'
-            + '<td class="skt-talbe-header">感染</td>'
-            + '<td class="skt-talbe-header">感染疑</td>'
-            + '<td class="skt-talbe-header">受験</td>'
-            + '<td class="skt-talbe-header">不注意</td>'
-            + '<td class="skt-talbe-header">その他</td>'
+            + '<td class="skt-talbe-header">出停<div class="skt-talbe-syuttei"></span></td>'
+            + '<td class="skt-talbe-header">病欠<span class="skt-talbe-byouketsu"></span></td>'
+            + '<td class="skt-talbe-header">事故欠<span class="skt-talbe-jikoketsu"></span></td>'
+            + '<td class="skt-talbe-header">遅刻<span class="skt-talbe-tikoku"></span></td>'
+            + '<td class="skt-talbe-header">早退<span class="skt-talbe-soutai"></span></td>'
+            + '<td class="skt-talbe-header">公欠<span class="skt-talbe-kouketsu"></span></td>'
+            + '<td class="skt-talbe-header">頭痛<span class="skt-talbe-zutsuu"></span></td>'
+            + '<td class="skt-talbe-header">腹痛<span class="skt-talbe-fukutsuu"></span></td>'
+            + '<td class="skt-talbe-header">通院<span class="skt-talbe-tsuuin"></span></td>'
+            + '<td class="skt-talbe-header">体調不良<span class="skt-talbe-taityou"></span></td>'
+            + '<td class="skt-talbe-header">発熱<span class="skt-talbe-hatsunetsu"></span></td>'
+            + '<td class="skt-talbe-header">感染<span class="skt-talbe-kansen"></span></td>'
+            + '<td class="skt-talbe-header">受験<span class="skt-talbe-jyuken"></span></td>'
+            + '<td class="skt-talbe-header">不注意<span class="skt-talbe-futyuui"></span></td>'
+            + '<td class="skt-talbe-header">その他<span class="skt-talbe-sonota"></span></td>'
             + '<td class="skt-talbe-header">他理由</td>';
     if (jimurenrakuFlg) {
       str += '<td class="skt-talbe-header">事務からの連絡</td>'
@@ -714,11 +714,11 @@ skt.model = (function () {
       reason = 4;
       reasonCount++;
     }
-    if (celldata.children[12].textContent == '1') { // 感染
+    if (celldata.children[12].textContent == '1') { // 発熱
       reason = 5;
       reasonCount++;
     }
-    if (celldata.children[13].textContent == '1') { // 感染疑
+    if (celldata.children[13].textContent == '1') { // 感染
       reason = 6;
       reasonCount++;
     }
@@ -765,6 +765,21 @@ skt.model = (function () {
       retObj.updateObj = updateObj;
     }
     return retObj;
+  }
+
+  skTableCound = function ( num, celldatas ) {
+    // 出停, 病欠, ・・・, 頭痛, 腹痛, ・・・は15個ある。これらを数えて返す。
+    let i,j,
+      retval = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+    for (i=1; i < (num + 1); i++) { // テーブルのヘッダがあるのでクラスの人数+1
+      for (j=0; j < 15; j++) { // 番号と氏名で2ずれる
+        if (celldatas[i].children[j + 2].textContent == '1') {
+          retval[j] += 1;
+        }
+      }
+    }
+    return retval;
   }
 
   updateSyukketsu = function ( syukketsuData ) {
@@ -1593,6 +1608,7 @@ skt.model = (function () {
           updateKyuugaku   : updateKyuugaku,
           getKyuugaku      : getKyuugaku,
           readyKekkaOnePerson : readyKekkaOnePerson,
-          readyUserInfo    : readyUserInfo
+          readyUserInfo    : readyUserInfo,
+          skTableCound     : skTableCound
         };
 }());

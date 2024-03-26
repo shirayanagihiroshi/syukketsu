@@ -77,7 +77,7 @@ skt.touroku = (function () {
       setJqueryMap, configModule, initModule, removeTouroku,
       verify, onUpdate, onPrevious, onBack, onNext, createTable,
       setDayButtons, setNotice, setLeak, redrawTable, onToggle,
-      printStudentMemo, onCalendar, getMode;
+      printStudentMemo, onCalendar, getMode, setCheckCount;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -420,6 +420,48 @@ skt.touroku = (function () {
     return memoStr;
   }
 
+  setCheckCount = function () {
+    let syuttei  = document.querySelector(".skt-talbe-syuttei"),
+      byouketsu  = document.querySelector(".skt-talbe-byouketsu"),
+      jikoketsu  = document.querySelector(".skt-talbe-jikoketsu"),
+      tikoku     = document.querySelector(".skt-talbe-tikoku"),
+      soutai     = document.querySelector(".skt-talbe-soutai"),
+      kouketsu   = document.querySelector(".skt-talbe-kouketsu"),
+      zutsuu     = document.querySelector(".skt-talbe-zutsuu"),
+      fukutsuu   = document.querySelector(".skt-talbe-fukutsuu"),
+      tsuuin     = document.querySelector(".skt-talbe-tsuuin"),
+      taityou    = document.querySelector(".skt-talbe-taityou"),
+      hatsunetsu = document.querySelector(".skt-talbe-hatsunetsu"),
+      kansen     = document.querySelector(".skt-talbe-kansen"),
+      jyuken     = document.querySelector(".skt-talbe-jyuken"),
+      futyuui    = document.querySelector(".skt-talbe-futyuui"),
+      sonota     = document.querySelector(".skt-talbe-sonota"),
+      datas      = skt.model.skTableCound(stateMap.tc.students.length, $('.skt-touroku-main').find('tr')),
+      f = function (d) {
+        if (d == 0) {
+          return '';
+        } else {
+          return String(d);
+        }
+      };
+
+    syuttei.textContent   = f(datas[0]);
+    byouketsu.textContent = f(datas[1]);
+    jikoketsu.textContent = f(datas[2]);
+    tikoku.textContent    = f(datas[3]);
+    soutai.textContent    = f(datas[4]);
+    kouketsu.textContent  = f(datas[5]);
+    zutsuu.textContent    = f(datas[6]);
+    fukutsuu.textContent  = f(datas[7]);
+    tsuuin.textContent    = f(datas[8]);
+    taityou.textContent   = f(datas[9]);
+    hatsunetsu.textContent= f(datas[10]);
+    kansen.textContent    = f(datas[11]);
+    jyuken.textContent    = f(datas[12]);
+    futyuui.textContent   = f(datas[13]);
+    sonota.textContent    = f(datas[14]);
+  }
+
   //---パブリックメソッド---
   configModule = function ( input_map ) {
     skt.util.setConfigMap({
@@ -445,6 +487,7 @@ skt.touroku = (function () {
 
     setDayButtons();
     createTable();
+    setCheckCount();
     setNotice();
     setLeak();
 
@@ -485,6 +528,7 @@ skt.touroku = (function () {
       } else {
         $(this).html('1');
       }
+      setCheckCount();
     });
 
     // memoがクリックされたらテキストボックスを用意する
