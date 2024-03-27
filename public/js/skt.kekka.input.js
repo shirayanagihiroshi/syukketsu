@@ -90,7 +90,7 @@ skt.kekkaInput = (function () {
       viewInit, setNotice, getPrevious, getNext,
       getPreviousSameJyugyou, getNextSameJyugyou, getTabType,
       readyKekkaCount, readyDetail, readyDetailCompletion, showDetail,
-      printStudentMemo, filterStudentMemo, redrawTable, showCount;
+      printStudentMemo, filterStudentMemo, redrawTable, showCount, setCheckCount;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -599,6 +599,7 @@ skt.kekkaInput = (function () {
     } else {
       str +='-';
     }
+    str += '<span class = "skt-table-prevkekka"></span>'
     str += '</td>';
     str += getTabType({ year      : configMap.targetYear,
                         month     : configMap.targetMonth,
@@ -608,6 +609,7 @@ skt.kekkaInput = (function () {
                       kekka,
                       true);
     str += String(configMap.koma) + '限';
+    str += '<span class = "skt-table-thiskekka"></span>'
     str += '</td>';
     str += getTabType(nextKoma, kekkaNextKoma);
     if (nextKoma.jyugyouId != 0) {
@@ -615,6 +617,7 @@ skt.kekkaInput = (function () {
     } else {
       str +='-';
     }
+    str += '<span class = "skt-table-nextkekka"></span>'
     str += ' ' + configMap.tbNextButton;
     str += '</td>';
     countZenki = stateMap.kekkasZenki.filter(filterState('done'));
@@ -976,6 +979,50 @@ skt.kekkaInput = (function () {
     return retStr;
   }
 
+  // 入力対象の授業のクラスの欠課を数えて表示する
+  setCheckCount = function () {
+    let i, pos,
+      prevkekka    = 0,
+      thiskekka    = 0,
+      nextkekka    = 0,
+      prevkekkaNum = document.querySelector(".skt-table-prevkekka"),
+      thiskekkaNum = document.querySelector(".skt-table-thiskekka"),
+      nextkekkaNum = document.querySelector(".skt-table-nextkekka"),
+      celldatas  = $('.skt-kekka-input-main').find('tr'),
+      jyugyous   = skt.model.getJyugyou(),
+      jyugyou    = jyugyous.find(skt.util.jyugyouSelectf(configMap.jyugyouId)),
+      num        = jyugyou.students.length,
+      f = function (d) {
+        if (d == 0) {
+          return '';
+        } else {
+          return String(d);
+        }
+      };
+
+      if ( configMap.mode == 'normal' ) {
+        pos = 6;
+      } else {
+        pos = 5;
+      }
+
+    for (i=3; i < (num + 3); i++) { // テーブルのヘッダが3行あるのでクラスの人数+3
+      if (celldatas[i].children[3].textContent == '1') { //組,番号,氏名,前回授業,今回授業,次回授業で3
+        prevkekka++;
+      }
+      if (celldatas[i].children[4].textContent == '1') { //組,番号,氏名,前回授業,今回授業,次回授業で4
+        thiskekka++;
+      }
+      if (celldatas[i].children[pos].textContent == '1') {
+        nextkekka++;
+      }
+    }
+
+    prevkekkaNum.textContent = f(prevkekka);
+    thiskekkaNum.textContent = f(thiskekka);
+    nextkekkaNum.textContent = f(nextkekka);
+  }
+
   //---パブリックメソッド---
   configModule = function ( input_map ) {
     skt.util.setConfigMap({
@@ -1002,6 +1049,7 @@ skt.kekkaInput = (function () {
 
     // ここにくるまでに名簿や欠課のデータはとってある。
     createTable();
+    setCheckCount();
     setNotice();
     viewInit();
 
@@ -1017,6 +1065,7 @@ skt.kekkaInput = (function () {
       } else {
         $(this).html('1');
       }
+      setCheckCount();
     });
 
     // setJqueryMap() した後に追加したものは、こんな風にクリックの登録をしてる
