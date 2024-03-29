@@ -24,14 +24,6 @@
     addClass,
     addClassList,// = JSON.parse(fs.readFileSync('./data2DB/class.json', 'utf8')),
     addClassListTemp,
-    addSyukketsu,
-    addSyukketsuList = JSON.parse(fs.readFileSync('./data2DB/syukketsu.json', 'utf8')),
-    addRenraku,
-    addRenrakuList = JSON.parse(fs.readFileSync('./data2DB/renraku.json', 'utf8')),
-    addCalendar,
-    addCalendarList = JSON.parse(fs.readFileSync('./data2DB/calendar.json', 'utf8')),
-    addKekka,
-    addKekkaList = JSON.parse(fs.readFileSync('./data2DB/kekka.json', 'utf8')),
     addGoudouMeibo,
     addGoudouMeiboList,// = JSON.parse(fs.readFileSync('./data2DB/goudouMeibo.json', 'utf8')),
     addGoudouMeiboListTemp;
@@ -90,23 +82,23 @@ readyData = function () {
       break;
     case 5:
       if (true) {
-        db.deleteManyDocuments('syukketsu', {}, function (res) { nextstep();} );
+        db.deleteManyDocuments('goudouMeibo', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 6:
       if (true) {
-        addSyukketsu(addSyukketsuList);
+        addGoudouMeibo(addGoudouMeiboList);
       } else { nextstep(); }
       break;
     case 7:
       if (true) {
-          db.deleteManyDocuments('renraku', {}, function (res) { nextstep();} );
-        } else { nextstep(); }
-        break;
+        db.deleteManyDocuments('syukketsu', {}, function (res) { nextstep();} );
+      } else { nextstep(); }
+      break;
     case 8:
       if (true) {
-          addRenraku(addRenrakuList);
-        } else { nextstep(); }
+          db.deleteManyDocuments('renraku', {}, function (res) { nextstep();} );
+      } else { nextstep(); }
         break;
     case 9:
       if (true) {
@@ -115,30 +107,21 @@ readyData = function () {
       break;
     case 10:
       if (true) {
-        addCalendar(addCalendarList);
+        db.deleteManyDocuments('kekka', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 11:
       if (true) {
-        db.deleteManyDocuments('kekka', {}, function (res) { nextstep();} );
+        db.deleteManyDocuments('kyuugaku', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 12:
       if (true) {
-        addKekka(addKekkaList);
+        db.deleteManyDocuments('studentMemo', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 13:
-      if (true) {
-        db.deleteManyDocuments('goudouMeibo', {}, function (res) { nextstep();} );
-      } else { nextstep(); }
-      break;
-    case 14:
-      if (true) {
-        addGoudouMeibo(addGoudouMeiboList);
-      } else { nextstep(); }
-      break;
-    case 15:
+      console.log('readyData finish');
       process.exit(0);
       break;
   }
@@ -187,34 +170,6 @@ addUser = function (userList) {
 addClass = function (addClassList) {
   db.insertManyDocuments('class', addClassList, function ( result ) {
     console.log("addClass done");
-    nextstep();
-  });
-}
-
-addSyukketsu = function (addSyukketsuList) {
-  db.insertManyDocuments('syukketsu', addSyukketsuList, function ( result ) {
-    console.log("addSyukketsu done");
-    nextstep();
-  });
-}
-
-addRenraku = function (addRenrakuList) {
-  db.insertManyDocuments('renraku', addRenrakuList, function ( result ) {
-    console.log("addRenraku done");
-    nextstep();
-  });
-}
-
-addCalendar = function (addCalendarList) {
-  db.insertManyDocuments('calendar', addCalendarList, function ( result ) {
-    console.log("addCalendar done");
-    nextstep();
-  });
-}
-
-addKekka = function (addKekkaList) {
-  db.insertManyDocuments('kekka', addKekkaList, function ( result ) {
-    console.log("addKekkaList done");
     nextstep();
   });
 }
