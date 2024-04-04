@@ -81,7 +81,9 @@ skt.shell = (function () {
         + '</div>'
       + '</div>',
     titleStr : String()
-      + 'hamamatsu nittai skt'
+      + 'hamamatsu nittai skt',
+    linktoirekae : String()
+      + '<a href="https://hatomochi.net:4001"  target="_blank" rel="noopener noreferrer" >授業変更を確認する</a>',
     },
     stateMap = {
       $container : null,
@@ -522,7 +524,7 @@ skt.shell = (function () {
     });
 
     //version 表示
-    jqueryMap.$title.html( configMap.titleStr + ' ' + skt.appVersion.show() );
+    jqueryMap.$title.html( configMap.titleStr + ' ' + skt.appVersion.show() + ' ' + configMap.linktoirekae);
 
     // 出欠の入力をする際に過去の情報を表示->修正->登録のあと、
     // さっき表示してた日に戻りたい。よって、機能モジュールでなく、shellで日付を持つ。
