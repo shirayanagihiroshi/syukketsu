@@ -18,12 +18,6 @@ skt.kekkaJyugyou = (function () {
             + '<input type="radio" name="meiboType" value="meiboId">混合名簿IDで指定'
           + '</div>'
           + '<select class="skt-kekka-jyugyou-gakunenlist">'
-            + '<option value="1">中学1年</option>'
-            + '<option value="2">中学2年</option>'
-            + '<option value="3">中学3年</option>'
-            + '<option value="4">高校1年</option>'
-            + '<option value="5">高校2年</option>'
-            + '<option value="6">高校3年</option>'
           + '</select>'
           + '<select class="skt-kekka-jyugyou-clslist">'
           + '</select>'
@@ -57,12 +51,20 @@ skt.kekkaJyugyou = (function () {
         // 事務からの連絡のときは真面目に名簿から取ってるけど、ここでは固定で持っとく
         highschoolClsList : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         juniorhighClsList : [1, 2, 3],
+        gakunenListVal : [1        , 2        , 3        , 4        , 5        , 6        ],
+        gakunenListStr : ['中学1年', '中学2年', '中学3年', '高校1年', '高校2年', '高校3年'],
         tbEditClsName : String()
           + '<td class="skt-kekka-jyugyou-edi">',
         tbDeleteClsName : String()
           + '<td class="skt-kekka-jyugyou-del">',
         tbEditTanniClsName : String()
-          + '<td class="skt-kekka-jyugyou-edi-tanni">'
+          + '<td class="skt-kekka-jyugyou-edi-tanni">',
+        tbEditGakunenClsName : String()
+          + '<td class="skt-kekka-jyugyou-edi-gakunen">',
+        tbEditClassClsName : String()
+          + '<td class="skt-kekka-jyugyou-edi-class">',
+        tbEditGoudouMeiboClsName : String()
+          + '<td class="skt-kekka-jyugyou-edi-goudouMeibo">'
       },
       stateMap = {
         $container  : null,
@@ -81,6 +83,7 @@ skt.kekkaJyugyou = (function () {
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKekkaJyugyou,
       update, onUpdate, onCancel, onAdd, createTable, setClsList,
+      setGakunenList, 
       setMeiboIdList, copyJyugyou, editedJyugyou, switchList;
 
   //---DOMメソッド---
@@ -191,22 +194,24 @@ skt.kekkaJyugyou = (function () {
 
       str += configMap.tbEditClsName + jyugyous[i].name + '</td>';
 
+      str += configMap.tbEditGakunenClsName;
       if (Object.keys(jyugyous[i]).indexOf('gakunen') != -1) {
-        str += '<td>' + skt.model.showGakunen(jyugyous[i].gakunen) + '</td>';
-      } else {
-        str += '<td></td>';
+        str += skt.model.showGakunen(jyugyous[i].gakunen);
       }
+      str += '</td>';
+
+      str += configMap.tbEditClassClsName;
       if (Object.keys(jyugyous[i]).indexOf('cls') != -1) {
-        str += '<td>' + skt.model.showCls(jyugyous[i].gakunen,
-                                          jyugyous[i].cls) + '</td>';
-      } else {
-        str += '<td></td>';
+        str += skt.model.showCls(jyugyous[i].gakunen,jyugyous[i].cls);
       }
+      str += '</td>';
+
+      str += configMap.tbEditGoudouMeiboClsName;
       if (Object.keys(jyugyous[i]).indexOf('goudouMeiboId') != -1) {
-        str += '<td>' + jyugyous[i].goudouMeiboId + '</td>';
-      } else {
-        str += '<td></td>';
+        str += jyugyous[i].goudouMeiboId;
       }
+      str += '</td>';
+
       str += configMap.tbEditTanniClsName;
       if (Object.keys(jyugyous[i]).indexOf('tanni') != -1) {
         str += String(jyugyous[i].tanni);
@@ -216,6 +221,16 @@ skt.kekkaJyugyou = (function () {
       str += configMap.tbDeleteClsName + '<button >この授業を削除</button>' + '</tr>';
     }
     jqueryMap.$main.append(str);
+  }
+  
+  // 学年のドロップダウンを設定
+  setGakunenList =  function () {
+    let i;
+
+    for (i = 0; i < configMap.gakunenListVal.length ; i++) {
+      jqueryMap.$gakunenlist.append($('<option>').val(configMap.gakunenListVal[i]).html(
+        configMap.gakunenListStr[i]));
+    }
   }
 
   // 組のドロップダウンを設定。
@@ -298,9 +313,13 @@ skt.kekkaJyugyou = (function () {
                'name'          : arr[i].name};
 
       // 名簿IDで名簿を指定するタイプ
-      } else {
+      } else if (Object.keys(arr[i]).indexOf('goudouMeiboId') != -1) {
         obj = {'jyugyouId'     : arr[i].jyugyouId,
                'goudouMeiboId' : arr[i].goudouMeiboId,
+               'name'          : arr[i].name};
+
+      } else {
+        obj = {'jyugyouId'     : arr[i].jyugyouId,
                'name'          : arr[i].name};
       }
 
@@ -393,6 +412,7 @@ skt.kekkaJyugyou = (function () {
 
     copyJyugyou(skt.model.getJyugyou()); // コピーしたものを使うので、createTableより先にする
     createTable();
+    setGakunenList();
     setClsList();
     setMeiboIdList();
     jqueryMap.$meiboIdlist.hide();
@@ -432,6 +452,44 @@ skt.kekkaJyugyou = (function () {
 
           $('.sktJyugyouName').parent().html(inputstr);
         }
+
+        stateMap.edittingFlg = false;
+      }
+    });
+//koko
+    $(document).on('click', '.skt-kekka-jyugyou-edi-goudouMeibo', function (event) {
+      let tateIndex = $(this).closest('tr').index(), // ヘッダが1行で、0始まりだから1から
+        temp = $(this).text();
+
+      if (stateMap.edittingFlg == false) {
+        stateMap.edittingFlg = true;
+
+        // 位置を覚えておいて、決定(フォーカスアウト)時に使う
+        stateMap.editPos = tateIndex;
+
+        $(this).html('<input class="sktJyugyouGoudouMeibo" type="text" value="' + temp + '">');
+
+        $('.sktJyugyouGoudouMeibo').focus();
+      }
+    });
+
+    //テキストボックスからフォーカスが外れたら入力されていた値をセルに設定する
+    $(document).on('blur', '.skt-kekka-jyugyou-edi-goudouMeibo', function () {
+      let inputstr;
+
+      if (stateMap.edittingFlg == true) {
+
+        inputstr = $('.sktJyugyouGoudouMeibo').val();
+
+        // 何故か""は数値扱いみたい
+        if (undefined !== inputstr && inputstr != "" && !isNaN(inputstr)) {
+          stateMap.jyugyouEdit[stateMap.editPos-1].goudouMeiboId = Number(inputstr);
+        } else {
+          delete stateMap.jyugyouEdit[stateMap.editPos-1].goudouMeiboId;
+          inputstr = "";
+        }
+
+        $('.sktJyugyouGoudouMeibo').parent().html(inputstr);
 
         stateMap.edittingFlg = false;
       }

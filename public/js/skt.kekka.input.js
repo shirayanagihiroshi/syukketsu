@@ -632,10 +632,12 @@ skt.kekkaInput = (function () {
     jqueryMap.$main.append(str);
 
     // 生徒ごとの繰り返し
-    for (i = 0; i < jyugyou.students.length; i++) {
-      // 長くなったので関数を分ける。
-      str = createTableInner(i, jyugyou, kekkaPreviousKoma, kekka, kekkaNextKoma);
-      jqueryMap.$main.append(str);
+    if (Object.keys(jyugyou).indexOf('students') != -1) { // 名簿が無くても落ちないようにガード
+      for (i = 0; i < jyugyou.students.length; i++) {
+        // 長くなったので関数を分ける。
+        str = createTableInner(i, jyugyou, kekkaPreviousKoma, kekka, kekkaNextKoma);
+        jqueryMap.$main.append(str);
+      }
     }
   }
 
@@ -914,11 +916,13 @@ skt.kekkaInput = (function () {
     // クラス混合なら
     } else {
 
-      for (i = 0; i < jyugyou.students.length; i++) {
-        // メンドイので人単位でなくクラス単位で絞る
-        if (gakunenClsList.findIndex(f(jyugyou.students[i].gakunen, jyugyou.students[i].cls)) == -1) {
-          gakunenClsList.push({ gakunen : jyugyou.students[i].gakunen,
-                                cls     : jyugyou.students[i].cls });
+      if (Object.keys(jyugyou).indexOf('students') != -1) { // 名簿が無くても落ちないようにガード
+        for (i = 0; i < jyugyou.students.length; i++) {
+          // メンドイので人単位でなくクラス単位で絞る
+          if (gakunenClsList.findIndex(f(jyugyou.students[i].gakunen, jyugyou.students[i].cls)) == -1) {
+            gakunenClsList.push({ gakunen : jyugyou.students[i].gakunen,
+                                  cls     : jyugyou.students[i].cls });
+          }
         }
       }
 
@@ -981,7 +985,7 @@ skt.kekkaInput = (function () {
 
   // 入力対象の授業のクラスの欠課を数えて表示する
   setCheckCount = function () {
-    let i, pos,
+    let i, pos, num,
       prevkekka    = 0,
       thiskekka    = 0,
       nextkekka    = 0,
@@ -991,7 +995,6 @@ skt.kekkaInput = (function () {
       celldatas  = $('.skt-kekka-input-main').find('tr'),
       jyugyous   = skt.model.getJyugyou(),
       jyugyou    = jyugyous.find(skt.util.jyugyouSelectf(configMap.jyugyouId)),
-      num        = jyugyou.students.length,
       f = function (d) {
         if (d == 0) {
           return '';
@@ -999,6 +1002,14 @@ skt.kekkaInput = (function () {
           return String(d);
         }
       };
+
+      // 当初授業の対象の学級は必ず指定する流れであったが、教員全員の時間割を
+      // 一斉に登録する対応で、未設定のケースが出てきた。そのときに落ちないように回避
+      if (Object.keys(jyugyou).indexOf('students') == -1) {
+        return;
+      } else {
+        num = jyugyou.students.length;
+      }
 
       if ( configMap.mode == 'normal' ) {
         pos = 6;

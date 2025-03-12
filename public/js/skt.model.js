@@ -1372,11 +1372,13 @@ skt.model = (function () {
       // この前の処理で名簿は取得済のはず。
       // なお、番号まで指定してもいいけど、メンドイのでクラス単位で取得（不要なデータもとれてしまう）
       } else {
-        for (j = 0; j < jyugyou[i].students.length; j++) {
-          // リストになければ追加
-          if (gakunenClsList.findIndex(f(jyugyou[i].students[j].gakunen, jyugyou[i].students[j].cls)) == -1) {
-            gakunenClsList.push({ gakunen : jyugyou[i].students[j].gakunen,
-                                  cls     : jyugyou[i].students[j].cls });
+        if (Object.keys(jyugyou[i]).indexOf('students') != -1) { // 名簿が無くても落ちないようにガード
+          for (j = 0; j < jyugyou[i].students.length; j++) {
+            // リストになければ追加
+            if (gakunenClsList.findIndex(f(jyugyou[i].students[j].gakunen, jyugyou[i].students[j].cls)) == -1) {
+              gakunenClsList.push({ gakunen : jyugyou[i].students[j].gakunen,
+                                    cls     : jyugyou[i].students[j].cls });
+            }
           }
         }
       }
