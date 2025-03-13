@@ -83,7 +83,8 @@ skt.kekkaJyugyou = (function () {
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeKekkaJyugyou,
       update, onUpdate, onCancel, onAdd, createTable, setClsList,
-      setGakunenList, 
+      setGakunenList, onGakunenIDChange, onClassIDChange, setGakunenListById,
+      setClassListById, 
       setMeiboIdList, copyJyugyou, editedJyugyou, switchList;
 
   //---DOMメソッド---
@@ -181,6 +182,45 @@ skt.kekkaJyugyou = (function () {
     }
   }
 
+  onGakunenIDChange =  function () {
+    let i;
+
+    if (stateMap.edittingFlg == true) {
+      if (this.value != 0) {
+        stateMap.jyugyouEdit[stateMap.editPos-1].gakunen = Number(this.value);
+      } else {
+        delete stateMap.jyugyouEdit[stateMap.editPos-1].gakunen;
+      }
+
+      $('#sktJyugyouGakunenID').parent().html(configMap.gakunenListStr[this.value - 1]);
+
+      stateMap.edittingFlg = false;
+    }
+  }
+
+  onClassIDChange =  function () {
+    let i, str;
+
+    if (stateMap.edittingFlg == true) {
+      if (this.value != 0) {
+        stateMap.jyugyouEdit[stateMap.editPos-1].cls = Number(this.value);
+
+        // クラスの設定の前に学年は設定されているはず
+        // 学年とクラスを設定するなら、合同名簿ＩＤは削除する
+        delete stateMap.jyugyouEdit[stateMap.editPos-1].goudouMeiboId;
+        $(this).parent().next().html("");
+
+      } else {
+        delete stateMap.jyugyouEdit[stateMap.editPos-1].cls;
+      }
+
+      str = skt.model.showCls(stateMap.jyugyouEdit[stateMap.editPos-1].gakunen, this.value);
+      $('#sktJyugyouClassID').parent().html(str);
+
+      stateMap.edittingFlg = false;
+    }
+  }
+
   //---ユーティリティメソッド---
   createTable = function () {
     let i, str, jyugyou,
@@ -233,6 +273,29 @@ skt.kekkaJyugyou = (function () {
     }
   }
 
+  setGakunenListById = function (IDstr) {
+    let i, obj,
+      lst = document.getElementById(IDstr);
+
+    // 表中に一時的に現れる学年の選択
+    // リストの選択アイテムをonchangeで取る場合、選択項目が変更される必要がある。
+    // (変更されないとイベントが飛んでこない)
+    // 苦肉の策として、先頭に不要な項目を入れる。
+    // 常時存在する方の学年選択リストは上のsetGakunenListで設定していて、
+    // そちらでは発生しない問題である。
+    obj = document.createElement('option');
+    obj.value = 0;
+    obj.text  = '選択してね';
+    lst.appendChild(obj);
+
+    for (i = 0; i < configMap.gakunenListVal.length ; i++) {
+      obj = document.createElement('option');
+      obj.value = configMap.gakunenListVal[i];
+      obj.text  = configMap.gakunenListStr[i];
+      lst.appendChild(obj);
+    }
+  }
+
   // 組のドロップダウンを設定。
   setClsList = function () {
     let i, cl, gakunen;
@@ -251,6 +314,35 @@ skt.kekkaJyugyou = (function () {
     for (i = 0; i < cl.length ; i++) {
       jqueryMap.$clslist.append($('<option>').val(cl[i]).html(
         skt.model.showCls(gakunen, cl[i])));
+    }
+  }
+
+  setClassListById = function (IDstr, gakunen) {
+    let i, obj, cl,
+      lst = document.getElementById(IDstr);
+
+    // 表中に一時的に現れるクラスの選択
+    // リストの選択アイテムをonchangeで取る場合、選択項目が変更される必要がある。
+    // (変更されないとイベントが飛んでこない)
+    // 苦肉の策として、先頭に不要な項目を入れる。
+    // 常時存在する方の学年選択リストは上のsetGakunenListで設定していて、
+    // そちらでは発生しない問題である。
+    obj = document.createElement('option');
+    obj.value = 0;
+    obj.text  = '選択してね';
+    lst.appendChild(obj);
+
+    if (gakunen <= 3) {
+      cl = configMap.juniorhighClsList;
+    } else {
+      cl = configMap.highschoolClsList;
+    }
+
+    for (i = 0; i < cl.length ; i++) {
+      obj = document.createElement('option');
+      obj.value = cl[i];
+      obj.text  = skt.model.showCls(gakunen, cl[i]);
+      lst.appendChild(obj);
     }
   }
 
@@ -456,7 +548,58 @@ skt.kekkaJyugyou = (function () {
         stateMap.edittingFlg = false;
       }
     });
-//koko
+
+    $(document).on('click', '.skt-kekka-jyugyou-edi-gakunen', function (event) {
+      let tateIndex = $(this).closest('tr').index(), // ヘッダが1行で、0始まりだから1から
+        temp = $(this).text();
+
+      if (stateMap.edittingFlg == false) {
+
+        // 合同名簿を設定すべきなのに誤って学年を入力してしまった場合に消す手段をつくる
+        // すでに学年を入力済であるときに、クリックしたら学年と(整合性を保つために)クラスを消す
+        if (Object.keys(stateMap.jyugyouEdit[tateIndex-1]).indexOf('gakunen') != -1) {
+          delete stateMap.jyugyouEdit[tateIndex-1].gakunen;
+          delete stateMap.jyugyouEdit[tateIndex-1].cls;
+
+          $(this).html("");
+          $(this).next().html("");
+
+        // 学年が未入力なら
+        } else {
+          stateMap.edittingFlg = true;
+
+          // 位置を覚えておいて、決定(onchange)時に使う
+          stateMap.editPos = tateIndex;
+
+          $(this).html('<select id="sktJyugyouGakunenID"></select>');
+          let lst = document.getElementById('sktJyugyouGakunenID');
+          lst.onchange = onGakunenIDChange;
+          setGakunenListById('sktJyugyouGakunenID');
+        }
+      }
+    });
+
+    $(document).on('click', '.skt-kekka-jyugyou-edi-class', function (event) {
+      let tateIndex = $(this).closest('tr').index(), // ヘッダが1行で、0始まりだから1から
+        temp = $(this).text();
+
+      if (stateMap.edittingFlg == false) {
+
+        // 学年の情報が必要なので、学年が設定されていなければスルー
+        if (Object.keys(stateMap.jyugyouEdit[tateIndex-1]).indexOf('gakunen') != -1) {
+          stateMap.edittingFlg = true;
+
+          // 位置を覚えておいて、決定(onchange)時に使う
+          stateMap.editPos = tateIndex;
+
+          $(this).html('<select id="sktJyugyouClassID"></select>');
+          let lst = document.getElementById('sktJyugyouClassID');
+          lst.onchange = onClassIDChange;
+          setClassListById('sktJyugyouClassID', stateMap.jyugyouEdit[tateIndex-1].gakunen);
+        }
+      }
+    });
+
     $(document).on('click', '.skt-kekka-jyugyou-edi-goudouMeibo', function (event) {
       let tateIndex = $(this).closest('tr').index(), // ヘッダが1行で、0始まりだから1から
         temp = $(this).text();
@@ -484,6 +627,14 @@ skt.kekkaJyugyou = (function () {
         // 何故か""は数値扱いみたい
         if (undefined !== inputstr && inputstr != "" && !isNaN(inputstr)) {
           stateMap.jyugyouEdit[stateMap.editPos-1].goudouMeiboId = Number(inputstr);
+
+          // 合同名簿IDを指定するなら、学年とクラスは削除する
+          delete stateMap.jyugyouEdit[stateMap.editPos-1].gakunen;
+          delete stateMap.jyugyouEdit[stateMap.editPos-1].cls;
+
+          $(this).prev().html("");
+          $(this).prev().prev().html("");
+
         } else {
           delete stateMap.jyugyouEdit[stateMap.editPos-1].goudouMeiboId;
           inputstr = "";
@@ -580,6 +731,7 @@ skt.kekkaJyugyou = (function () {
         jqueryMap.$meiboIdlist.remove();
         jqueryMap.$tanniListTitle.remove();
         jqueryMap.$tanniList.remove();
+        //追加！！
       }
     }
     return true;
