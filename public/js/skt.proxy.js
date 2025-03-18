@@ -8,11 +8,12 @@ skt.proxy = (function () {
   //---モジュールスコープ変数---
   var configMap = {
         main_html : String()
-          + '<div class="skt-proxy-title">下記のクラスの出欠を入力します。担任が不在の場合のみ使用してください。</div>'
+          + '<div class="skt-proxy-title">下記のクラスの出欠を入力/確認します。担任が不在の場合のみ使用してください。</div>'
           + '<table class="skt-proxy-main"></table>',
         header    : String()
-          + '<tr><td>学年/組</td><td>入力</td></tr>',
+          + '<tr><td>学年/組</td><td>入力</td><td>確認</td></tr>',
         inputButton : 'skt-proxy-input',
+        countButton : 'skt-proxy-count',
         settable_map : {},
         allMeibo : {}
       },
@@ -23,7 +24,7 @@ skt.proxy = (function () {
       },
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeProxy, createTable,
-      addButton, gakunenCls2Id, id2GakunenCls;
+      addButton, addCountButton, gakunenCls2Id, id2GakunenCls;
 
   //---DOMメソッド---
   setJqueryMap = function () {
@@ -56,6 +57,9 @@ skt.proxy = (function () {
         str +=   '<td>';
         str +=     addButton(gakunenArr[i],cl[j]);
         str +=   '</td>';
+        str +=   '<td>';
+        str +=     addCountButton(gakunenArr[i],cl[j]);
+        str +=   '</td>';
         str += '</tr>';
 
         jqueryMap.$main.append(str);
@@ -67,6 +71,13 @@ skt.proxy = (function () {
     return '<button class="' + configMap.inputButton + '" '
          + 'id="' + gakunenCls2Id(gakunen, cls) + '">'
          + '入力'
+         + '</button>';
+  }
+
+  addCountButton = function (gakunen, cls) {
+    return '<button class="' + configMap.countButton + '" '
+         + 'id="' + gakunenCls2Id(gakunen, cls) + '">'
+         + '確認'
          + '</button>';
   }
 
@@ -114,6 +125,18 @@ skt.proxy = (function () {
       // 代理で入力するクラスを選んでいるので、そのクラスの名簿や
       // 出欠を取得する。この後、readySyukketsuResult を受けて入力画面へ遷移する。
       skt.model.setTargetClass('input', stateMap.gakunen, stateMap.cls);
+    });
+
+    // 確認ボタンの登録
+    $(document).on('click', ('.' + configMap.countButton), function (event) {
+      let targetcls = id2GakunenCls(this.id);
+
+      stateMap.gakunen = targetcls.gakunen;
+      stateMap.cls     = targetcls.cls;
+
+      // 代理で入力するクラスを選んでいるので、そのクラスの名簿や
+      // 出欠を取得する。この後、readySyukketsuResult を受けて入力画面へ遷移する。
+      skt.model.setTargetClass('count', stateMap.gakunen, stateMap.cls);
     });
 
     return true;
