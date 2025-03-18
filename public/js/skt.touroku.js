@@ -421,6 +421,9 @@ skt.touroku = (function () {
   }
 
   setCheckCount = function () {
+    if (configMap.mode == 'studentmemo') {
+      return;
+    }
     let syuttei  = document.querySelector(".skt-talbe-syuttei"),
       byouketsu  = document.querySelector(".skt-talbe-byouketsu"),
       jikoketsu  = document.querySelector(".skt-talbe-jikoketsu"),
