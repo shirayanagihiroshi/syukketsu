@@ -26,7 +26,9 @@
     addClassListTemp,
     addGoudouMeibo,
     addGoudouMeiboList,// = JSON.parse(fs.readFileSync('./data2DB/goudouMeibo.json', 'utf8')),
-    addGoudouMeiboListTemp;
+    addGoudouMeiboListTemp,
+    addAllJikanwari,
+    allJikanwariList = JSON.parse(fs.readFileSync('./data2DB/jikanwariPerTeacher.json', 'utf8'));
 
 // excelでutf-8のjsonを出力して、読み込もうとしたが、
 // excelはBOM付きの UTF8を出力するらしいので、JSON.parseに
@@ -66,61 +68,66 @@ readyData = function () {
       } else { nextstep(); }
       break;
     case 2:
-      if (true) {
+      if (false) {
         addUser(addUserList);
       } else { nextstep(); }
       break;
     case 3:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('class', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 4:
-      if (true) {
+      if (false) {
         addClass(addClassList);
       } else { nextstep(); }
       break;
     case 5:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('goudouMeibo', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 6:
-      if (true) {
+      if (false) {
         addGoudouMeibo(addGoudouMeiboList);
       } else { nextstep(); }
       break;
     case 7:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('syukketsu', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 8:
-      if (true) {
+      if (false) {
           db.deleteManyDocuments('renraku', {}, function (res) { nextstep();} );
       } else { nextstep(); }
         break;
     case 9:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('calendar', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 10:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('kekka', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 11:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('kyuugaku', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 12:
-      if (true) {
+      if (false) {
         db.deleteManyDocuments('studentMemo', {}, function (res) { nextstep();} );
       } else { nextstep(); }
       break;
     case 13:
+      if (false) {
+        addAllJikanwari(allJikanwariList);
+      } else { nextstep(); }
+      break;
+    case 14:
       console.log('readyData finish');
       process.exit(0);
       break;
@@ -179,6 +186,37 @@ addGoudouMeibo = function (addGoudouMeiboList) {
     console.log("addGoudouMeiboList done");
     nextstep();
   });
+}
+
+addAllJikanwari = function (allJikanwariList) {
+  let i, complete_num, lst,
+    f = function (target) {
+      if ( Object.keys(target).indexOf('userId') != -1 ) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+  // userIdが無いと登録できない。例えばALT分は登録しない
+  lst = allJikanwariList.filter(f);
+
+  // 登録完了数を設定
+  complete_num = 0;
+
+  for (i = 0; i < lst.length; i++) {
+    db.updateDocument('user',
+                      {userId : lst[i].userId},
+                      {$set   : {jyugyou   : lst[i].jyugyou,
+                                 jikanwari : lst[i].jikanwari}},
+                      function (result) {
+                        complete_num++;
+                        if (complete_num == lst.length) {
+                          console.log('addAllJikanwari done');
+                          nextstep();
+                        }
+                      });
+  }
 }
 
 //------ユーティリティメソッドe--------

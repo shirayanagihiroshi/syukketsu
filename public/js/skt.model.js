@@ -244,7 +244,8 @@ skt.model = (function () {
     // 欠課取得完了
     skt.data.registerReceive('getKekkaResult', function (msg) {
       let i, ans,
-        noMeiboFlg = false;
+        noMeiboFlg = false,
+        ikkatuJikanwariDoneFlg = false;
 
       console.log('getKekkaResult');
 
@@ -264,6 +265,20 @@ skt.model = (function () {
         if (Object.keys(jyugyou[i]).indexOf('students') == -1) {
           noMeiboFlg = true;
         }
+
+        // これまでは授業登録時に学年組か合同名簿IDを設定していたが
+        // 一括で時間割を設定した後は、学年も組も合同名簿IDも無い
+        if (Object.keys(jyugyou[i]).indexOf('gakunen') == -1 &&
+            Object.keys(jyugyou[i]).indexOf('cls') == -1     &&
+            Object.keys(jyugyou[i]).indexOf('goudouMeiboId') == -1) {
+          ikkatuJikanwariDoneFlg = true;
+        }
+      }
+
+      if (ikkatuJikanwariDoneFlg) {
+        //名簿を取得できないので、授業設定画面へ遷移
+        $.gevent.publish('ikkatuJikanwariDone', [{}]);
+        return;
       }
 
       // 欠課データの取得が済んだら、(そしてまだ名簿を取ってなければ)名簿を取得しておく。

@@ -1078,6 +1078,13 @@ skt.shell = (function () {
       });
     });
 
+    // 合同名簿取得完了
+    $.gevent.subscribe( $container, 'ikkatuJikanwariDone', function (event, msg_map) {
+      changeAnchorPart({
+        status : 'setJyugyou'
+      });
+    });
+
     // 休学情報登録確認
     $.gevent.subscribe( $container, 'verifyKGUpdate', function (event, msg_map) {
       changeAnchorPart({
