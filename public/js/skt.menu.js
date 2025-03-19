@@ -20,7 +20,8 @@ skt.menu = (function () {
         main_html4 : String()
           + '<div class="skt-menu8">代理で出欠(教務)</div>'
           + '<div class="skt-menu9">日課の入力(教務)</div>'
-          + '<div class="skt-menu10">休学の入力(教務)</div>',
+          + '<div class="skt-menu10">休学の入力(教務)</div>'
+          + '<div class="skt-menu11">合同名簿登録(教務)</div>',
         settable_map : {userKind : true},
         userKind : 8  // 8  事務 (8から始まってることに特に意味はない)
                       // 9  非常勤教諭
@@ -33,7 +34,7 @@ skt.menu = (function () {
       jqueryMap = {},
       setJqueryMap, configModule, initModule, removeMenu, onClickMenu1,
       onClickMenu2, onClickMenu3, onClickMenu4, onClickMenu5, onClickMenu6,
-      onClickMenu7, onClickMenu8, onClickMenu9, onClickMenu10,
+      onClickMenu7, onClickMenu8, onClickMenu9, onClickMenu10, onClickMenu11,
       setColor;
 
   //---DOMメソッド---
@@ -57,6 +58,7 @@ skt.menu = (function () {
       jqueryMap.$menu8 = $container.find( '.skt-menu8' );
       jqueryMap.$menu9 = $container.find( '.skt-menu9' );
       jqueryMap.$menu10 = $container.find( '.skt-menu10' );
+      jqueryMap.$menu11 = $container.find( '.skt-menu11' );
     }
   }
 
@@ -140,6 +142,14 @@ skt.menu = (function () {
     skt.model.readyAllClass('kyuugaku');
     return false;
   }
+  // 合同名簿登録(教務)
+  onClickMenu11 = function () {
+    //console.log('onClickMenu10');
+    setColor(11);
+    skt.shell.resetDate(); //日付がずれたままだど使いにくいので、メニューを押したら今日に戻す
+    skt.model.readyAllGoudouMeibo('menu'); //clientStateは現状未使用
+    return false;
+  }
 
   //---ユーティリティメソッド---
   setColor = function (menuNum) {
@@ -157,6 +167,7 @@ skt.menu = (function () {
       menus.push(jqueryMap.$menu8);
       menus.push(jqueryMap.$menu9);
       menus.push(jqueryMap.$menu10);
+      menus.push(jqueryMap.$menu11);
     }
 
     for (i = 0; i < menus.length; i++) {
@@ -226,6 +237,9 @@ skt.menu = (function () {
 
       jqueryMap.$menu10
         .click( onClickMenu10 );
+
+      jqueryMap.$menu11
+        .click( onClickMenu11 );
     }
 
     return true;
@@ -258,6 +272,9 @@ skt.menu = (function () {
         }
         if ( jqueryMap.$menu10 ) {
           jqueryMap.$menu10.remove();
+        }
+        if ( jqueryMap.$menu11 ) {
+          jqueryMap.$menu11.remove();
         }
       }
     }

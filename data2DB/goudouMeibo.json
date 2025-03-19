@@ -1,5 +1,6 @@
 ﻿[
  {"goudouMeiboId" : 1,
+  "explanation" : "3-23数学総合演習",
   "students":[
      {"gakunen" : 6,"cls" : 2,"bangou" : 1,"name" : "豊根　1子"}
     ,{"gakunen" : 6,"cls" : 2,"bangou" : 2,"name" : "豊根　2子"}
@@ -23,6 +24,7 @@
     ,{"gakunen" : 6,"cls" : 3,"bangou" : 10,"name" : "設楽　10男"}
   ]}
 ,{"goudouMeiboId" : 2,
+  "explanation" : "3-45古典",
   "students":[
      {"gakunen" : 6,"cls" : 4,"bangou" : 1,"name" : "岡崎　1子"}
     ,{"gakunen" : 6,"cls" : 4,"bangou" : 2,"name" : "岡崎　2子"}
@@ -46,6 +48,7 @@
     ,{"gakunen" : 6,"cls" : 5,"bangou" : 10,"name" : "蒲郡　10男"}
   ]}
 ,{"goudouMeiboId" : 3,
+  "explanation" : "中3選択1",
   "students":[
      {"gakunen" : 3,"cls" : 1,"bangou" : 1,"name" : "菊川　1子"}
     ,{"gakunen" : 3,"cls" : 1,"bangou" : 2,"name" : "菊川　2子"}
@@ -69,6 +72,7 @@
     ,{"gakunen" : 3,"cls" : 2,"bangou" : 10,"name" : "森　10男"}
   ]}
 ,{"goudouMeiboId" : 4,
+  "explanation" : "中3選択2",
   "students":[
      {"gakunen" : 3,"cls" : 3,"bangou" : 1,"name" : "島田　1子"}
     ,{"gakunen" : 3,"cls" : 3,"bangou" : 2,"name" : "島田　2子"}

@@ -20,11 +20,12 @@ skt.model = (function () {
       readySyukketsuGakunenCls, readyStudentMemo, getStudentMemo,
       updateStudentMemo, deleteStudentMemo, isMyMemo, memoDeleted,
       readyMeiboIdList, getMeiboIdList, updateKyuugaku, getKyuugaku,
-      readyKekkaOnePerson, readyUserInfo, skTableCound, //関数
+      readyKekkaOnePerson, readyUserInfo, skTableCound,
+      readyAllGoudouMeibo, getAllGoudouMeibo, addGoudouMeibo, //関数
       accessKey, userKind, name, targetClass, allClass,
       syukketsu, renraku, receiveAnotherLoginFlg,
       calendar, jyugyou, jikanwari, kekka, studentMemo, meiboIdList,
-      kyuugaku;//モジュールスコープ変数
+      kyuugaku, allGoudouMeibo;//モジュールスコープ変数
 
   // この配列はreason1、reason2・・・と順番にならべなきゃだめ。
   const skReasons = ['reason1', 'reason2', 'reason3', 'reason4' , 'reason5', 'reason6', 'reason7', 'reason8', 'reason9'],
@@ -49,6 +50,7 @@ skt.model = (function () {
     studentMemo = [];
     meiboIdList = [];
     kyuugaku    = [];
+    allGoudouMeibo = [];
   }
 
   initModule = function () {
@@ -388,6 +390,17 @@ skt.model = (function () {
       $.gevent.publish('getUserInfoResult', [msg]);
     });
 
+    // 合同名簿IDの全部の取得完了
+    skt.data.registerReceive('getAllGoudouMeiboResult', function (msg) {
+
+      allGoudouMeibo = msg.res;
+      $.gevent.publish('getAllGoudouMeiboResult', [msg]);
+    });
+
+    // 合同名簿IDの追加完了
+    skt.data.registerReceive('addGoudouMeiboResult', function (msg) {
+      $.gevent.publish('addGoudouMeiboFinish', [msg]);
+    });
 
   };//initModule end
 
@@ -1557,6 +1570,29 @@ skt.model = (function () {
     skt.data.sendToServer('getUserInfo',queryObj);
   }
 
+  readyAllGoudouMeibo = function (clientState) {
+    let queryObj;
+
+    queryObj = {AKey : {userId : accessKey.userId,
+                        token  : accessKey.token},
+                SKey : {},
+                clientState : clientState};
+
+    skt.data.sendToServer('getAllGoudouMeibo',queryObj);
+  }
+
+  getAllGoudouMeibo = function () {
+
+    return allGoudouMeibo;
+  }
+
+  addGoudouMeibo = function (addData) {
+    let queryObj = {AKey : {userId : accessKey.userId,
+                            token  : accessKey.token},
+                    goudouMeibos : addData};
+    skt.data.sendToServer('addGoudouMeibo',queryObj);
+  }
+
   return { initModule      : initModule,
           login            : login,
           logout           : logout,
@@ -1611,6 +1647,9 @@ skt.model = (function () {
           getKyuugaku      : getKyuugaku,
           readyKekkaOnePerson : readyKekkaOnePerson,
           readyUserInfo    : readyUserInfo,
-          skTableCound     : skTableCound
+          skTableCound     : skTableCound,
+          readyAllGoudouMeibo : readyAllGoudouMeibo,
+          getAllGoudouMeibo   : getAllGoudouMeibo,
+          addGoudouMeibo      : addGoudouMeibo
         };
 }());

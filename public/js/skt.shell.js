@@ -22,7 +22,8 @@ skt.shell = (function () {
                 setJyugyou      : true, //従属変数なし
                 kekkaInput      : true,
                 kyuugaku        : true, //従属変数なし
-                kojinkekkakakunin : true //従属変数なし
+                kojinkekkakakunin : true, //従属変数なし
+                addGoudouMeibo  : true  //従属変数なし
               },
       _status : {
         dialogKind : { login          : true,  // status : dialog のとき使用
@@ -42,7 +43,8 @@ skt.shell = (function () {
                        studentMemo    : true,  // status : dialog のとき使用
                        delStudentMemo : true,  // status : dialog のとき使用
                        verifyKGUpdate : true,  // status : dialog のとき使用
-                       calendarPick   : true}, // status : dialog のとき使用
+                       calendarPick   : true,  // status : dialog のとき使用
+                       addGoudoumeibo : true}, // status : dialog のとき使用
         year  : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         month : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
         day   : true,                  // status : inputSyukketsu,schoolTotal,calendar,kekka,kekkaInputのとき使用
@@ -70,10 +72,10 @@ skt.shell = (function () {
       + '<div class="skt-shell-main">'
         + '<div class="skt-shell-main-menu"></div>'
         + '<div class="skt-shell-main-content">'
-          + '<h1>version1.9(R6年度4月版)での主な変更点</h1>'
+          + '<h1>version2.0(R7年度4月版)での主な変更点</h1>'
           + '<ul>'
-          +   '<li>出欠入力(担任)画面の理由の整理</li>'
-          +   '<li>出欠入力(担任)画面、欠課入力画面でチェックした数を表示するように</li>'
+          +   '<li>授業と時間割の登録を一括で行うように(各ユーザで名簿の指定は必要)</li>'
+          +   '<li>教務がクラスの出欠を確認できるように</li>'
           + '</ul>'
           + '<p>'
           + '<a href="https://shirayanagihiroshi.github.io/syukketsu/"  target="_blank" rel="noopener noreferrer" >sktの使い方を見る</a>'
@@ -171,6 +173,7 @@ skt.shell = (function () {
       skt.kekkaInput.removeKekkaInput();
       skt.calendar.removeCalendar();
       skt.kojinkekkakakunin.removeKojinkekkakakunin();
+      skt.addGoudouMeibo.removeAddGoudouMeibo();
     };
 
     // ダイアログの場合
@@ -288,8 +291,13 @@ skt.shell = (function () {
                                              targetMonth : stateMap.skMonth,
                                              targetDay   : stateMap.skDay});
         skt.dialogCalendarPick.initModule( jqueryMap.$container );
+      } else if (anchor_map._status.dialogKind == 'addGoudoumeibo') {
+        setModal(true);
+        skt.dialogOkCancel.configModule({showStr : '合同名簿IDを追加しました',
+                                         okFunc  : skt.addGoudouMeibo.reGetAllGoudouMeibo,
+                                         okStr   : 'ok'});
+        skt.dialogOkCancel.initModule( jqueryMap.$container );
       }
-
 
     // 待ち受け画面の場合
     } else if ( anchor_map.status == 'matiuke' ) {
@@ -424,12 +432,20 @@ skt.shell = (function () {
       clearMainContent();
       skt.kyuugaku.configModule({});
       skt.kyuugaku.initModule( jqueryMap.$content );
+
     // 個人の欠課確認画面
     } else if (  anchor_map.status == 'kojinkekkakakunin' ) {
       setModal(false);
       clearMainContent();
       skt.kojinkekkakakunin.configModule({});
       skt.kojinkekkakakunin.initModule( jqueryMap.$content );
+
+    // 合同名簿IDの確認登録画面
+    } else if (  anchor_map.status == 'addGoudouMeibo' ) {
+      setModal(false);
+      clearMainContent();
+      skt.addGoudouMeibo.configModule({});
+      skt.addGoudouMeibo.initModule( jqueryMap.$content );
     }
   }
 
@@ -1096,6 +1112,23 @@ skt.shell = (function () {
         status : 'dialog',
         _status : {
           dialogKind : 'calendarPick'
+        }
+      });
+    });
+
+    // 合同名簿IDの確認と登録へ
+    $.gevent.subscribe( $container, 'getAllGoudouMeiboResult', function (event, msg_map) {
+      changeAnchorPart({
+        status : 'addGoudouMeibo',
+      });
+    });
+
+    // 合同名簿IDの登録完了画面へ
+    $.gevent.subscribe( $container, 'addGoudouMeiboFinish', function (event, msg_map) {
+      changeAnchorPart({
+        status : 'dialog',
+        _status : {
+          dialogKind : 'addGoudoumeibo'
         }
       });
     });

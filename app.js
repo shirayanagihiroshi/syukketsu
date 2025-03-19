@@ -137,6 +137,12 @@ io.on("connection", function (socket) {
     commonDBFind(msg, 'studentMemo', 'getStudentMemoResult');
   });
 
+  socket.on('getAllGoudouMeibo', function (msg) {
+//    console.log("getAllGoudouMeibo");
+
+    commonDBFind(msg, 'goudouMeibo', 'getAllGoudouMeiboResult');
+  });
+
   socket.on('getSyukketsu', function (msg) {
 //    console.log("getSyukketsu");
     // アクセスキーの確認のために'user'にアクセスしている
@@ -510,6 +516,22 @@ io.on("connection", function (socket) {
         db.findManyDocuments('user', msg.SKey, {projection:{_id:0, userKind:0, token:0, passWord:0, jikanwari:0}}, function (res) {
           let obj = {res:res, clientState:msg.clientState};
           io.to(socket.id).emit('getUserInfoResult', obj); // 送信者のみに送信
+        });
+      } else {
+        io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
+      }
+    });
+  });
+
+  socket.on('addGoudouMeibo', function (msg) {
+    db.findManyDocuments('user', {userId:msg.AKey.userId}, {projection:{_id:0}}, function (result) {
+      // ログイン中のユーザのみに追加を許可
+      if (result.length != 0 && msg.AKey.token == result[0].token ) {
+        db.insertManyDocuments('goudouMeibo',
+                               msg.goudouMeibos,
+                               function (res) {
+
+          io.to(socket.id).emit('addGoudouMeiboResult', res); // 送信者のみに送信
         });
       } else {
         io.to(socket.id).emit('anotherLogin', {}); // 送信者のみに送信
