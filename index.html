@@ -3,6 +3,13 @@
 	<meta http-equiv="content-type" charset="utf-8">
 	<link rel="stylesheet" href="index.css">
 	<title>sktの使い方</title>
+
+	<style type="text/css">
+	.strong {
+	  color       : red;
+	  font-weight : bold;
+	}
+	</style>
 </head>
 <body>
 
@@ -27,6 +34,7 @@
   <li><a href="#jyugyoucount">授業時数の確認</a></li>
   <li><a href="#kyuugaku">休学中の生徒の扱いについて</a></li>
   <li><a href="#kojinkekka">特定の生徒の欠課時数を確認するには</a></li>
+  <li><a href="#settingMeibo">一括時間割設定後の授業名簿の設定(ver2.0以降)</a></li>
 </ol>
 
 <h2><a name="gaiyou">概要</a></h2>
@@ -36,6 +44,9 @@
 
 <h2><a name="rireki">更新履歴</a></h2>
 <ul>
+  <li>
+    ver.2.0 : 2025/03/25 年度当初の授業/時間割の登録を教務が一括で行うように
+  </li>
   <li>
     ver.1.9 : 2024/03/27 入力画面でチェックした数を表示するように
   </li>
@@ -189,8 +200,27 @@
 ↓
 <img src="images/howToUse092.png">
 
+
+<h2><a name="settingMeibo">一括時間割設定後の授業名簿の設定(ver2.0以降)</a></h2>
+<ul>
+	<li>ver2.0より、年度当初に授業と時間割を教務部で一括して登録できる。</li>
+	<li>ただし、授業と名簿の紐づけは一括で行うには困難であり、それは各先生に設定してもらう。</li>
+	<li>名簿データが未設定の状態で"欠課入力"を行おうとすると(従来からある)授業の登録画面へ遷移する。</li>
+	<li>時間割の一括設定後なら既に授業のIDや授業名は設定されているはず。各先生が<span class="strong">学年と組</span>または<span class="strong">合同名簿ID</span>を設定する。</li>
+	<li>学年と組または合同名簿IDが設定済なら結果を入力できる画面に遷移する。</li>
+</ul>
+<img src="images/howToUse111.png">
+<p>↓</p>
+<img src="images/howToUse112.png">
+<p>↓</p>
+<img src="images/howToUse113.png">
+<p>↓</p>
+<img src="images/howToUse114.png">
+<p>↓</p>
+<img src="images/howToUse115.png">
+
 <h1>本ページを書いた人</h1>
 <p>shirayanagi hiroshi</p>
-<p>2024/03/27</p>
+<p>2025/03/25</p>
 </body>
 </html>
