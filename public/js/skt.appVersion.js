@@ -7,7 +7,7 @@ skt.appVersion = (function () {
   'use strict';
 
   var initModule, show, zenkiP, koukiP,
-      ver = '1.9';
+      ver = '2.0';
 
   initModule      = function () {};
 
@@ -16,19 +16,19 @@ skt.appVersion = (function () {
   };
 
   zenkiP = function () {
-    return { startY : 2024, // 欠課時数の集計の期間を指定
+    return { startY : 2025, // 欠課時数の集計の期間を指定
              startM : 4,
              startD : 1,
-             endY   : 2024,
+             endY   : 2025,
              endM   : 9,
              endD   : 30 }
   }
 
   koukiP = function () {
-    return { startY : 2024,
+    return { startY : 2025,
              startM : 10,
              startD : 1,
-             endY   : 2025,
+             endY   : 2026,
              endM   : 3,
              endD   : 31 }
   }
