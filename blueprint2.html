@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出欠管理システム 設計書 v2</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.13.7/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { 
+            font-size: 1.4em;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        p, li {
+            font-size: 1.1em;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            color: #555;
+        }
+        tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+        .mermaid {
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .daiji {
+            color: #e74c3c;
+            font-weight: bold;
+            background-color: #fff5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+        }
+        .toggle-button {
+            cursor: pointer;
+            color: #3498db;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .toggle-content {
+            display: none;
+            padding-left: 20px;
+            border-left: 3px solid #eee;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>出欠管理システム 設計書 v2</h1>
+
+    <!-- =================================================================== -->
+    <h2>1. 全体アーキテクチャ</h2>
+    <p>本システムは、サーバーサイドにNode.js、クライアントサイドにjQueryを利用したシングルページアプリケーション(SPA)です。クライアント・サーバー間はSocket.IOによるリアルタイム通信を行います。</p>
+    <div class="mermaid">
+        graph TD
+            subgraph "ブラウザ (クライアント)"
+                U["<B>ユーザー</B>"]
+                SH("<b>skt.shell.js</b><br>画面遷移と全体制御")
+                M("<b>skt.model.js</b><br>データ管理とビジネスロジック")
+                D("<b>skt.data.js</b><br>Socket.IOラッパー")
+                UI{"UIモジュール群<br>(skt.menu, skt.kekka, etc.)"}
+                GE("<b>$.gevent</b><br>カスタムイベントバス")
+                CD["クライアント内データ"]
+
+                U --> SH
+                SH -- "管理" --> UI
+                UI -- "イベント発行" --> GE
+                SH -- "イベント購読" --> GE
+                UI -- "データ要求/更新" --> M
+                M -- "キャッシュ" --> CD
+                M -- "通信要求" --> D
+            end
+
+            subgraph "サーバー"
+                SAPP("<b>app.js</b><br>Express + Socket.IO")
+                DBW("<b>database.js</b><br>DB操作ラッパー")
+                MDB[("<B>MongoDB</B><br>データベース")]
+            end
+
+            D <-->|Socket.IO| SAPP
+            SAPP --> DBW
+            DBW --> MDB;
+    </div>
+    <p><b>処理の概要:</b></p>
+    <ol>
+        <li>ユーザーが操作を行うと、UIモジュールが反応します。</li>
+        <li>UIモジュールは、状態の変更を<b>$.gevent</b>を通じてイベントとして発行します。</li>
+        <li><b>skt.shell</b>がイベントを購読し、URLのハッシュ(#)を変更して画面状態を遷移させます。</li>
+        <li>データの取得や更新が必要な場合、UIモジュールは<b>skt.model</b>に要求します。</li>
+        <li><b>skt.model</b>は、必要に応じて<b>skt.data</b>を通じてサーバー(<b>app.js</b>)と通信し、データを取得・更新します。</li>
+        <li>サーバーは<b>database.js</b>を介してMongoDBとデータをやり取りします。</li>
+    </ol>
+
+    <!-- =================================================================== -->
+    <h2>2. クライアント側イベントフロー</h2>
+    <p>本アプリケーションの画面遷移は、URLハッシュの変更をトリガーとするイベント駆動モデルに基づいています。これにより、ブラウザの「戻る」「進む」ボタンが機能し、状態管理がシンプルになります。</p>
+    <div class="mermaid">
+        sequenceDiagram
+            participant Menu as UIモジュール (skt.menu.js)
+            participant Gevent as $.gevent (イベントバス)
+            participant Shell as skt.shell.js
+            participant Browser as ブラウザ
+
+            Menu->>Gevent: $.gevent.publish('kekka', [{}]);
+            Gevent->>Shell: イベントを通知
+            Shell->>Shell: changeAnchorPart({status: 'kekka', ...});
+            Shell->>Browser: window.location.hash = "#!status=kekka...";
+            Browser->>Shell: onHashchange イベント発火
+            Shell->>Shell: stateCtl() 実行
+            Shell->>Shell: 既存のUIモジュールを破棄
+            Shell->>Shell: 新しいUIモジュール(skt.kekka.js)を初期化・表示
+    </div>
+    <p>この仕組みにより、各UIモジュールは自身の役割に集中でき、画面全体の制御は`skt.shell`に一任されるため、関心の分離が実現されています。</p>
+
+    <!-- =================================================================== -->
+    <h2>3. データモデル (MongoDBコレクション)</h2>
+    <p>サーバーサイドでは、以下のMongoDBコレクションを使用してデータを永続化しています。</p>
+    <table>
+        <thead>
+            <tr><th>コレクション名</th><th>主なフィールド</th><th>説明</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>users</b></td>
+                <td><code>userId</code>, <code>passWord</code>, <code>token</code>, <code>userKind</code>, <code>name</code>, <code>jyugyou</code>, <code>jikanwari</code></td>
+                <td>ユーザー情報。パスワードはハッシュ化して保存。`token`でログイン状態を管理し、`userKind`で教務・常勤等の権限を管理する。</td>
+            </tr>
+            <tr>
+                <td><b>syukketsu</b></td>
+                <td><code>gakunen</code>, <code>cls</code>, <code>year</code>, <code>month</code>, <code>day</code>, <code>member</code></td>
+                <td>クラス単位の日々の出欠データ。`member`配列に、各生徒の欠席情報(種別、理由など)が格納される。</td>
+            </tr>
+            <tr>
+                <td><b>renraku</b></td>
+                <td><code>gakunen</code>, <code>cls</code>, <code>bangou</code>, <code>name</code>, <code>kind</code>, <code>reason</code>, <code>memo</code></td>
+                <td>主に事務からの出欠連絡を記録する。担任が入力する`syukketsu`とは別管理。</td>
+            </tr>
+            <tr>
+                <td><b>kekka</b></td>
+                <td><code>userId</code>, <code>year</code>, <code>month</code>, <code>day</code>, <code>koma</code>, <code>jyugyouId</code>, <code>state</code>, <code>contents</code></td>
+                <td>授業ごとの欠課状況。`state`で入力状況(未入力/入力済/授業なし)を管理し、`contents`に欠課した生徒のリストを保持する。</td>
+            </tr>
+            <tr>
+                <td><b>calendar</b></td>
+                <td><code>year</code>, <code>month</code>, <code>day</code>, <code>nikka</code>, <code>gyouji</code></td>
+                <td>営業日カレンダー。`nikka`はA/B日課、`gyouji`は行事を示す。</td>
+            </tr>
+            <tr>
+                <td><b>goudouMeibo</b></td>
+                <td><code>goudouMeiboId</code>, <code>explanation</code>, <code>students</code></td>
+                <td>複数クラスの生徒が参加する合同授業の名簿。</td>
+            </tr>
+            <tr>
+                <td><b>studentMemo</b></td>
+                <td><code>year</code>, <code>month</code>, <code>day</code>, <code>gakunen</code>, <code>cls</code>, <code>bangou</code>, <code>contents</code></td>
+                <td>特定の日、特定の生徒に関する教員間の共有メモ。</td>
+            </tr>
+             <tr>
+                <td><b>kyuugaku</b></td>
+                <td><code>gakunen</code>, <code>cls</code>, <code>bangou</code>, <code>jiyuu</code>, <code>sYear</code>, <code>sMonth</code>, ...</td>
+                <td>休学情報を管理する。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- =================================================================== -->
+    <h2>4. 主要シーケンス</h2>
+    
+    <h3>4.1 ログイン処理 (既存)</h3>
+    <div class="mermaid">
+      sequenceDiagram
+        participant u  as ユーザ
+        participant sh as skt.shell
+        participant l  as skt.login
+        participant m  as skt.model
+        participant d  as skt.data
+        participant an as uriAnchor
+        participant sv as サーバ
+        u->>l: ユーザID等入力後OKボタンを押す
+        l->>m: ログイン処理
+        m->>d: ログイン処理
+        Note right of d : 通信はskt.dataに集約
+        d->>sv: ログイン処理
+        sv->>m: ログイン成功
+        m->>sh: loginSuccessイベント送信
+        sh->>m: 登録済の課題を取得
+        m->>d: 課題の取得
+        d->>sv: 課題の取得
+        sv->>m: 課題の取得完了
+        m->>sh: 課題の取得完了
+        sh->>an: setAnchorしてカレンダー表示へ
+        Note right of an : 以降略
+    </div>
+
+    <h3>4.2 欠課入力フロー (新規追加)</h3>
+    <div class="mermaid">
+        sequenceDiagram
+            participant U as ユーザー(教員)
+            participant V as View (skt.kekka.input.js)
+            participant M as Model (skt.model.js)
+            participant D as Data (skt.data.js)
+            participant S as Server (app.js)
+            U->>V: 欠課生徒にチェックを入れ、「登録」ボタンをクリック
+            V->>V: 入力内容を検証
+            V->>M: skt.model.updateKekka(data)
+            M->>D: sendToServer('updateKekka', payload)
+            D->>S: socket.emit('updateKekka', payload)
+            S->>S: トークン検証、データ更新
+            S->>S: db.updateDocument('kekka', ...)
+            S-->>D: socket.emit('updateKekkaResult')
+            D-->>M: (コールバック実行)
+            M->>M: 自身の欠課データを更新
+            M->>V: $.gevent.publish('kekka', [{}])
+            V-->>U: 欠課入力(管理)画面に遷移し、更新後の状態で再描画
+    </div>
+
+    <h3>4.3 ユーザー権限とメニュー表示 (新規追加)</h3>
+    <div class="mermaid">
+        sequenceDiagram
+            participant Login as ログイン処理
+            participant Model as skt.model.js
+            participant Shell as skt.shell.js
+            participant Menu as skt.menu.js
+            
+            Login->>Model: ログイン成功、ユーザー情報(userKind)を保持
+            Model->>Shell: 'loginSuccess' イベント発行
+            Shell->>Menu: initModule() を呼び出し
+            Menu->>Model: getUserKind() でユーザー種別を取得
+            Menu->>Menu: userKindに応じて表示するメニュー項目を決定
+            Menu->>Shell: 権限に応じたメニューのHTMLを生成して表示
+    </div>
+
+    <!-- =================================================================== -->
+    <h2>5. フォルダ構成とファイル説明</h2>
+    
+    <h3>5.1 クライアント (public/)</h3>
+    <div id="client-toggle" class="toggle-button">▼ クリックで詳細を表示/非表示</div>
+    <div id="client-content" class="toggle-content">
+        <ul>
+            <li><b>skt.shell.js:</b> コントローラ。SPA全体の外骨格。各機能モジュールを動的に読み込み、モジュール間のイベントを調停する。</li>
+            <li><b>skt.model.js:</b> モデル。アプリケーションの全データを管理する。UIモジュールをまたぐデータはここに保持される。表示や通信は行わない。</li>
+            <li><b>skt.data.js:</b> データ層。Socket.IOをラップし、サーバーとのすべての通信を担う。</li>
+            <li><b>skt.acct.js:</b> 機能モジュール。画面右上のアカウント情報（ユーザー名、ログアウトボタン）の描画とイベント処理。</li>
+            <li><b>skt.login.js:</b> 機能モジュール。ログイン画面の描画とイベント処理。</li>
+            <li><b>skt.menu.js:</b> 機能モジュール。ユーザー権限に基づき、左側のナビゲーションメニューを描画する。</li>
+            <li><b>skt.touroku.js:</b> 機能モジュール。担任が出欠を入力するためのメイン画面。</li>
+            <li><b>skt.kekka.input.js:</b> 機能モジュール。教員が授業ごとの欠課を入力するための画面。</li>
+            <li><b>skt.util.js:</b> 汎用ユーティリティ。ブラウザ環境に依存しない純粋なJavaScript関数群。</li>
+            <li><b>skt.util_b.js:</b> 汎用ユーティリティ。ブラウザ環境を前提とした関数群。</li>
+            <li>その他、`skt.calendar.js`, `skt.clsTotal.js`など、各画面機能に対応した多数のモジュールが存在する。</li>
+        </ul>
+    </div>
+
+    <h3>5.2 サーバー (app.js, lib/)</h3>
+    <div id="server-toggle" class="toggle-button">▼ クリックで詳細を表示/非表示</div>
+    <div id="server-content" class="toggle-content">
+        <ul>
+            <li><b>app.js:</b> サーバーのエントリーポイント。Expressで静的ファイル配信とSocket.IOの接続管理を行う。クライアントからの要求を受け、認証とデータ操作を行う。</li>
+            <li><b>lib/database.js:</b> MongoDBへのアクセスを抽象化するラッパー。CRUD操作を提供する。</li>
+            <li><b>lib/crypt.js:</b> パスワードのハッシュ化と比較を行うユーティリティ。</li>
+            <li><b>lib/keys.js:</b> HTTPSの鍵やDBの接続情報など、環境依存の設定を保持する。<span class="daiji">本番環境のデータをgitにpushしてはいけない。</span></li>
+        </ul>
+    </div>
+
+    <!-- =================================================================== -->
+    <h2>6. ポイント (既存の考察)</h2>
+    <ul>
+        <li>イベントは2種類ある：クライアント/サーバ間のでやり取りするためのイベントと、クライアント内のやり取りに使うイベントがある。前者はskt.data（とskt.dataで登録したskt.model）とサーバのみがやりとりする。後者はskt.modelや機能モジュールとskt.shellの間でやり取りする。</li>
+        <li>skt.shellの役割：機能モジュール同士で直接やりとりしてはいけない。結合度が上がってしまうから。機能モジュール同士で何かやりとりする場合は、skt.shellが調停すること。</li>
+        <li>クライアントの画面遷移：ユーザの操作やデータの取得などで画面遷移するわけだが、これらを契機に処理すると、ブラウザの戻るボタンに対応できない。これに対応するため、画面遷移は必ずonHashchangeを契機に行うこと。そうすれば、画面遷移の直接の原因を気にしなくて良くなる。</li>
+        <li>ユーザが登録した課題データの扱い：サーバのDBにデータが保存されるが、防犯上の理由から、ユーザ操作上で課題データを変更、削除したとしてもデータは残すことにしてある。</li>
+    </ul>
+</div>
+
+<script>
+    // Mermaid.jsの初期化
+    mermaid.initialize({ startOnLoad: true });
+
+    // トグル機能の初期化
+    function setupToggle(buttonId, contentId) {
+        const button = document.getElementById(buttonId);
+        const content = document.getElementById(contentId);
+        if (button && content) {
+            button.addEventListener('click', function() {
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                    button.textContent = '▼ クリックで詳細を表示/非表示';
+                } else {
+                    content.style.display = 'block';
+                    button.textContent = '▲ クリックで詳細を閉じる';
+                }
+            });
+        }
+    }
+    
+    window.onload = function() {
+        setupToggle('client-toggle', 'client-content');
+        setupToggle('server-toggle', 'server-content');
+    };
+</script>
+
+</body>
+</html>
