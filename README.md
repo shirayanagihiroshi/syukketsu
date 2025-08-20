@@ -14,8 +14,8 @@ Michael S. Mikowski、Josh C. Powell　著、佐藤 直生　監訳、木下 哲
 サーバ側はnode.jsとmongodbが必要。クライアントはブラウザで該当URLにアクセスすれば良い。mongodがあらかじめ動いている必要があり、DBにある程度の情報が登録されている必要がある。
 
 ### バージョン
-- node.js : v12.18.3
-- mongodb : v4.4.2
+- node.js : ~~v12.18.3~~ v20.19.4
+- mongodb : ~~v4.4.2~~ v8.0.12
 
 ## 実行
 - サーバ側 : このリポジトリをcloneし、`npm install`そして、`node app.js`
